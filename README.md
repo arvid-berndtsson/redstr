@@ -86,6 +86,20 @@ All transformation functions accept a `&str` and return a `String`. Here are the
 - `space_variants(input: &str) -> String` - Use various space characters
 - `mixed_encoding(input: &str) -> String` - Mix character encodings
 
+### Encoding and Obfuscation Functions
+- `base64_encode(input: &str) -> String` - Encode to Base64
+- `url_encode(input: &str) -> String` - URL/percent encoding
+- `hex_encode(input: &str) -> String` - Encode to hexadecimal
+- `hex_encode_mixed(input: &str) -> String` - Mixed hex formats (\\x, %, 0x, &#x)
+
+### Injection Testing Functions
+- `sql_comment_injection(input: &str) -> String` - Insert SQL comment patterns
+- `xss_tag_variations(input: &str) -> String` - Generate XSS tag variations
+- `case_swap(input: &str) -> String` - Random case swapping for WAF bypass
+- `null_byte_injection(input: &str) -> String` - Insert null byte representations
+- `path_traversal(input: &str) -> String` - Generate path traversal patterns
+- `command_injection(input: &str) -> String` - Insert command injection separators
+
 See the [library documentation](https://docs.rs/random-cap) for detailed API documentation.
 
 ### CLI Transformation Modes
@@ -153,22 +167,115 @@ See the [library documentation](https://docs.rs/random-cap) for detailed API doc
   - Useful for testing encoding vulnerabilities and XSS
   - Example: `random-cap mixed-encoding "test"` → Mix of HTML entities and Unicode escapes
 
+#### Encoding and Obfuscation Modes
+
+- **base64, b64** - Encode to Base64
+  - Useful for red team payload obfuscation
+  - Example: `random-cap base64 "hello"` → `aGVsbG8=`
+
+- **url-encode, url** - URL/percent encoding
+  - Useful for web security testing
+  - Example: `random-cap url-encode "test @example.com"` → `test%20%40example.com`
+
+- **hex-encode, hex** - Encode to hexadecimal
+  - Useful for encoding obfuscation
+  - Example: `random-cap hex-encode "test"` → `74657374`
+
+- **hex-mixed, hm** - Mixed hex formats (\\x, %, 0x, &#x)
+  - Useful for testing encoding detection
+  - Example: `random-cap hex-mixed "ab"` → `\x61%62` (varies)
+
+#### Injection Testing Modes
+
+- **sql-comment, sql** - Insert SQL comment patterns
+  - Useful for red team SQL injection testing
+  - Example: `random-cap sql-comment "SELECT * FROM users"` → `SELECT --* FROM users`
+
+- **xss-tags, xss** - Generate XSS tag variations
+  - Useful for testing XSS filters
+  - Example: `random-cap xss-tags "<script>alert(1)</script>"` → Encoded variations
+
+- **case-swap, cs** - Random case swapping
+  - Useful for WAF/filter bypass testing
+  - Example: `random-cap case-swap "SELECT"` → `SeLeCt`
+
+- **null-byte, nb** - Insert null byte representations
+  - Useful for testing null byte vulnerabilities
+  - Example: `random-cap null-byte "test.txt"` → `test%00.txt` (varies)
+
+- **path-traversal, pt** - Generate path traversal patterns
+  - Useful for directory traversal testing
+  - Example: `random-cap path-traversal "/etc/passwd"` → `../etc/../passwd` (varies)
+
+- **command-injection, ci** - Insert command injection separators
+  - Useful for OS command injection testing
+  - Example: `random-cap command-injection "ping example.com"` → `ping;example.com` (varies)
+
 ## Security Testing Use Cases
 
 ### Red Team Activities
-- **Phishing campaigns**: Use homoglyph substitution to create convincing lookalike domains
-- **Filter evasion**: Use leetspeak, unicode variations, or character doubling to bypass content filters
-- **Payload obfuscation**: Mix encodings to evade detection systems
+
+#### Phishing and Social Engineering
+- **Domain spoofing**: Use `homoglyph_substitution` to create convincing lookalike domains
+  - `paypal.com` → `pаypаl.com` (using Cyrillic characters)
+- **Email obfuscation**: Combine unicode variations with case swapping to evade email filters
+
+#### Filter and WAF Evasion
+- **Content filter bypass**: Use `leetspeak`, `unicode_variations`, or `case_swap` to bypass content filters
+  - `malware` → `m@1w@r3` or `mAlWaRe`
+- **SQL injection**: Use `sql_comment_injection` to insert SQL comments and evade WAF detection
+  - `SELECT * FROM users` → `SELECT --* FROM /**/users`
+- **XSS filter evasion**: Use `xss_tag_variations` to bypass XSS filters
+  - `<script>` → `&#x3C;sCrIpT&#x3E;`
+- **Command injection**: Use `command_injection` to test command separator filtering
+
+#### Payload Obfuscation
+- **Encoding obfuscation**: Use `base64_encode`, `url_encode`, `hex_encode`, or `hex_encode_mixed`
+- **Mixed encoding**: Combine `mixed_encoding` with other transformations to evade detection systems
+- **Path traversal**: Use `path_traversal` to test directory traversal vulnerabilities
+  - `/etc/passwd` → `../etc/../passwd`
+- **Null byte injection**: Use `null_byte_injection` to test null byte vulnerabilities
+  - `file.txt` → `file%00.txt`
 
 ### Blue Team Activities
-- **Detection testing**: Test if your filters catch variations like leetspeak or homoglyphs
+
+#### Detection and Validation Testing
+- **Filter testing**: Test if your content filters catch variations like leetspeak or homoglyphs
+  - Generate test cases for blocked words using multiple transformations
+- **XSS detection**: Verify your XSS filters catch obfuscated payloads
+- **SQL injection detection**: Test if your WAF detects SQL injection patterns with comments
 - **Input validation**: Verify systems handle Unicode properly and reject malformed input
-- **Log analysis**: Test logging systems with various character encodings
+- **Encoding detection**: Test if your systems properly detect and decode various encoding schemes
+
+#### Security Control Testing
+- **URL encoding validation**: Use `url_encode` to test URL parsers and validators
+- **Path validation**: Use `path_traversal` to test path sanitization functions
+- **Command validation**: Use `command_injection` to test command sanitization
+- **Null byte handling**: Use `null_byte_injection` to verify proper null byte handling
+
+#### Monitoring and Logging
+- **Log analysis**: Test logging systems with various character encodings to ensure proper logging
+- **Alert generation**: Verify security monitoring systems trigger on obfuscated attacks
+- **Normalization testing**: Test if logs properly normalize Unicode and encoded strings
 
 ### Purple Team Activities
-- **Collaboration**: Share obfuscated test data between red and blue teams
-- **Baseline testing**: Create test cases for security controls
-- **Training**: Generate examples for security awareness training
+
+#### Collaborative Testing
+- **Shared test cases**: Use transformations to create consistent test payloads for both teams
+- **Baseline establishment**: Generate standard test cases for security controls
+- **Detection validation**: Red team uses transformations, blue team validates detection
+
+#### Training and Documentation
+- **Security awareness**: Generate examples for security training programs
+  - Show how phishing domains can be spoofed with homoglyphs
+  - Demonstrate filter evasion techniques
+- **Playbook development**: Create standard attack patterns and detection rules
+- **Tool validation**: Test security tools against various obfuscation techniques
+
+#### Continuous Improvement
+- **Coverage testing**: Ensure security controls cover all transformation variations
+- **Gap analysis**: Identify missing detection rules using transformation permutations
+- **Effectiveness metrics**: Measure detection rates across different obfuscation techniques
 
 ## No Dependencies
 
