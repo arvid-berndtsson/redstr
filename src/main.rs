@@ -1,17 +1,17 @@
-use std::env;
 use redstr::*;
+use std::env;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    
+
     if args.len() < 2 {
         print_usage(&args[0]);
         std::process::exit(1);
     }
-    
+
     let mode = if args.len() >= 3 { &args[1] } else { "random" };
     let input = if args.len() >= 3 { &args[2] } else { &args[1] };
-    
+
     let result = match mode {
         "random" | "r" => randomize_capitalization(input),
         "leetspeak" | "l" => leetspeak(input),
@@ -49,7 +49,7 @@ fn main() {
             std::process::exit(1);
         }
     };
-    
+
     println!("{}", result);
 }
 
@@ -101,5 +101,3 @@ fn print_usage(program_name: &str) {
     eprintln!("  {} sql-comment 'SELECT * FROM users'", program_name);
     eprintln!("  {} xss-tags '<script>alert(1)</script>'", program_name);
 }
-
-

@@ -2,7 +2,6 @@
 ///
 /// This example demonstrates how to integrate redstr into professional
 /// security testing tools like Caido, EvilJinx, urlscan.io, and bot detection systems.
-
 use redstr::*;
 
 fn main() {
@@ -12,14 +11,14 @@ fn main() {
     // Caido / Web Security Testing Proxy
     // ========================================
     println!("=== CAIDO / WEB SECURITY PROXY ===\n");
-    
+
     println!("1. Request Fingerprint Randomization:");
     for i in 1..=3 {
         let ua = random_user_agent();
         println!("   Request #{}: {}", i, &ua[..60]);
     }
     println!();
-    
+
     println!("2. Payload Generation with Builder:");
     let payloads = vec![
         TransformBuilder::new("<script>alert(1)</script>")
@@ -54,7 +53,7 @@ fn main() {
     // EvilJinx / Phishing Framework
     // ========================================
     println!("=== EVILJINX / PHISHING FRAMEWORK ===\n");
-    
+
     println!("4. Phishing Domain Generation:");
     let targets = vec!["paypal.com", "microsoft.com", "google.com"];
     for target in targets {
@@ -69,14 +68,15 @@ fn main() {
     let email_content = "Click here to verify your account";
     println!("   Original: {}", email_content);
     println!("   HTML Entities: {}", html_entity_encode(email_content));
-    println!("   Unicode Variants: {}", unicode_normalize_variants(email_content));
+    println!(
+        "   Unicode Variants: {}",
+        unicode_normalize_variants(email_content)
+    );
     println!();
 
     println!("6. Link Obfuscation Chain:");
     let phishing_link = "https://secure-login.example.com/verify";
-    let obfuscated = TransformBuilder::new(phishing_link)
-        .homoglyphs()
-        .build();
+    let obfuscated = TransformBuilder::new(phishing_link).homoglyphs().build();
     println!("   Original: {}", phishing_link);
     println!("   Obfuscated: {}", obfuscated);
     println!();
@@ -85,7 +85,7 @@ fn main() {
     // URL Scanner / Web Crawler
     // ========================================
     println!("=== URLSCAN.IO / WEB CRAWLER ===\n");
-    
+
     println!("7. URL Normalization Testing:");
     let test_urls = vec![
         "http://example.com/path",
@@ -109,7 +109,7 @@ fn main() {
     // Cloudflare / Bot Detection
     // ========================================
     println!("=== CLOUDFLARE BOT PROTECTION / WAF BYPASS ===\n");
-    
+
     println!("9. User-Agent Rotation:");
     println!("   Strategy: Use random modern browser UAs");
     for i in 1..=5 {
@@ -138,17 +138,17 @@ fn main() {
     // Advanced Chaining
     // ========================================
     println!("=== ADVANCED TRANSFORMATION CHAINS ===\n");
-    
+
     println!("12. Multi-Stage Payload:");
     let payload = "admin' OR '1'='1";
     println!("   Stage 1 (Original):  {}", payload);
-    
+
     let stage2 = case_swap(payload);
     println!("   Stage 2 (Case Swap): {}", stage2);
-    
+
     let stage3 = url_encode(&stage2);
     println!("   Stage 3 (URL Enc):   {}", stage3);
-    
+
     let stage4 = base64_encode(&stage3);
     println!("   Stage 4 (Base64):    {}", stage4);
     println!();
@@ -166,12 +166,12 @@ fn main() {
     // Evasion Testing Suite
     // ========================================
     println!("=== EVASION TESTING SUITE ===\n");
-    
+
     println!("14. Complete Evasion Test:");
     let test_string = "DROP TABLE";
     println!("   Target String: {}", test_string);
     println!("\n   Transformations:");
-    
+
     let transformations = vec![
         ("Leetspeak", leetspeak(test_string)),
         ("Case Swap", case_swap(test_string)),
@@ -182,7 +182,7 @@ fn main() {
         ("ROT13", rot13(test_string)),
         ("Alternate", alternate_case(test_string)),
     ];
-    
+
     for (name, result) in transformations {
         println!("     {:<12} -> {}", name, result);
     }
