@@ -219,30 +219,55 @@ Where:
 
 ### Creating a Release
 
-We have automated the release process to prevent version mismatches between tags and `Cargo.toml`.
+We use [`cargo-release`](https://github.com/crate-ci/cargo-release) to automate the release process and prevent version mismatches.
 
-#### Recommended: Use the Release Script
+#### Prerequisites
 
-The easiest way to create a release is using the provided script:
-
+Install `cargo-release` (one-time setup):
 ```bash
-./scripts/release.sh <version>
+cargo install cargo-release
 ```
 
-**Example:**
+#### Recommended: Use cargo-release
+
+The easiest way to create a release is using `cargo-release`:
+
+**For semantic versioning:**
 ```bash
-./scripts/release.sh 0.2.0
+cargo release patch   # 0.1.0 -> 0.1.1
+cargo release minor   # 0.1.0 -> 0.2.0
+cargo release major   # 0.1.0 -> 1.0.0
 ```
 
-This script will:
-1. ✅ Validate the version format
-2. ✅ Check that the tag doesn't already exist
-3. ✅ Verify the working directory is clean
-4. ✅ Update `Cargo.toml` to the specified version
-5. ✅ Run `cargo check` to ensure everything compiles
-6. ✅ Commit the version change
-7. ✅ Create the git tag `v<version>`
-8. ✅ Optionally push to origin
+**For specific version:**
+```bash
+cargo release 0.2.0
+```
+
+**Dry run (preview changes without committing):**
+```bash
+cargo release --dry-run patch
+```
+
+`cargo-release` will:
+1. ✅ Update `Cargo.toml` version
+2. ✅ Update `Cargo.lock` if needed
+3. ✅ Create a git commit with the version change
+4. ✅ Create a git tag `v<version>`
+5. ✅ Optionally push to origin (use `--execute` flag)
+
+**Full release workflow:**
+```bash
+# Preview what will happen
+cargo release --dry-run minor
+
+# Execute the release (updates version, commits, tags)
+cargo release minor --execute
+
+# Push the commit and tag
+git push origin main
+git push origin --tags
+```
 
 #### Manual Release Process
 
@@ -281,6 +306,8 @@ Publishing is **automatic** when you push a tag matching the pattern `v*`:
 - It validates the version matches
 - It publishes to crates.io using Trusted Publishing
 - No manual intervention needed
+
+For detailed release instructions, see [docs/RELEASE.md](docs/RELEASE.md).
 
 ## 🔍 Code Review Process
 

@@ -49,7 +49,7 @@ jobs:
             echo "The version in Cargo.toml must match the tag version."
             echo "Please update Cargo.toml to version $TAG_VERSION before creating the tag."
             echo ""
-            echo "Tip: Use './scripts/release.sh $TAG_VERSION' to automate this process."
+            echo "Tip: Use 'cargo release $TAG_VERSION' to automate this process."
             exit 1
           fi
           
