@@ -1,9 +1,9 @@
 /// Example: Comprehensive security testing scenarios for Red, Blue, and Purple teams
 ///
-/// This example demonstrates how to use polystr transformations for various
+/// This example demonstrates how to use redstr transformations for various
 /// security testing scenarios across different security team roles.
 
-use polystr::*;
+use redstr::*;
 
 fn main() {
     println!("=== Security Team Use Cases ===\n");

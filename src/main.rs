@@ -1,5 +1,5 @@
 use std::env;
-use polystr::*;
+use redstr::*;
 
 fn main() {
     let args: Vec<String> = env::args().collect();

@@ -1,10 +1,10 @@
-# polystr
+# redstr
 
-[![Crates.io](https://img.shields.io/crates/v/polystr.svg)](https://crates.io/crates/polystr)
-[![Documentation](https://docs.rs/polystr/badge.svg)](https://docs.rs/polystr)
+[![Crates.io](https://img.shields.io/crates/v/redstr.svg)](https://crates.io/crates/redstr)
+[![Documentation](https://docs.rs/redstr/badge.svg)](https://docs.rs/redstr)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Polymorphic string transformation library for offensive security, penetration testing, and evasion techniques.**
+**Red team string transformation library for offensive security operations, penetration testing, and evasion techniques.**
 
 A comprehensive Rust library providing 30+ string obfuscation and transformation functions for red team operations, blue team defense testing, and purple team collaboration. Perfect for security professionals building tools like Caido, Burp Suite extensions, phishing frameworks (EvilJinx), WAF bypass testing, XSS detection, SQL injection testing, and bot detection evasion.
 
@@ -48,7 +48,7 @@ A comprehensive Rust library providing 30+ string obfuscation and transformation
 - **Well-documented** - Complete API documentation with real-world integration examples
 - **CLI tool included** - Optional command-line interface for quick testing
 
-## 🤔 Why polystr?
+## 🤔 Why redstr?
 
 **For Security Tool Developers:**
 - Integrate into Caido, Burp Suite, or custom security proxies
@@ -86,14 +86,14 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-polystr = "0.1.0"
+redstr = "0.1.0"
 ```
 
 ### With Serde Support (for web tools)
 
 ```toml
 [dependencies]
-polystr = { version = "0.1.0", features = ["serde"] }
+redstr = { version = "0.1.0", features = ["serde"] }
 ```
 
 ## Quick Start
@@ -101,7 +101,7 @@ polystr = { version = "0.1.0", features = ["serde"] }
 ### Basic Usage
 
 ```rust
-use polystr::{
+use redstr::{
     randomize_capitalization, leetspeak, homoglyph_substitution,
     base64_encode, sql_comment_injection, xss_tag_variations,
     random_user_agent, domain_typosquat
@@ -135,7 +135,7 @@ fn main() {
 Chain multiple transformations fluently:
 
 ```rust
-use polystr::TransformBuilder;
+use redstr::TransformBuilder;
 
 fn main() {
     // Chain transformations
@@ -157,7 +157,7 @@ fn main() {
 ### Caido / Web Security Testing Tools
 
 ```rust
-use polystr::{random_user_agent, url_encode, xss_tag_variations};
+use redstr::{random_user_agent, url_encode, xss_tag_variations};
 
 // Randomize requests to avoid fingerprinting
 let headers = vec![
@@ -175,7 +175,7 @@ let variations = vec![
 ### EvilJinx / Phishing Frameworks
 
 ```rust
-use polystr::{domain_typosquat, homoglyph_substitution, html_entity_encode};
+use redstr::{domain_typosquat, homoglyph_substitution, html_entity_encode};
 
 // Generate phishing domains
 let target = "paypal.com";
@@ -190,7 +190,7 @@ let obfuscated = html_entity_encode(&homoglyph_substitution(link));
 ### Bot Detection Testing
 
 ```rust
-use polystr::{
+use redstr::{
     random_user_agent, 
     js_string_concat, 
     unicode_normalize_variants,
@@ -206,7 +206,7 @@ let normalized = unicode_normalize_variants("robot");
 ### URL Scanner / Web Crawler Integration
 
 ```rust
-use polystr::{url_encode, base64_encode, TransformBuilder};
+use redstr::{url_encode, base64_encode, TransformBuilder};
 
 // Encode URLs for safe storage/transmission
 let suspicious_url = "http://example.com/path?param=<script>";
@@ -230,7 +230,7 @@ An optional CLI binary is available for quick testing and experimentation.
 To install with the CLI tool:
 
 ```bash
-cargo install polystr --features cli
+cargo install redstr --features cli
 ```
 
 Or build from source with the CLI feature:
@@ -239,12 +239,12 @@ Or build from source with the CLI feature:
 cargo build --release --features cli
 ```
 
-The binary will be available at `target/release/polystr`.
+The binary will be available at `target/release/redstr`.
 
 ### CLI Usage
 
 ```bash
-polystr [mode] <text>
+redstr [mode] <text>
 ```
 
 If no mode is specified, random capitalization is used by default.
@@ -302,123 +302,123 @@ All transformation functions accept a `&str` and return a `String`. Here are the
   - `.leetspeak()` - Apply leetspeak
   - `.base64()` - Apply base64 encoding
   - `.url_encode()` - Apply URL encoding
-  - `.polystrs()` - Apply random capitalization
+  - `.redstrs()` - Apply random capitalization
   - `.homoglyphs()` - Apply homoglyph substitution
   - `.case_swap()` - Apply case swapping
   - `.hex_encode()` - Apply hex encoding
   - `.rot13()` - Apply ROT13
   - `.build()` - Get the final result
 
-See the [library documentation](https://docs.rs/polystr) for detailed API documentation.
+See the [library documentation](https://docs.rs/redstr) for detailed API documentation.
 
 ### CLI Transformation Modes
 
 #### Basic Transformations
 
 - **random, r** - Random capitalization (default)
-  - Example: `polystr "Hello World"` → `HeLlO wOrLd`
+  - Example: `redstr "Hello World"` → `HeLlO wOrLd`
   
 - **alternate, a** - Alternate upper/lower case
-  - Example: `polystr alternate "Hello World"` → `HeLlO wOrLd`
+  - Example: `redstr alternate "Hello World"` → `HeLlO wOrLd`
   
 - **inverse, i** - Invert the case of each letter
-  - Example: `polystr inverse "Hello World"` → `hELLO wORLD`
+  - Example: `redstr inverse "Hello World"` → `hELLO wORLD`
 
 - **reverse, rv** - Reverse the string
-  - Example: `polystr reverse "Hello World"` → `dlroW olleH`
+  - Example: `redstr reverse "Hello World"` → `dlroW olleH`
 
 #### Case Conversion
 
 - **camel, c** - Convert to camelCase
-  - Example: `polystr camel "hello world test"` → `helloWorldTest`
+  - Example: `redstr camel "hello world test"` → `helloWorldTest`
   
 - **snake, s** - Convert to snake_case
-  - Example: `polystr snake "HelloWorldTest"` → `hello_world_test`
+  - Example: `redstr snake "HelloWorldTest"` → `hello_world_test`
   
 - **kebab, k** - Convert to kebab-case
-  - Example: `polystr kebab "HelloWorldTest"` → `hello-world-test`
+  - Example: `redstr kebab "HelloWorldTest"` → `hello-world-test`
 
 #### Security Testing Modes
 
 - **leetspeak, l** - Convert to leetspeak
   - Useful for testing password filters and content detection
-  - Example: `polystr leetspeak "password123"` → `p@55w0rd123`
+  - Example: `redstr leetspeak "password123"` → `p@55w0rd123`
 
 - **homoglyph, h** - Substitute with similar-looking characters
   - Useful for testing homograph attacks and IDN spoofing
-  - Example: `polystr homoglyph "admin@example.com"` → `аdmіn@еxаmple.com`
+  - Example: `redstr homoglyph "admin@example.com"` → `аdmіn@еxаmple.com`
 
 - **unicode, u** - Random unicode variations
   - Useful for testing Unicode handling and normalization
-  - Example: `polystr unicode "administrator"` → `ádmïnïštrâtör`
+  - Example: `redstr unicode "administrator"` → `ádmïnïštrâtör`
 
 - **zalgo, z** - Add zalgo combining characters
   - Useful for testing display issues and Unicode handling
-  - Example: `polystr zalgo "test"` → `t̃̂e̊̋s̈̃t̂̃`
+  - Example: `redstr zalgo "test"` → `t̃̂e̊̋s̈̃t̂̃`
 
 - **rot13** - Apply ROT13 cipher
   - Classic cipher transformation
-  - Example: `polystr rot13 "Hello World"` → `Uryyb Jbeyq`
+  - Example: `redstr rot13 "Hello World"` → `Uryyb Jbeyq`
 
 - **vowel-swap, vs** - Swap vowels randomly
   - Useful for testing pattern matching and filters
-  - Example: `polystr vowel-swap "testing"` → `tistong`
+  - Example: `redstr vowel-swap "testing"` → `tistong`
 
 - **double, d** - Double random characters
   - Useful for testing input validation
-  - Example: `polystr double "test"` → `tteesstt`
+  - Example: `redstr double "test"` → `tteesstt`
 
 - **space-variants, sv** - Use various space characters
   - Useful for testing whitespace handling (uses various Unicode spaces)
-  - Example: `polystr space-variants "hello world"`
+  - Example: `redstr space-variants "hello world"`
 
 - **mixed-encoding, me** - Mix character encodings
   - Useful for testing encoding vulnerabilities and XSS
-  - Example: `polystr mixed-encoding "test"` → Mix of HTML entities and Unicode escapes
+  - Example: `redstr mixed-encoding "test"` → Mix of HTML entities and Unicode escapes
 
 #### Encoding and Obfuscation Modes
 
 - **base64, b64** - Encode to Base64
   - Useful for red team payload obfuscation
-  - Example: `polystr base64 "hello"` → `aGVsbG8=`
+  - Example: `redstr base64 "hello"` → `aGVsbG8=`
 
 - **url-encode, url** - URL/percent encoding
   - Useful for web security testing
-  - Example: `polystr url-encode "test @example.com"` → `test%20%40example.com`
+  - Example: `redstr url-encode "test @example.com"` → `test%20%40example.com`
 
 - **hex-encode, hex** - Encode to hexadecimal
   - Useful for encoding obfuscation
-  - Example: `polystr hex-encode "test"` → `74657374`
+  - Example: `redstr hex-encode "test"` → `74657374`
 
 - **hex-mixed, hm** - Mixed hex formats (\\x, %, 0x, &#x)
   - Useful for testing encoding detection
-  - Example: `polystr hex-mixed "ab"` → `\x61%62` (varies)
+  - Example: `redstr hex-mixed "ab"` → `\x61%62` (varies)
 
 #### Injection Testing Modes
 
 - **sql-comment, sql** - Insert SQL comment patterns
   - Useful for red team SQL injection testing
-  - Example: `polystr sql-comment "SELECT * FROM users"` → `SELECT --* FROM users`
+  - Example: `redstr sql-comment "SELECT * FROM users"` → `SELECT --* FROM users`
 
 - **xss-tags, xss** - Generate XSS tag variations
   - Useful for testing XSS filters
-  - Example: `polystr xss-tags "<script>alert(1)</script>"` → Encoded variations
+  - Example: `redstr xss-tags "<script>alert(1)</script>"` → Encoded variations
 
 - **case-swap, cs** - Random case swapping
   - Useful for WAF/filter bypass testing
-  - Example: `polystr case-swap "SELECT"` → `SeLeCt`
+  - Example: `redstr case-swap "SELECT"` → `SeLeCt`
 
 - **null-byte, nb** - Insert null byte representations
   - Useful for testing null byte vulnerabilities
-  - Example: `polystr null-byte "test.txt"` → `test%00.txt` (varies)
+  - Example: `redstr null-byte "test.txt"` → `test%00.txt` (varies)
 
 - **path-traversal, pt** - Generate path traversal patterns
   - Useful for directory traversal testing
-  - Example: `polystr path-traversal "/etc/passwd"` → `../etc/../passwd` (varies)
+  - Example: `redstr path-traversal "/etc/passwd"` → `../etc/../passwd` (varies)
 
 - **command-injection, ci** - Insert command injection separators
   - Useful for OS command injection testing
-  - Example: `polystr command-injection "ping example.com"` → `ping;example.com` (varies)
+  - Example: `redstr command-injection "ping example.com"` → `ping;example.com` (varies)
 
 ## Security Testing Use Cases
 
@@ -577,7 +577,7 @@ Contributions are welcome! This library is designed for the security community. 
 
 ## 📖 Learn More
 
-- **Documentation**: [docs.rs/polystr](https://docs.rs/polystr)
+- **Documentation**: [docs.rs/redstr](https://docs.rs/redstr)
 - **Repository**: [GitHub](https://github.com/arvid-berndtsson/random-cap)
 - **Examples**: See the `examples/` directory for comprehensive integration patterns
 - **Blog Posts**: Check for community blog posts and integration guides (coming soon)

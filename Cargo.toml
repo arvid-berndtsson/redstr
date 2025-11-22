@@ -1,24 +1,24 @@
 [package]
-name = "polystr"
+name = "redstr"
 version = "0.1.0"
 edition = "2021"
 authors = ["Arvid Berndtsson <103070833+arvid-berndtsson@users.noreply.github.com>"]
-description = "Polymorphic string obfuscation and transformation for red team, blue team security testing, WAF bypass, XSS, SQL injection, and phishing detection"
+description = "Red team string obfuscation and transformation for offensive security, WAF bypass, XSS, SQL injection, phishing, and evasion testing"
 license = "MIT"
 repository = "https://github.com/arvid-berndtsson/random-cap"
-documentation = "https://docs.rs/polystr"
+documentation = "https://docs.rs/redstr"
 homepage = "https://github.com/arvid-berndtsson/random-cap"
-keywords = ["security", "obfuscation", "red-team", "waf-bypass", "xss"]
+keywords = ["red-team", "security", "obfuscation", "waf-bypass", "evasion"]
 categories = ["development-tools", "text-processing", "web-programming", "encoding"]
 readme = "README.md"
 
 [lib]
-name = "polystr"
+name = "redstr"
 path = "src/lib.rs"
 
 # Optional CLI binary - only built when specifically requested
 [[bin]]
-name = "polystr"
+name = "redstr"
 path = "src/main.rs"
 required-features = ["cli"]
 
