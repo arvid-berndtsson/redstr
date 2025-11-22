@@ -26,34 +26,18 @@ jobs:
 
       - name: Validate version matches tag
         run: |
-          # Extract version from tag (e.g., v0.2.0 -> 0.2.0)
           TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          CARGO_VERSION=$(cargo metadata --format-version 1 --no-deps | grep -o '"version":"[^"]*"' | head -1 | cut -d'"' -f4)
           
-          # Extract version from Cargo.toml using cargo metadata (more reliable)
-          CARGO_VERSION=$(cargo metadata --format-version 1 --no-deps | \
-            grep -o '"version":"[^"]*"' | head -1 | cut -d'"' -f4)
-          
-          # Fallback to grep if cargo metadata fails
           if [ -z "$CARGO_VERSION" ]; then
             CARGO_VERSION=$(grep '^version = ' Cargo.toml | sed 's/version = "\(.*\)"/\1/')
           fi
           
-          echo "Tag version: $TAG_VERSION"
-          echo "Cargo.toml version: $CARGO_VERSION"
-          
           if [ "$TAG_VERSION" != "$CARGO_VERSION" ]; then
-            echo "❌ Version mismatch detected!"
-            echo "   Tag version: $TAG_VERSION"
-            echo "   Cargo.toml version: $CARGO_VERSION"
-            echo ""
-            echo "The version in Cargo.toml must match the tag version."
-            echo "Please update Cargo.toml to version $TAG_VERSION before creating the tag."
-            echo ""
-            echo "Tip: Use 'cargo release $TAG_VERSION' to automate this process."
+            echo "❌ Version mismatch: tag=$TAG_VERSION, Cargo.toml=$CARGO_VERSION"
+            echo "Use 'cargo release $TAG_VERSION --execute' to fix this."
             exit 1
           fi
-          
-          echo "✅ Version validation passed"
 
       - name: Authenticate with crates.io (Trusted Publishing)
         id: auth

@@ -269,45 +269,15 @@ git push origin main
 git push origin --tags
 ```
 
-#### Manual Release Process
+### CI Validation & Publishing
 
-If you prefer to do it manually:
+The GitHub Actions workflow automatically:
+- ✅ Validates that `Cargo.toml` version matches the tag version
+- ✅ Publishes to crates.io when validation passes
+- ✅ Uses Trusted Publishing (no API tokens needed)
 
-1. **Update `Cargo.toml`**:
-   ```bash
-   # Edit Cargo.toml and change version = "X.Y.Z"
-   ```
+**Workflow:** Push tag → CI validates → Auto-publishes to crates.io
 
-2. **Commit the change**:
-   ```bash
-   git add Cargo.toml
-   git commit -m "chore: bump version to X.Y.Z"
-   ```
-
-3. **Create and push the tag**:
-   ```bash
-   git tag -a vX.Y.Z -m "Release X.Y.Z"
-   git push origin main
-   git push origin vX.Y.Z
-   ```
-
-### Automatic Validation
-
-The GitHub Actions publish workflow automatically validates that:
-- The version in `Cargo.toml` matches the tag version
-- If they don't match, the workflow will fail with a clear error message
-
-**This prevents the issue where a tag is created but the version in `Cargo.toml` doesn't match.**
-
-### Publishing to crates.io
-
-Publishing is **automatic** when you push a tag matching the pattern `v*`:
-- The workflow triggers on tag push
-- It validates the version matches
-- It publishes to crates.io using Trusted Publishing
-- No manual intervention needed
-
-For detailed release instructions, see [docs/RELEASE.md](docs/RELEASE.md).
 
 ## 🔍 Code Review Process
 
