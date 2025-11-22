@@ -1,0 +1,395 @@
+use crate::rng::SimpleRng;
+
+/// Generates Cloudflare Turnstile challenge variations.
+///
+/// Cloudflare Turnstile is a privacy-focused CAPTCHA alternative that uses
+/// challenge-response mechanisms. This function generates variations of
+/// Turnstile challenge tokens and responses for bot detection evasion testing.
+///
+/// Useful for red team Cloudflare bypass testing and blue team bot detection validation.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::cloudflare_turnstile_variation;
+/// let challenge = "challenge-token";
+/// let result = cloudflare_turnstile_variation(challenge);
+/// assert!(result.len() > 0);
+/// ```
+pub fn cloudflare_turnstile_variation(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+
+    // Common Turnstile token patterns
+    let patterns = [
+        format!("{}-{}", input, generate_random_suffix(&mut rng)),
+        format!("{}_{}", input, generate_random_suffix(&mut rng)),
+        format!("cf-turnstile-{}", input),
+        format!("turnstile-{}-{}", input, generate_random_suffix(&mut rng)),
+    ];
+
+    patterns[rng.next() as usize % patterns.len()].clone()
+}
+
+/// Generates Cloudflare challenge response patterns.
+///
+/// Cloudflare uses various challenge mechanisms (Turnstile, __cf_bm cookies, etc.).
+/// This function generates response patterns that mimic legitimate challenge responses.
+///
+/// Useful for testing Cloudflare challenge bypass techniques and bot detection evasion.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::cloudflare_challenge_response;
+/// let challenge = "cf_clearance=abc123";
+/// let result = cloudflare_challenge_response(challenge);
+/// assert!(result.len() > 0);
+/// ```
+pub fn cloudflare_challenge_response(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+
+    // Generate response variations for Cloudflare challenges
+    if input.contains("cf_clearance") || input.contains("__cf_bm") {
+        // Cookie-based challenge response
+        input
+            .chars()
+            .map(|c| {
+                match rng.next() % 10 {
+                    0..=6 => c.to_string(),
+                    7 => {
+                        // Occasionally add spacing variations
+                        if c == '=' {
+                            if rng.next() % 2 == 0 {
+                                " = ".to_string()
+                            } else {
+                                "=".to_string()
+                            }
+                        } else {
+                            c.to_string()
+                        }
+                    }
+                    8 => {
+                        // Underscore/hyphen variations
+                        if c == '_' && rng.next() % 3 == 0 {
+                            "-".to_string()
+                        } else if c == '-' && rng.next() % 3 == 0 {
+                            "_".to_string()
+                        } else {
+                            c.to_string()
+                        }
+                    }
+                    _ => c.to_string(),
+                }
+            })
+            .collect()
+    } else if input.contains("turnstile") || input.contains("challenge") {
+        // Turnstile challenge response
+        let mut result = input.to_string();
+        if rng.next() % 2 == 0 {
+            result.push_str(&format!("-{}", generate_random_suffix(&mut rng)));
+        }
+        result
+    } else {
+        // Generic challenge response - add timestamp-like suffix
+        format!("{}-{}", input, generate_random_suffix(&mut rng))
+    }
+}
+
+/// Generates TLS handshake pattern variations for Cloudflare bot detection evasion.
+///
+/// Cloudflare analyzes TLS handshake characteristics (cipher suites, extensions, etc.)
+/// to fingerprint clients. This function generates variations of TLS handshake patterns.
+///
+/// Useful for red team TLS fingerprinting evasion and blue team detection testing.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::tls_handshake_pattern;
+/// let pattern = "TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256";
+/// let result = tls_handshake_pattern(pattern);
+/// assert!(result.len() > 0);
+/// ```
+pub fn tls_handshake_pattern(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+
+    // Common TLS handshake pattern variations
+    let separators = [":", ",", " ", "-"];
+    let separator = separators[rng.next() as usize % separators.len()];
+
+    input
+        .split(|c: char| [':', ',', ' ', '-'].contains(&c))
+        .enumerate()
+        .map(|(i, part)| {
+            if i > 0 {
+                format!("{}{}", separator, part)
+            } else {
+                part.to_string()
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("")
+}
+
+/// Generates canvas fingerprint variations for Cloudflare bot detection evasion.
+///
+/// Canvas fingerprinting is a technique used to identify browsers based on
+/// how they render canvas elements. This function generates variations that
+/// might affect canvas fingerprinting results.
+///
+/// Useful for red team browser fingerprinting evasion and blue team detection testing.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::canvas_fingerprint_variation;
+/// let canvas_data = "canvas-fingerprint-data";
+/// let result = canvas_fingerprint_variation(canvas_data);
+/// assert!(result.len() > 0);
+/// ```
+pub fn canvas_fingerprint_variation(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+
+    // Canvas fingerprint variations typically involve subtle rendering differences
+    // This function generates string variations that might affect fingerprinting
+    input
+        .chars()
+        .map(|c| {
+            match rng.next() % 15 {
+                0..=11 => c.to_string(),
+                12 => {
+                    // Occasionally swap similar characters
+                    match c {
+                        '0' => {
+                            if rng.next() % 2 == 0 {
+                                "O".to_string()
+                            } else {
+                                "0".to_string()
+                            }
+                        }
+                        '1' => {
+                            if rng.next() % 2 == 0 {
+                                "l".to_string()
+                            } else {
+                                "1".to_string()
+                            }
+                        }
+                        'O' => {
+                            if rng.next() % 2 == 0 {
+                                "0".to_string()
+                            } else {
+                                "O".to_string()
+                            }
+                        }
+                        'l' => {
+                            if rng.next() % 2 == 0 {
+                                "1".to_string()
+                            } else {
+                                "l".to_string()
+                            }
+                        }
+                        _ => c.to_string(),
+                    }
+                }
+                13 => {
+                    // Add subtle spacing variations
+                    if c.is_whitespace() && rng.next() % 2 == 0 {
+                        "  ".to_string() // Double space
+                    } else {
+                        c.to_string()
+                    }
+                }
+                _ => c.to_string(),
+            }
+        })
+        .collect()
+}
+
+/// Obfuscates WebGL fingerprint data for Cloudflare bot detection evasion.
+///
+/// WebGL fingerprinting uses graphics rendering characteristics to identify browsers.
+/// This function obfuscates WebGL-related strings that might be used in fingerprinting.
+///
+/// Useful for red team WebGL fingerprinting evasion and blue team detection testing.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::webgl_fingerprint_obfuscate;
+/// let webgl_data = "WebGL 2.0 Renderer: ANGLE (Intel, Intel(R) UHD Graphics 620 Direct3D11 vs_5_0 ps_5_0)";
+/// let result = webgl_fingerprint_obfuscate(webgl_data);
+/// assert!(result.len() > 0);
+/// ```
+pub fn webgl_fingerprint_obfuscate(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+
+    // WebGL fingerprint obfuscation - vary version numbers, renderer names, etc.
+    input
+        .chars()
+        .map(|c| {
+            match rng.next() % 12 {
+                0..=9 => c.to_string(),
+                10 => {
+                    // Vary version numbers slightly
+                    if c.is_ascii_digit() && rng.next() % 4 == 0 {
+                        // Occasionally change digit
+                        let digit = c.to_digit(10).unwrap();
+                        let new_digit = (digit + 1) % 10;
+                        char::from_digit(new_digit, 10).unwrap_or(c).to_string()
+                    } else {
+                        c.to_string()
+                    }
+                }
+                _ => {
+                    // Case variations for version strings
+                    if c == '.' && rng.next() % 3 == 0 {
+                        ".".to_string()
+                    } else if c.is_alphabetic() && rng.next() % 5 == 0 {
+                        if c.is_uppercase() {
+                            c.to_lowercase().to_string()
+                        } else {
+                            c.to_uppercase().to_string()
+                        }
+                    } else {
+                        c.to_string()
+                    }
+                }
+            }
+        })
+        .collect()
+}
+
+/// Generates font fingerprint consistency variations for Cloudflare bot detection evasion.
+///
+/// Font fingerprinting identifies browsers by checking which fonts are available.
+/// This function generates variations that maintain consistency while evading detection.
+///
+/// Useful for red team font fingerprinting evasion and blue team detection testing.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::font_fingerprint_consistency;
+/// let font_list = "Arial, Helvetica, Times New Roman";
+/// let result = font_fingerprint_consistency(font_list);
+/// assert!(result.len() > 0);
+/// ```
+pub fn font_fingerprint_consistency(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+
+    // Font list variations - maintain valid font names but vary formatting
+    let fonts: Vec<&str> = input
+        .split(|c: char| [',', ';'].contains(&c))
+        .map(|s| s.trim())
+        .collect();
+
+    if fonts.is_empty() {
+        return input.to_string();
+    }
+
+    let separators = [", ", ",", "; ", ";"];
+    let separator = separators[rng.next() as usize % separators.len()];
+
+    fonts
+        .iter()
+        .enumerate()
+        .map(|(i, font)| {
+            let mut font_str = font.to_string();
+            // Occasionally add/remove quotes
+            if rng.next() % 4 == 0 && !font_str.starts_with('"') {
+                font_str = format!("\"{}\"", font_str);
+            }
+            if i > 0 {
+                format!("{}{}", separator, font_str)
+            } else {
+                font_str
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("")
+}
+
+/// Helper function to generate random suffix for tokens
+fn generate_random_suffix(rng: &mut SimpleRng) -> String {
+    let chars: Vec<char> = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        .chars()
+        .collect();
+    let length = 8 + (rng.next() % 8) as usize; // 8-15 characters
+    (0..length)
+        .map(|_| chars[rng.next() as usize % chars.len()])
+        .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_cloudflare_turnstile_variation() {
+        let challenge = "challenge-token";
+        let result = cloudflare_turnstile_variation(challenge);
+        assert!(result.len() > challenge.len());
+        assert!(result.contains(challenge));
+    }
+
+    #[test]
+    fn test_cloudflare_challenge_response() {
+        let challenge = "cf_clearance=abc123";
+        let result = cloudflare_challenge_response(challenge);
+        assert!(result.len() > 0);
+        // Should preserve key parts of the challenge
+        assert!(
+            result.to_lowercase().contains("cf_clearance")
+                || result.to_lowercase().contains("cf-clearance")
+        );
+    }
+
+    #[test]
+    fn test_tls_handshake_pattern() {
+        let pattern = "TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256";
+        let result = tls_handshake_pattern(pattern);
+        assert!(result.len() > 0);
+        assert!(result.contains("TLS"));
+    }
+
+    #[test]
+    fn test_canvas_fingerprint_variation() {
+        let canvas_data = "canvas-fingerprint-data";
+        let result = canvas_fingerprint_variation(canvas_data);
+        assert!(result.len() > 0);
+        assert!(result.contains("canvas"));
+    }
+
+    #[test]
+    fn test_webgl_fingerprint_obfuscate() {
+        let webgl_data = "WebGL 2.0 Renderer: ANGLE";
+        let result = webgl_fingerprint_obfuscate(webgl_data);
+        assert!(result.len() > 0);
+        assert!(result.to_lowercase().contains("webgl"));
+    }
+
+    #[test]
+    fn test_font_fingerprint_consistency() {
+        let font_list = "Arial, Helvetica, Times New Roman";
+        let result = font_fingerprint_consistency(font_list);
+        assert!(result.len() > 0);
+        assert!(result.to_lowercase().contains("arial"));
+    }
+
+    #[test]
+    fn test_cloudflare_challenge_response_turnstile() {
+        let challenge = "turnstile-challenge-123";
+        let result = cloudflare_challenge_response(challenge);
+        assert!(result.len() > 0);
+        assert!(result.contains("turnstile") || result.contains("challenge"));
+    }
+
+    #[test]
+    fn test_cloudflare_challenge_response_generic() {
+        let challenge = "generic-challenge";
+        let result = cloudflare_challenge_response(challenge);
+        assert!(result.len() > 0);
+        // Generic challenge should contain the original challenge
+        assert!(result.contains(challenge));
+    }
+}

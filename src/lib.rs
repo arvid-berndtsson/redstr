@@ -81,6 +81,12 @@ pub use transformations::bot_detection::{
     random_user_agent, tls_fingerprint_variation,
 };
 
+// Re-export cloudflare transformations
+pub use transformations::cloudflare::{
+    canvas_fingerprint_variation, cloudflare_challenge_response, cloudflare_turnstile_variation,
+    font_fingerprint_consistency, tls_handshake_pattern, webgl_fingerprint_obfuscate,
+};
+
 // Re-export web security transformations
 pub use transformations::web_security::{
     api_endpoint_variation, graphql_obfuscate, http_header_variation, session_token_variation,

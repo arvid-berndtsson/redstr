@@ -1,5 +1,8 @@
 use crate::transformations::bot_detection::cloudflare_challenge_variation;
 use crate::transformations::case::{case_swap, randomize_capitalization};
+use crate::transformations::cloudflare::{
+    cloudflare_challenge_response, cloudflare_turnstile_variation,
+};
 use crate::transformations::encoding::{base64_encode, hex_encode, url_encode};
 use crate::transformations::obfuscation::{leetspeak, rot13};
 use crate::transformations::phishing::{advanced_domain_spoof, email_obfuscation};
@@ -106,6 +109,18 @@ impl TransformBuilder {
     /// Applies Cloudflare challenge variation.
     pub fn cloudflare_challenge(mut self) -> Self {
         self.text = cloudflare_challenge_variation(&self.text);
+        self
+    }
+
+    /// Applies Cloudflare Turnstile challenge variation.
+    pub fn cloudflare_turnstile(mut self) -> Self {
+        self.text = cloudflare_turnstile_variation(&self.text);
+        self
+    }
+
+    /// Applies Cloudflare challenge response pattern.
+    pub fn cloudflare_challenge_response(mut self) -> Self {
+        self.text = cloudflare_challenge_response(&self.text);
         self
     }
 
