@@ -1,0 +1,84 @@
+name: Conventional Commits Check
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+  push:
+    branches: [main, develop]
+
+jobs:
+  check-commits:
+    name: Check Conventional Commits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Install cc-check
+        run: cargo install cc-check
+
+      - name: Check commit messages
+        env:
+          PATH: ${{ env.PATH }}:$HOME/.cargo/bin
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            # Get commits in PR
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+            
+            # Check each commit
+            for commit in $(git rev-list $BASE_SHA..$HEAD_SHA); do
+              echo "Checking commit: $commit"
+              COMMIT_MSG=$(git log -1 --format=%B $commit)
+              echo "$COMMIT_MSG" | cc-check check - || {
+                echo "❌ Commit $commit does not follow conventional commits format"
+                echo ""
+                echo "Expected format: [TASK-ID] <type>(<scope>): <subject>"
+                echo ""
+                echo "Types: feat, fix, docs, style, refactor, test, chore, perf"
+                echo ""
+                echo "Example: [CF-001] feat(cloudflare): add Turnstile challenge variation"
+                echo ""
+                echo "Commit message was:"
+                echo "$COMMIT_MSG"
+                exit 1
+              }
+            done
+          else
+            # For push events, check the latest commit
+            COMMIT_MSG=$(git log -1 --format=%B HEAD)
+            echo "$COMMIT_MSG" | cc-check check - || {
+              echo "❌ Commit does not follow conventional commits format"
+              echo ""
+              echo "Commit message was:"
+              echo "$COMMIT_MSG"
+              exit 1
+            }
+          fi
+
+      - name: Validate commit format
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+            
+            for commit in $(git rev-list $BASE_SHA..$HEAD_SHA); do
+              COMMIT_MSG=$(git log -1 --format=%B $commit)
+              
+              # Check for task ID pattern (optional but recommended)
+              if ! echo "$COMMIT_MSG" | head -1 | grep -qE '^\[[A-Z]+-[0-9]{3}\].*|^[a-z]+\(.*\):.*'; then
+                echo "⚠️  Warning: Commit $commit should include task ID in format [TASK-ID]"
+                echo "   Example: [CF-001] feat(cloudflare): add function"
+                echo "   Or use: feat(cloudflare): add function"
+              fi
+            done
+          fi

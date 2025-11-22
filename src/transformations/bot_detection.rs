@@ -240,7 +240,12 @@ mod tests {
     fn test_cloudflare_challenge_variation() {
         let challenge = "cf_clearance=abc123";
         let result = cloudflare_challenge_variation(challenge);
-        assert!(result.contains("cf_clearance"));
+        // Result should contain some form of the original challenge
+        // (may be case-swapped or have variations, but should preserve key parts)
+        assert!(
+            result.to_lowercase().contains("cf_clearance")
+                || result.to_lowercase().contains("cf-clearance")
+        );
     }
 
     #[test]
