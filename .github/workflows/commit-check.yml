@@ -39,7 +39,7 @@ jobs:
             for commit in $(git rev-list $BASE_SHA..$HEAD_SHA); do
               echo "Checking commit: $commit"
               COMMIT_MSG=$(git log -1 --format=%B $commit)
-              echo "$COMMIT_MSG" | cc-check || {
+              echo "$COMMIT_MSG" | cc-check check - || {
                 echo "❌ Commit $commit does not follow conventional commits format"
                 echo ""
                 echo "Expected format: [TASK-ID] <type>(<scope>): <subject>"
@@ -56,7 +56,7 @@ jobs:
           else
             # For push events, check the latest commit
             COMMIT_MSG=$(git log -1 --format=%B HEAD)
-            echo "$COMMIT_MSG" | cc-check || {
+            echo "$COMMIT_MSG" | cc-check check - || {
               echo "❌ Commit does not follow conventional commits format"
               echo ""
               echo "Commit message was:"

@@ -1,4 +1,3 @@
-
 use crate::rng::SimpleRng;
 
 /// Inserts SQL comment patterns for SQL injection testing.

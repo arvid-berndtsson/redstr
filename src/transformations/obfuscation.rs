@@ -1,4 +1,3 @@
-
 use crate::rng::SimpleRng;
 
 /// Converts text to leetspeak by replacing letters with similar-looking numbers/symbols.

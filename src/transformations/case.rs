@@ -1,4 +1,3 @@
-
 use crate::rng::SimpleRng;
 
 /// Applies random capitalization to each letter in the input string.

@@ -1,4 +1,3 @@
-
 use crate::rng::SimpleRng;
 
 /// Replaces characters with random Unicode variations.

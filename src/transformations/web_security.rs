@@ -1,4 +1,3 @@
-
 use crate::rng::SimpleRng;
 use crate::transformations::case::case_swap;
 use crate::transformations::encoding::url_encode;

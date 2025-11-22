@@ -201,12 +201,12 @@ You can install a pre-commit hook to validate commits locally:
 cargo install cc-check
 
 # Create pre-commit hook
-cat > .git/hooks/pre-commit << 'EOF'
+cat > .git/hooks/commit-msg << 'EOF'
 #!/bin/bash
-cargo run --bin cc-check -- --check HEAD
+cc-check check "$1"
 EOF
 
-chmod +x .git/hooks/pre-commit
+chmod +x .git/hooks/commit-msg
 ```
 
 ## 🔍 Code Review Process

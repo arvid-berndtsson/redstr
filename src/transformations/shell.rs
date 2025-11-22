@@ -1,4 +1,3 @@
-
 use crate::rng::SimpleRng;
 
 /// Generates PowerShell command obfuscation for Windows penetration testing.
