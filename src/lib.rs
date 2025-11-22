@@ -60,8 +60,9 @@ pub use transformations::unicode::{
 
 // Re-export injection transformations
 pub use transformations::injection::{
-    command_injection, null_byte_injection, path_traversal, sql_comment_injection,
-    xss_tag_variations,
+    command_injection, couchdb_injection, dynamodb_obfuscate, mongodb_injection,
+    nosql_operator_injection, null_byte_injection, path_traversal, sql_comment_injection,
+    ssti_framework_variation, ssti_injection, ssti_syntax_obfuscate, xss_tag_variations,
 };
 
 // Re-export obfuscation transformations
@@ -83,7 +84,9 @@ pub use transformations::bot_detection::{
 
 // Re-export web security transformations
 pub use transformations::web_security::{
-    api_endpoint_variation, graphql_obfuscate, http_header_variation, session_token_variation,
+    api_endpoint_variation, graphql_introspection_bypass, graphql_obfuscate,
+    graphql_variable_injection, http_header_variation, jwt_algorithm_confusion,
+    jwt_header_manipulation, jwt_payload_obfuscate, jwt_signature_bypass, session_token_variation,
 };
 
 // Re-export shell transformations
