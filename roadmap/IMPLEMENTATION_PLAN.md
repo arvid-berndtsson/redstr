@@ -560,7 +560,7 @@ pub fn graphql_introspection_bypass(input: &str) -> String
 
 ## 📝 Notes
 
-- All tasks should maintain zero-dependency core
+- All tasks should maintain no-required-dependency core
 - Performance is critical - benchmark everything
 - Documentation is as important as code
 - Community feedback drives priorities

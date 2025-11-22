@@ -26,8 +26,8 @@
 
 ### Strengths
 - ✅ 30+ transformation functions
-- ✅ Zero dependencies (std only)
-- ✅ Published to crates.io (v0.1.1)
+- ✅ No required dependencies (optional serde, dev-only cc-check)
+- ✅ Published to crates.io (v0.2.0)
 - ✅ Comprehensive documentation
 - ✅ Builder pattern API
 - ✅ CLI tool available

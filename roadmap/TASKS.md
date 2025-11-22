@@ -307,10 +307,9 @@ docs/performance.md
 - [ ] Performance reports generated
 - [ ] Baseline metrics established
 - [ ] Documentation explains results
+- [ ] Criterion added as dev-dependency only (not required dependency)
 
 **Dependencies:** None
-
-**Note:** Criterion is dev-dependency only, not core dependency
 
 ---
 
