@@ -215,6 +215,73 @@ Where:
 
 **CI will fail if commits don't follow this format.**
 
+## 🚀 Release Process
+
+### Creating a Release
+
+We have automated the release process to prevent version mismatches between tags and `Cargo.toml`.
+
+#### Recommended: Use the Release Script
+
+The easiest way to create a release is using the provided script:
+
+```bash
+./scripts/release.sh <version>
+```
+
+**Example:**
+```bash
+./scripts/release.sh 0.2.0
+```
+
+This script will:
+1. ✅ Validate the version format
+2. ✅ Check that the tag doesn't already exist
+3. ✅ Verify the working directory is clean
+4. ✅ Update `Cargo.toml` to the specified version
+5. ✅ Run `cargo check` to ensure everything compiles
+6. ✅ Commit the version change
+7. ✅ Create the git tag `v<version>`
+8. ✅ Optionally push to origin
+
+#### Manual Release Process
+
+If you prefer to do it manually:
+
+1. **Update `Cargo.toml`**:
+   ```bash
+   # Edit Cargo.toml and change version = "X.Y.Z"
+   ```
+
+2. **Commit the change**:
+   ```bash
+   git add Cargo.toml
+   git commit -m "chore: bump version to X.Y.Z"
+   ```
+
+3. **Create and push the tag**:
+   ```bash
+   git tag -a vX.Y.Z -m "Release X.Y.Z"
+   git push origin main
+   git push origin vX.Y.Z
+   ```
+
+### Automatic Validation
+
+The GitHub Actions publish workflow automatically validates that:
+- The version in `Cargo.toml` matches the tag version
+- If they don't match, the workflow will fail with a clear error message
+
+**This prevents the issue where a tag is created but the version in `Cargo.toml` doesn't match.**
+
+### Publishing to crates.io
+
+Publishing is **automatic** when you push a tag matching the pattern `v*`:
+- The workflow triggers on tag push
+- It validates the version matches
+- It publishes to crates.io using Trusted Publishing
+- No manual intervention needed
+
 ## 🔍 Code Review Process
 
 1. **Automated Checks**
