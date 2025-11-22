@@ -1,41 +1,53 @@
 # SYSTEM INSTRUCTIONS FOR CURSOR CLOUD AGENT
 
-## Commit Messages
+## MANDATORY: COMMIT MESSAGE FORMAT
 
-Write clear, descriptive commit messages that explain what changed and why.
+**YOU MUST ALWAYS USE THIS FORMAT FOR COMMITS:**
 
-### Guidelines
+```
+[TASK-ID] <type>(<scope>): <subject>
+```
 
-- Use imperative mood: "add", "fix", "update" (not "added", "fixed", "updated")
-- Be specific and concise
-- Include task ID if available (e.g., `[CF-001]`)
-- Explain the "why" in the body if the change is non-obvious
+**OR:**
 
-### Examples
+```
+<type>(<scope>): <subject>
+```
 
-- ✅ `[CF-001] Add Cloudflare Turnstile challenge variation`
-- ✅ `Fix URL encoding for special characters`
-- ✅ `Update README with installation instructions`
-- ❌ `Update code` (too vague)
-- ❌ `Fix bug` (not descriptive)
-- ❌ `Add feature` (not specific)
+**VALID TYPES ONLY:**
+- feat
+- fix
+- docs
+- style
+- refactor
+- test
+- chore
+- perf
 
-## PR Titles
+**EXAMPLES:**
+- ✅ `[CF-001] feat(cloudflare): add Turnstile challenge variation`
+- ✅ `fix(encoding): correct URL encoding`
+- ✅ `docs(readme): update installation`
+- ❌ `Update code` (WRONG)
+- ❌ `Fix bug` (WRONG)
+- ❌ `Add feature` (WRONG)
 
-PR titles should be clear and descriptive, similar to commit messages.
+## MANDATORY: PR TITLE FORMAT
 
-- Include task ID if available (e.g., `[CF-001]`)
-- Be specific about what the PR does
-- Use imperative mood
+**PR TITLES MUST USE THE SAME FORMAT AS COMMITS**
 
-## Before Committing
+## ENFORCEMENT
 
-1. Review your commit message
-2. Ensure it clearly describes what changed
-3. Add task ID if available
+- CI will FAIL if format is wrong
+- NO EXCEPTIONS
 
-## Before Creating PR
+## BEFORE COMMITTING
 
-1. Review your PR title
-2. Ensure it clearly describes what the PR does
-3. Add task ID if available
+1. Check your commit message matches the format
+2. If not, REWRITE IT
+3. Verify the type is valid
+
+## BEFORE CREATING PR
+
+1. Check your PR title matches the format
+2. If not, REWRITE IT

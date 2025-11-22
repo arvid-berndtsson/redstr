@@ -144,20 +144,33 @@ A pre-commit hook is automatically installed that runs the following checks befo
 
 ## 📝 Commit Messages
 
-Write clear, descriptive commit messages that explain what changed and why.
+**We enforce conventional commits using `cc-check` in CI.**
 
-### Guidelines
+### Format
 
-- Use imperative mood: "add", "fix", "update" (not "added", "fixed", "updated")
-- Be specific and concise
-- Include task ID if available (e.g., `[CF-001]`)
-- Explain the "why" in the body if the change is non-obvious
-- Reference related issues or PRs when applicable
+```
+[TASK-ID] <type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+### Types
+
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, etc.)
+- `refactor`: Code refactoring
+- `test`: Adding or updating tests
+- `chore`: Maintenance tasks
+- `perf`: Performance improvements
 
 ### Examples
 
 ```
-[CF-001] Add Cloudflare Turnstile challenge variation
+[CF-001] feat(cloudflare): add Turnstile challenge variation
 
 Implements cloudflare_turnstile_variation() for bot detection evasion.
 
@@ -169,7 +182,7 @@ Closes #123
 ```
 
 ```
-[PKG-001] Create Debian package structure
+[PKG-001] feat(packaging): create Debian package structure
 
 Adds debian/ directory with control, rules, and changelog files.
 
@@ -179,12 +192,28 @@ Adds debian/ directory with control, rules, and changelog files.
 ```
 
 ```
-Fix URL encoding for special characters
+fix(encoding): correct URL encoding for special characters
 
 Fixes issue where certain Unicode characters were not properly encoded.
 
 Fixes #456
 ```
+
+### Validation
+
+Commit messages are automatically validated in CI. The format must be:
+
+```
+[TASK-ID] <type>(<scope>): <subject>
+```
+
+Where:
+- `TASK-ID` is optional but recommended (e.g., `CF-001`)
+- `type` is required (feat, fix, docs, etc.)
+- `scope` is optional (module name)
+- `subject` is required (brief description)
+
+**CI will fail if commits don't follow this format.**
 
 ## 🔍 Code Review Process
 

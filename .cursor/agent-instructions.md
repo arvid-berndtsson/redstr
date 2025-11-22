@@ -1,58 +1,113 @@
 # Cursor Cloud Agent Instructions
 
-## Commit Messages
+## ⚠️ CRITICAL: COMMIT MESSAGES AND PR TITLES
 
-Write clear, descriptive commit messages that explain what changed and why.
+**YOU MUST ALWAYS follow conventional commits format for ALL commits and PR titles. This is enforced in CI.**
 
-### Guidelines
+### Commit Message Format
 
-- Use imperative mood: "add", "fix", "update" (not "added", "fixed", "updated")
-- Be specific and concise
-- Include task ID if available (e.g., `[CF-001]`)
-- Explain the "why" in the body if the change is non-obvious
-- Reference related issues or PRs when applicable
+**REQUIRED FORMAT:**
+```
+[TASK-ID] <type>(<scope>): <subject>
+```
 
-### Examples of Good Commit Messages
+**OR (without task ID):**
+```
+<type>(<scope>): <subject>
+```
 
-- `[CF-001] Add Cloudflare Turnstile challenge variation`
-- `Fix URL encoding for special characters`
-- `Update README with installation instructions`
-- `Add tests for TransformBuilder`
-- `Refactor encoding module for better performance`
+### Valid Types
+- `feat` - New feature
+- `fix` - Bug fix
+- `docs` - Documentation changes
+- `style` - Code style changes (formatting, etc.)
+- `refactor` - Code refactoring
+- `test` - Adding or updating tests
+- `chore` - Maintenance tasks
+- `perf` - Performance improvements
 
-### Examples of Poor Commit Messages (Avoid)
+### Examples of CORRECT Commit Messages
+- `[CF-001] feat(cloudflare): add Turnstile challenge variation`
+- `fix(encoding): correct URL encoding for special characters`
+- `docs(readme): update installation instructions`
+- `test(builder): add tests for TransformBuilder`
+- `chore(deps): update dependencies`
 
+### Examples of INCORRECT Commit Messages (DO NOT USE)
 - ❌ `Update code`
 - ❌ `Fix bug`
 - ❌ `Add feature`
 - ❌ `Changes`
 - ❌ `WIP`
-- ❌ `Update README` (too vague - what was updated?)
+- ❌ `Update README`
+- ❌ `Fix issue`
 
-### PR Titles
+### PR Title Format
 
-PR titles should be clear and descriptive, similar to commit messages.
+**PR titles MUST follow the SAME format as commit messages:**
+- `[CF-001] feat(cloudflare): add Turnstile challenge variation`
+- `fix(encoding): correct URL encoding for special characters`
+- `docs(readme): update installation instructions`
 
-- Include task ID if available (e.g., `[CF-001]`)
-- Be specific about what the PR does
-- Use imperative mood
+### Before Every Commit
 
-### Examples of Good PR Titles
+1. **STOP** and check your commit message
+2. Verify it matches: `[TASK-ID] <type>(<scope>): <subject>` OR `<type>(<scope>): <subject>`
+3. Ensure the type is one of: feat, fix, docs, style, refactor, test, chore, perf
+4. If it doesn't match, **REWRITE IT** before committing
 
-- `[CF-001] Add Cloudflare Turnstile challenge variation`
-- `Fix URL encoding for special characters`
-- `Update README with installation instructions`
+### Before Creating Every PR
 
-### Before Committing
+1. **STOP** and check your PR title
+2. Verify it matches the conventional commits format
+3. If it doesn't match, **REWRITE IT** before creating the PR
 
-1. Review your commit message
-2. Ensure it clearly describes what changed
-3. Add task ID if available
-4. Include additional context in the body if needed
+### Enforcement
 
-### Before Creating PR
+- CI will **FAIL** if commits don't follow this format
+- CI will **FAIL** if PR titles don't follow this format
+- **There are NO exceptions to this rule**
 
-1. Review your PR title
-2. Ensure it clearly describes what the PR does
-3. Add task ID if available
-4. Use the PR template to provide additional context
+### How to Write a Good Commit Message
+
+1. Identify the type: What kind of change is this?
+   - New feature? → `feat`
+   - Bug fix? → `fix`
+   - Documentation? → `docs`
+   - Tests? → `test`
+   - etc.
+
+2. Identify the scope: What part of the codebase?
+   - `encoding` - encoding functions
+   - `cloudflare` - cloudflare functions
+   - `builder` - TransformBuilder
+   - `readme` - README.md
+   - `ci` - CI/CD
+   - etc.
+
+3. Write a clear subject: What did you do?
+   - Use imperative mood: "add", "fix", "update", not "added", "fixed", "updated"
+   - Be specific but concise
+   - Start with lowercase
+
+4. Add task ID if available: `[CF-001]`
+
+### Example Workflow
+
+**Before committing:**
+```
+Current commit message: "Update README"
+❌ This is WRONG!
+
+Correct commit message: "docs(readme): update installation instructions"
+✅ This is CORRECT!
+```
+
+**Before creating PR:**
+```
+Current PR title: "Add new feature"
+❌ This is WRONG!
+
+Correct PR title: "feat(cloudflare): add Turnstile challenge variation"
+✅ This is CORRECT!
+```
