@@ -1,8 +1,6 @@
 #!/usr/bin/make -f
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
-export DEB_CARGO_PACKAGE = redstr
-export DEB_RUST_EXTRA_ARGS = --features cli
 
 %:
 	dh $@
@@ -12,20 +10,16 @@ override_dh_auto_build:
 	cargo build --release --features cli
 
 override_dh_auto_install:
-	# Install CLI binary
+	# Install CLI binary manually (explicit control for Rust binaries)
 	install -d debian/redstr/usr/bin
 	install -m 755 target/release/redstr debian/redstr/usr/bin/redstr
-	# Install documentation
-	install -d debian/redstr/usr/share/doc/redstr
-	install -m 644 README.md debian/redstr/usr/share/doc/redstr/
-	install -m 644 LICENSE debian/redstr/usr/share/doc/redstr/copyright
-	# Install man page if available (will be added in CLI optimization task)
-	# install -D -m 644 man/redstr.1 debian/redstr/usr/share/man/man1/redstr.1.gz
+	# Documentation files will be installed automatically by dh_install
+	# from debian/redstr.install (called in debhelper sequence)
 
 override_dh_auto_test:
 	# Run tests before building package
 	cargo test --release
 
 override_dh_strip:
-	# Strip binaries
+	# Strip binaries (creates debug package if needed)
 	dh_strip --dbg-package=redstr-dbg
