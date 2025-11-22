@@ -1,6 +1,9 @@
-// Note: Clippy may suggest using is_multiple_of() which is unstable in stable Rust.
+// Suppress manual_is_multiple_of lint - is_multiple_of() is unstable in stable Rust.
 // We use the % n == 0 pattern which is stable, idiomatic, and well-understood.
-// This lint may not be available in all Rust versions, so we document the rationale here.
+// Note: This lint exists in newer clippy versions. The allow(unknown_lints) allows
+// referencing it even if it doesn't exist in the current clippy version.
+#![allow(unknown_lints)]
+#![allow(clippy::manual_is_multiple_of)]
 
 //! # redstr
 //!
