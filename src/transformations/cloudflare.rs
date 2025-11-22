@@ -417,10 +417,7 @@ mod tests {
         let challenge = "__cf_bm=cookie123";
         let result = cloudflare_challenge_response(challenge);
         assert!(result.len() > 0);
-        assert!(
-            result.to_lowercase().contains("cf_bm")
-                || result.to_lowercase().contains("cf-bm")
-        );
+        assert!(result.to_lowercase().contains("cf_bm") || result.to_lowercase().contains("cf-bm"));
     }
 
     #[test]
@@ -555,7 +552,10 @@ mod tests {
         let challenge = "cf_clearance=abc!@#$%^&*()123";
         let result = cloudflare_challenge_response(challenge);
         assert!(result.len() > 0);
-        assert!(result.to_lowercase().contains("cf_clearance") || result.to_lowercase().contains("cf-clearance"));
+        assert!(
+            result.to_lowercase().contains("cf_clearance")
+                || result.to_lowercase().contains("cf-clearance")
+        );
     }
 
     #[test]
@@ -580,7 +580,10 @@ mod tests {
         let challenge = "cf_clearance=".to_string() + &"a".repeat(500);
         let result = cloudflare_challenge_response(&challenge);
         assert!(result.len() > 0);
-        assert!(result.to_lowercase().contains("cf_clearance") || result.to_lowercase().contains("cf-clearance"));
+        assert!(
+            result.to_lowercase().contains("cf_clearance")
+                || result.to_lowercase().contains("cf-clearance")
+        );
     }
 
     #[test]
@@ -679,8 +682,16 @@ mod tests {
         ];
 
         for input in test_cases {
-            assert!(cloudflare_turnstile_variation(input).len() > 0, "turnstile failed for: {}", input);
-            assert!(cloudflare_challenge_response(input).len() > 0, "challenge_response failed for: {}", input);
+            assert!(
+                cloudflare_turnstile_variation(input).len() > 0,
+                "turnstile failed for: {}",
+                input
+            );
+            assert!(
+                cloudflare_challenge_response(input).len() > 0,
+                "challenge_response failed for: {}",
+                input
+            );
             // These functions can return empty strings for empty input, so just check they don't panic
             let _ = tls_handshake_pattern(input);
             let _ = canvas_fingerprint_variation(input);
