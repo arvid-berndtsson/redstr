@@ -23,6 +23,8 @@ jobs:
 
       - name: Publish to crates.io
         run: cargo publish --all-features
-        # For trusted publishing, no token is needed once configured on crates.io
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        # Alternative: For trusted publishing, no token is needed once configured on crates.io
         # Configure the trusted publisher at: https://crates.io/settings/publishing
 
