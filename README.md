@@ -21,7 +21,10 @@ random-cap = "0.1.0"
 ### Quick Example
 
 ```rust
-use random_cap::{randomize_capitalization, leetspeak, homoglyph_substitution};
+use random_cap::{
+    randomize_capitalization, leetspeak, homoglyph_substitution,
+    base64_encode, sql_comment_injection, xss_tag_variations
+};
 
 fn main() {
     // Random capitalization
@@ -35,6 +38,18 @@ fn main() {
     // Homoglyph substitution for phishing tests
     let spoofed = homoglyph_substitution("admin@example.com");
     println!("{}", spoofed);  // e.g., "аdmіn@еxаmple.com"
+
+    // Base64 encoding for payload obfuscation
+    let encoded = base64_encode("alert('XSS')");
+    println!("{}", encoded);  // "YWxlcnQoJ1hTUycp"
+
+    // SQL injection testing
+    let sql_test = sql_comment_injection("SELECT * FROM users");
+    println!("{}", sql_test);  // e.g., "SELECT --* FROM users"
+
+    // XSS filter evasion
+    let xss_test = xss_tag_variations("<script>alert(1)</script>");
+    println!("{}", xss_test);  // Encoded variations
 }
 ```
 

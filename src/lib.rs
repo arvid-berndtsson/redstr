@@ -520,6 +520,7 @@ pub fn base64_encode(input: &str) -> String {
 /// Encodes text with URL/percent encoding.
 ///
 /// Useful for red team web security testing and blue team input validation testing.
+/// Properly encodes multi-byte UTF-8 characters.
 ///
 /// # Examples
 ///
@@ -529,16 +530,20 @@ pub fn base64_encode(input: &str) -> String {
 /// assert!(result.contains("%20"));
 /// ```
 pub fn url_encode(input: &str) -> String {
-    input
-        .chars()
-        .map(|c| {
-            if c.is_alphanumeric() || c == '-' || c == '_' || c == '.' || c == '~' {
-                c.to_string()
-            } else {
-                format!("%{:02X}", c as u32)
+    let mut result = String::new();
+    for c in input.chars() {
+        if c.is_ascii_alphanumeric() || c == '-' || c == '_' || c == '.' || c == '~' {
+            result.push(c);
+        } else {
+            // Properly encode multi-byte UTF-8 characters
+            let mut buf = [0; 4];
+            let encoded = c.encode_utf8(&mut buf);
+            for byte in encoded.bytes() {
+                result.push_str(&format!("%{:02X}", byte));
             }
-        })
-        .collect()
+        }
+    }
+    result
 }
 
 /// Inserts SQL comment patterns for SQL injection testing.
@@ -664,12 +669,13 @@ pub fn case_swap(input: &str) -> String {
 pub fn null_byte_injection(input: &str) -> String {
     let mut rng = SimpleRng::new();
     let null_variants = ["%00", "\\0", "\\x00", "&#00;"];
+    let input_len = input.len();
     
     input
         .chars()
         .enumerate()
         .map(|(i, c)| {
-            if i > 0 && i < input.len() - 1 && rng.next() % 4 == 0 {
+            if i > 0 && i < input_len - 1 && rng.next() % 4 == 0 {
                 let null = null_variants[rng.next() as usize % null_variants.len()];
                 format!("{}{}", null, c)
             } else {
@@ -745,9 +751,10 @@ pub fn command_injection(input: &str) -> String {
         .join(" ")
 }
 
-/// Encodes text to hexadecimal representation.
+/// Encodes text to hexadecimal representation (lowercase).
 ///
 /// Useful for red team payload encoding and blue team encoding detection.
+/// Uses lowercase hex digits which is the most common format.
 ///
 /// # Examples
 ///
