@@ -146,6 +146,8 @@ A pre-commit hook is automatically installed that runs the following checks befo
 
 **We enforce conventional commits using `cc-check`.**
 
+**⚠️ CURSOR CLOUD AGENT USERS:** See `.cursor/agent-instructions.md` and `.cursor/SYSTEM_INSTRUCTIONS.md` for detailed instructions.
+
 ### Format
 
 ```

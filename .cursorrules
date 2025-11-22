@@ -1,16 +1,60 @@
 # redstr - Cursor Rules
 
+## 🚨🚨🚨 CURSOR CLOUD AGENT: READ THIS FIRST 🚨🚨🚨
+
+**BEFORE MAKING ANY COMMIT OR CREATING ANY PR, YOU MUST READ THIS SECTION!**
+
 ## ⚠️ CRITICAL FOR AI AGENTS: COMMIT MESSAGES AND PR TITLES
 
-**ALL commits and PR titles MUST follow conventional commits format:**
-- Format: `[TASK-ID] <type>(<scope>): <subject>`
-- Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`
-- Examples:
-  - `[CF-001] feat(cloudflare): add Turnstile challenge variation`
-  - `fix(encoding): correct URL encoding for special characters`
-  - `docs(readme): update installation instructions`
-- **CI will FAIL if commits or PR titles don't follow this format**
-- **See "Commit Messages" section below for full details**
+**🚨 CURSOR CLOUD AGENT: READ THIS FIRST 🚨**
+
+**ALL commits and PR titles MUST follow conventional commits format. NO EXCEPTIONS.**
+
+### Format (REQUIRED)
+```
+[TASK-ID] <type>(<scope>): <subject>
+```
+
+**OR (without task ID):**
+```
+<type>(<scope>): <subject>
+```
+
+### Valid Types (ONLY these are allowed)
+- `feat` - New feature
+- `fix` - Bug fix  
+- `docs` - Documentation
+- `style` - Code style/formatting
+- `refactor` - Code refactoring
+- `test` - Tests
+- `chore` - Maintenance
+- `perf` - Performance
+
+### Examples (CORRECT ✅)
+- `[CF-001] feat(cloudflare): add Turnstile challenge variation`
+- `fix(encoding): correct URL encoding for special characters`
+- `docs(readme): update installation instructions`
+- `test(builder): add TransformBuilder tests`
+
+### Examples (INCORRECT ❌ - DO NOT USE)
+- ❌ `Update code`
+- ❌ `Fix bug`
+- ❌ `Add feature`
+- ❌ `Changes`
+- ❌ `WIP`
+- ❌ `Update README`
+
+### Enforcement
+- **CI will FAIL** if commits or PR titles don't follow this format
+- **Git hooks will BLOCK** commits that don't follow this format
+- **There are NO exceptions**
+
+### Before Every Commit/PR
+1. **STOP** and verify your message/title matches the format above
+2. If it doesn't match, **REWRITE IT** before committing/creating PR
+3. Check the type is one of: feat, fix, docs, style, refactor, test, chore, perf
+
+**See `.cursor/agent-instructions.md` for detailed instructions.**
 
 ## Project Overview
 redstr is a Rust library for string obfuscation and transformation designed for security testing (red team, blue team, purple team activities). The library provides 30+ transformation functions for WAF bypass, XSS evasion, SQL injection testing, phishing detection, and bot detection evasion.
