@@ -39,7 +39,7 @@ A comprehensive Rust library providing 30+ string obfuscation and transformation
 
 **Production-ready library for security professionals and tool developers:**
 
-- **Zero required dependencies** - Core library uses only Rust's standard library
+- **Minimal dependencies** - Core library uses only Rust's standard library (optional serde for serialization)
 - **30+ transformation functions** - Encoding, obfuscation, injection testing, and web-focused transformations
 - **Builder pattern API** - Chain multiple transformations fluently with `TransformBuilder`
 - **Serialization support** - Optional serde integration for web APIs and tool integration
@@ -74,7 +74,7 @@ A comprehensive Rust library providing 30+ string obfuscation and transformation
 **Compared to alternatives:**
 - **Native Rust performance** - No Python or JavaScript overhead
 - **Type-safe API** - Compile-time guarantees
-- **Zero dependencies** - No supply chain risks
+- **Minimal dependencies** - Core library has no required dependencies
 - **Comprehensive coverage** - 30+ functions in one library
 - **Active development** - Modern security techniques
 
@@ -486,9 +486,15 @@ See the [library documentation](https://docs.rs/redstr) for detailed API documen
 - **Gap analysis**: Identify missing detection rules using transformation permutations
 - **Effectiveness metrics**: Measure detection rates across different obfuscation techniques
 
-## No Dependencies
+## Dependencies
 
-This library uses only Rust's standard library and has zero external dependencies, making it lightweight and easy to audit.
+The core library has **no required dependencies** and uses only Rust's standard library, making it lightweight and easy to audit.
+
+**Optional dependencies:**
+- `serde` - For serialization support when using the `serde` feature flag
+
+**Development dependencies:**
+- `cc-check` - For conventional commit checking in CI/CD
 
 ## Building
 
@@ -569,7 +575,7 @@ cargo test
 
 **Tool Integration:** Caido integration, Burp Suite, EvilJinx, urlscan.io, Cloudflare bypass, security proxies, phishing frameworks, malware analysis
 
-**Technologies:** Rust security library, zero-dependency Rust, type-safe security, polymorphic strings, transformation library
+**Technologies:** Rust security library, minimal-dependency Rust, type-safe security, polymorphic strings, transformation library
 
 ## 🤝 Contributing
 

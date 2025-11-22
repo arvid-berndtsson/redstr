@@ -112,14 +112,14 @@ A pre-commit hook is automatically installed that runs the following checks befo
 
 **Note:** If you need to skip the pre-commit hook (e.g., for WIP commits), use `git commit --no-verify`. However, **never skip hooks for final commits** - all checks must pass before merging.
 
-### Zero Dependencies Principle
+### Minimal Dependencies Principle
 
-**CRITICAL:** The core library must use only Rust's standard library.
+**CRITICAL:** The core library must not have required dependencies.
 
 - ✅ Use `std` only for core functionality
-- ✅ Optional features (like `serde`) behind feature flags
-- ❌ Never add dependencies to core library
-- ✅ Dev-dependencies (like `criterion`) are OK for benchmarks
+- ✅ Optional features (like `serde`) behind feature flags are acceptable
+- ❌ Never add required dependencies to core library
+- ✅ Dev-dependencies (like `cc-check`, `criterion`) are OK for testing/benchmarking
 
 ### Testing
 
@@ -290,7 +290,7 @@ The GitHub Actions workflow automatically:
    - Code follows style guide
    - Tests are comprehensive
    - Documentation is complete
-   - Zero dependencies maintained
+   - No new required dependencies added
    - Performance considered
 
 3. **Review Feedback**
