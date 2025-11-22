@@ -1,9 +1,9 @@
-/// Example: Using random-cap as part of a security testing tool
+/// Example: Using polystr as part of a security testing tool
 ///
 /// This demonstrates how to integrate the library into a security tool
 /// for generating test payloads and obfuscated strings.
 
-use random_cap::*;
+use polystr::*;
 
 fn main() {
     println!("=== Security Tool Integration Example ===\n");

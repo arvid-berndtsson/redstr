@@ -1,9 +1,9 @@
 [package]
-name = "random-cap"
+name = "polystr"
 version = "0.1.0"
 edition = "2021"
 authors = ["Arvid Berndtsson <103070833+arvid-berndtsson@users.noreply.github.com>"]
-description = "String obfuscation and transformation library for security testing, penetration testing tools, and bot detection"
+description = "Polymorphic string transformation library for security testing, penetration testing tools, and bot detection"
 license = "MIT"
 repository = "https://github.com/arvid-berndtsson/random-cap"
 keywords = ["security", "obfuscation", "penetration-testing", "web-security", "phishing"]
@@ -11,12 +11,12 @@ categories = ["development-tools", "text-processing", "web-programming"]
 readme = "README.md"
 
 [lib]
-name = "random_cap"
+name = "polystr"
 path = "src/lib.rs"
 
 # Optional CLI binary - only built when specifically requested
 [[bin]]
-name = "random-cap"
+name = "polystr"
 path = "src/main.rs"
 required-features = ["cli"]
 

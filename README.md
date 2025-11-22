@@ -1,4 +1,4 @@
-# random-cap
+# polystr
 
 A Rust library for string obfuscation and transformation designed for security testing and penetration testing tools. Ideal for integration into tools like Caido, EvilJinx, urlscan.io, and bot detection systems.
 
@@ -21,14 +21,14 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-random-cap = "0.1.0"
+polystr = "0.1.0"
 ```
 
 ### With Serde Support (for web tools)
 
 ```toml
 [dependencies]
-random-cap = { version = "0.1.0", features = ["serde"] }
+polystr = { version = "0.1.0", features = ["serde"] }
 ```
 
 ## Quick Start
@@ -36,7 +36,7 @@ random-cap = { version = "0.1.0", features = ["serde"] }
 ### Basic Usage
 
 ```rust
-use random_cap::{
+use polystr::{
     randomize_capitalization, leetspeak, homoglyph_substitution,
     base64_encode, sql_comment_injection, xss_tag_variations,
     random_user_agent, domain_typosquat
@@ -70,7 +70,7 @@ fn main() {
 Chain multiple transformations fluently:
 
 ```rust
-use random_cap::TransformBuilder;
+use polystr::TransformBuilder;
 
 fn main() {
     // Chain transformations
@@ -92,7 +92,7 @@ fn main() {
 ### Caido / Web Security Testing Tools
 
 ```rust
-use random_cap::{random_user_agent, url_encode, xss_tag_variations};
+use polystr::{random_user_agent, url_encode, xss_tag_variations};
 
 // Randomize requests to avoid fingerprinting
 let headers = vec![
@@ -110,7 +110,7 @@ let variations = vec![
 ### EvilJinx / Phishing Frameworks
 
 ```rust
-use random_cap::{domain_typosquat, homoglyph_substitution, html_entity_encode};
+use polystr::{domain_typosquat, homoglyph_substitution, html_entity_encode};
 
 // Generate phishing domains
 let target = "paypal.com";
@@ -125,7 +125,7 @@ let obfuscated = html_entity_encode(&homoglyph_substitution(link));
 ### Bot Detection Testing
 
 ```rust
-use random_cap::{
+use polystr::{
     random_user_agent, 
     js_string_concat, 
     unicode_normalize_variants,
@@ -141,7 +141,7 @@ let normalized = unicode_normalize_variants("robot");
 ### URL Scanner / Web Crawler Integration
 
 ```rust
-use random_cap::{url_encode, base64_encode, TransformBuilder};
+use polystr::{url_encode, base64_encode, TransformBuilder};
 
 // Encode URLs for safe storage/transmission
 let suspicious_url = "http://example.com/path?param=<script>";
@@ -165,7 +165,7 @@ An optional CLI binary is available for quick testing and experimentation.
 To install with the CLI tool:
 
 ```bash
-cargo install random-cap --features cli
+cargo install polystr --features cli
 ```
 
 Or build from source with the CLI feature:
@@ -174,12 +174,12 @@ Or build from source with the CLI feature:
 cargo build --release --features cli
 ```
 
-The binary will be available at `target/release/random-cap`.
+The binary will be available at `target/release/polystr`.
 
 ### CLI Usage
 
 ```bash
-random-cap [mode] <text>
+polystr [mode] <text>
 ```
 
 If no mode is specified, random capitalization is used by default.
@@ -237,123 +237,123 @@ All transformation functions accept a `&str` and return a `String`. Here are the
   - `.leetspeak()` - Apply leetspeak
   - `.base64()` - Apply base64 encoding
   - `.url_encode()` - Apply URL encoding
-  - `.random_caps()` - Apply random capitalization
+  - `.polystrs()` - Apply random capitalization
   - `.homoglyphs()` - Apply homoglyph substitution
   - `.case_swap()` - Apply case swapping
   - `.hex_encode()` - Apply hex encoding
   - `.rot13()` - Apply ROT13
   - `.build()` - Get the final result
 
-See the [library documentation](https://docs.rs/random-cap) for detailed API documentation.
+See the [library documentation](https://docs.rs/polystr) for detailed API documentation.
 
 ### CLI Transformation Modes
 
 #### Basic Transformations
 
 - **random, r** - Random capitalization (default)
-  - Example: `random-cap "Hello World"` → `HeLlO wOrLd`
+  - Example: `polystr "Hello World"` → `HeLlO wOrLd`
   
 - **alternate, a** - Alternate upper/lower case
-  - Example: `random-cap alternate "Hello World"` → `HeLlO wOrLd`
+  - Example: `polystr alternate "Hello World"` → `HeLlO wOrLd`
   
 - **inverse, i** - Invert the case of each letter
-  - Example: `random-cap inverse "Hello World"` → `hELLO wORLD`
+  - Example: `polystr inverse "Hello World"` → `hELLO wORLD`
 
 - **reverse, rv** - Reverse the string
-  - Example: `random-cap reverse "Hello World"` → `dlroW olleH`
+  - Example: `polystr reverse "Hello World"` → `dlroW olleH`
 
 #### Case Conversion
 
 - **camel, c** - Convert to camelCase
-  - Example: `random-cap camel "hello world test"` → `helloWorldTest`
+  - Example: `polystr camel "hello world test"` → `helloWorldTest`
   
 - **snake, s** - Convert to snake_case
-  - Example: `random-cap snake "HelloWorldTest"` → `hello_world_test`
+  - Example: `polystr snake "HelloWorldTest"` → `hello_world_test`
   
 - **kebab, k** - Convert to kebab-case
-  - Example: `random-cap kebab "HelloWorldTest"` → `hello-world-test`
+  - Example: `polystr kebab "HelloWorldTest"` → `hello-world-test`
 
 #### Security Testing Modes
 
 - **leetspeak, l** - Convert to leetspeak
   - Useful for testing password filters and content detection
-  - Example: `random-cap leetspeak "password123"` → `p@55w0rd123`
+  - Example: `polystr leetspeak "password123"` → `p@55w0rd123`
 
 - **homoglyph, h** - Substitute with similar-looking characters
   - Useful for testing homograph attacks and IDN spoofing
-  - Example: `random-cap homoglyph "admin@example.com"` → `аdmіn@еxаmple.com`
+  - Example: `polystr homoglyph "admin@example.com"` → `аdmіn@еxаmple.com`
 
 - **unicode, u** - Random unicode variations
   - Useful for testing Unicode handling and normalization
-  - Example: `random-cap unicode "administrator"` → `ádmïnïštrâtör`
+  - Example: `polystr unicode "administrator"` → `ádmïnïštrâtör`
 
 - **zalgo, z** - Add zalgo combining characters
   - Useful for testing display issues and Unicode handling
-  - Example: `random-cap zalgo "test"` → `t̃̂e̊̋s̈̃t̂̃`
+  - Example: `polystr zalgo "test"` → `t̃̂e̊̋s̈̃t̂̃`
 
 - **rot13** - Apply ROT13 cipher
   - Classic cipher transformation
-  - Example: `random-cap rot13 "Hello World"` → `Uryyb Jbeyq`
+  - Example: `polystr rot13 "Hello World"` → `Uryyb Jbeyq`
 
 - **vowel-swap, vs** - Swap vowels randomly
   - Useful for testing pattern matching and filters
-  - Example: `random-cap vowel-swap "testing"` → `tistong`
+  - Example: `polystr vowel-swap "testing"` → `tistong`
 
 - **double, d** - Double random characters
   - Useful for testing input validation
-  - Example: `random-cap double "test"` → `tteesstt`
+  - Example: `polystr double "test"` → `tteesstt`
 
 - **space-variants, sv** - Use various space characters
   - Useful for testing whitespace handling (uses various Unicode spaces)
-  - Example: `random-cap space-variants "hello world"`
+  - Example: `polystr space-variants "hello world"`
 
 - **mixed-encoding, me** - Mix character encodings
   - Useful for testing encoding vulnerabilities and XSS
-  - Example: `random-cap mixed-encoding "test"` → Mix of HTML entities and Unicode escapes
+  - Example: `polystr mixed-encoding "test"` → Mix of HTML entities and Unicode escapes
 
 #### Encoding and Obfuscation Modes
 
 - **base64, b64** - Encode to Base64
   - Useful for red team payload obfuscation
-  - Example: `random-cap base64 "hello"` → `aGVsbG8=`
+  - Example: `polystr base64 "hello"` → `aGVsbG8=`
 
 - **url-encode, url** - URL/percent encoding
   - Useful for web security testing
-  - Example: `random-cap url-encode "test @example.com"` → `test%20%40example.com`
+  - Example: `polystr url-encode "test @example.com"` → `test%20%40example.com`
 
 - **hex-encode, hex** - Encode to hexadecimal
   - Useful for encoding obfuscation
-  - Example: `random-cap hex-encode "test"` → `74657374`
+  - Example: `polystr hex-encode "test"` → `74657374`
 
 - **hex-mixed, hm** - Mixed hex formats (\\x, %, 0x, &#x)
   - Useful for testing encoding detection
-  - Example: `random-cap hex-mixed "ab"` → `\x61%62` (varies)
+  - Example: `polystr hex-mixed "ab"` → `\x61%62` (varies)
 
 #### Injection Testing Modes
 
 - **sql-comment, sql** - Insert SQL comment patterns
   - Useful for red team SQL injection testing
-  - Example: `random-cap sql-comment "SELECT * FROM users"` → `SELECT --* FROM users`
+  - Example: `polystr sql-comment "SELECT * FROM users"` → `SELECT --* FROM users`
 
 - **xss-tags, xss** - Generate XSS tag variations
   - Useful for testing XSS filters
-  - Example: `random-cap xss-tags "<script>alert(1)</script>"` → Encoded variations
+  - Example: `polystr xss-tags "<script>alert(1)</script>"` → Encoded variations
 
 - **case-swap, cs** - Random case swapping
   - Useful for WAF/filter bypass testing
-  - Example: `random-cap case-swap "SELECT"` → `SeLeCt`
+  - Example: `polystr case-swap "SELECT"` → `SeLeCt`
 
 - **null-byte, nb** - Insert null byte representations
   - Useful for testing null byte vulnerabilities
-  - Example: `random-cap null-byte "test.txt"` → `test%00.txt` (varies)
+  - Example: `polystr null-byte "test.txt"` → `test%00.txt` (varies)
 
 - **path-traversal, pt** - Generate path traversal patterns
   - Useful for directory traversal testing
-  - Example: `random-cap path-traversal "/etc/passwd"` → `../etc/../passwd` (varies)
+  - Example: `polystr path-traversal "/etc/passwd"` → `../etc/../passwd` (varies)
 
 - **command-injection, ci** - Insert command injection separators
   - Useful for OS command injection testing
-  - Example: `random-cap command-injection "ping example.com"` → `ping;example.com` (varies)
+  - Example: `polystr command-injection "ping example.com"` → `ping;example.com` (varies)
 
 ## Security Testing Use Cases
 

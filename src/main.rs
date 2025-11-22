@@ -1,5 +1,5 @@
 use std::env;
-use random_cap::*;
+use polystr::*;
 
 fn main() {
     let args: Vec<String> = env::args().collect();

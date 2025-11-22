@@ -1,4 +1,4 @@
-//! # random-cap
+//! # polystr
 //!
 //! A versatile string obfuscation and transformation library for security testing.
 //! Useful for red team, blue team, and purple team activities.
@@ -12,7 +12,7 @@
 //! ## Usage
 //!
 //! ```rust
-//! use random_cap::{randomize_capitalization, leetspeak, homoglyph_substitution};
+//! use polystr::{randomize_capitalization, leetspeak, homoglyph_substitution};
 //!
 //! // Random capitalization
 //! let result = randomize_capitalization("Hello World");
@@ -36,7 +36,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 /// # Examples
 ///
 /// ```
-/// use random_cap::randomize_capitalization;
+/// use polystr::randomize_capitalization;
 /// let result = randomize_capitalization("hello");
 /// assert_eq!(result.len(), 5);
 /// ```
@@ -66,7 +66,7 @@ pub fn randomize_capitalization(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::leetspeak;
+/// use polystr::leetspeak;
 /// let result = leetspeak("password");
 /// assert!(result.contains('0') || result.contains('5'));
 /// ```
@@ -98,7 +98,7 @@ pub fn leetspeak(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::alternate_case;
+/// use polystr::alternate_case;
 /// assert_eq!(alternate_case("hello"), "HeLlO");
 /// ```
 pub fn alternate_case(input: &str) -> String {
@@ -126,7 +126,7 @@ pub fn alternate_case(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::inverse_case;
+/// use polystr::inverse_case;
 /// assert_eq!(inverse_case("Hello World"), "hELLO wORLD");
 /// ```
 pub fn inverse_case(input: &str) -> String {
@@ -149,7 +149,7 @@ pub fn inverse_case(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::to_camel_case;
+/// use polystr::to_camel_case;
 /// assert_eq!(to_camel_case("hello world"), "helloWorld");
 /// ```
 pub fn to_camel_case(input: &str) -> String {
@@ -182,7 +182,7 @@ pub fn to_camel_case(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::to_snake_case;
+/// use polystr::to_snake_case;
 /// assert_eq!(to_snake_case("HelloWorld"), "hello_world");
 /// ```
 pub fn to_snake_case(input: &str) -> String {
@@ -212,7 +212,7 @@ pub fn to_snake_case(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::to_kebab_case;
+/// use polystr::to_kebab_case;
 /// assert_eq!(to_kebab_case("HelloWorld"), "hello-world");
 /// ```
 pub fn to_kebab_case(input: &str) -> String {
@@ -226,7 +226,7 @@ pub fn to_kebab_case(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::unicode_variations;
+/// use polystr::unicode_variations;
 /// let result = unicode_variations("admin");
 /// assert_eq!(result.chars().count(), 5);
 /// ```
@@ -259,7 +259,7 @@ pub fn unicode_variations(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::zalgo_text;
+/// use polystr::zalgo_text;
 /// let result = zalgo_text("test");
 /// assert!(result.len() > 4);
 /// ```
@@ -296,7 +296,7 @@ pub fn zalgo_text(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::rot13;
+/// use polystr::rot13;
 /// assert_eq!(rot13("Hello"), "Uryyb");
 /// assert_eq!(rot13("Uryyb"), "Hello"); // ROT13 is reversible
 /// ```
@@ -327,7 +327,7 @@ pub fn rot13(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::homoglyph_substitution;
+/// use polystr::homoglyph_substitution;
 /// let result = homoglyph_substitution("example");
 /// // Result may contain Cyrillic characters that look like Latin
 /// ```
@@ -364,7 +364,7 @@ pub fn homoglyph_substitution(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::vowel_swap;
+/// use polystr::vowel_swap;
 /// let result = vowel_swap("hello");
 /// assert_eq!(result.len(), 5);
 /// ```
@@ -397,7 +397,7 @@ pub fn vowel_swap(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::double_characters;
+/// use polystr::double_characters;
 /// let result = double_characters("test");
 /// assert!(result.len() >= 4);
 /// ```
@@ -423,7 +423,7 @@ pub fn double_characters(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::space_variants;
+/// use polystr::space_variants;
 /// let result = space_variants("hello world");
 /// assert_eq!(result.chars().filter(|c| c.is_whitespace()).count(), 1);
 /// ```
@@ -450,7 +450,7 @@ pub fn space_variants(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::mixed_encoding;
+/// use polystr::mixed_encoding;
 /// let result = mixed_encoding("test");
 /// assert!(result.contains("&#") || result.contains("\\u"));
 /// ```
@@ -474,7 +474,7 @@ pub fn mixed_encoding(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::reverse_string;
+/// use polystr::reverse_string;
 /// assert_eq!(reverse_string("hello"), "olleh");
 /// ```
 pub fn reverse_string(input: &str) -> String {
@@ -488,7 +488,7 @@ pub fn reverse_string(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::base64_encode;
+/// use polystr::base64_encode;
 /// let result = base64_encode("hello");
 /// assert_eq!(result, "aGVsbG8=");
 /// ```
@@ -525,7 +525,7 @@ pub fn base64_encode(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::url_encode;
+/// use polystr::url_encode;
 /// let result = url_encode("hello world");
 /// assert!(result.contains("%20"));
 /// ```
@@ -553,7 +553,7 @@ pub fn url_encode(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::sql_comment_injection;
+/// use polystr::sql_comment_injection;
 /// let result = sql_comment_injection("SELECT * FROM users");
 /// // Result may contain SQL comments injected between words
 /// assert!(result.contains("SELECT") && result.len() >= "SELECT * FROM users".len());
@@ -585,7 +585,7 @@ pub fn sql_comment_injection(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::xss_tag_variations;
+/// use polystr::xss_tag_variations;
 /// let result = xss_tag_variations("<script>alert(1)</script>");
 /// // Result contains variations in tags and case
 /// assert!(result.len() >= 20);
@@ -630,7 +630,7 @@ pub fn xss_tag_variations(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::case_swap;
+/// use polystr::case_swap;
 /// let result = case_swap("SELECT");
 /// assert_ne!(result, "SELECT");
 /// ```
@@ -661,7 +661,7 @@ pub fn case_swap(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::null_byte_injection;
+/// use polystr::null_byte_injection;
 /// let result = null_byte_injection("test.txt");
 /// // Result should be at least as long and preserve first/last characters
 /// assert!(result.len() >= "test.txt".len());
@@ -692,7 +692,7 @@ pub fn null_byte_injection(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::path_traversal;
+/// use polystr::path_traversal;
 /// let result = path_traversal("/etc/passwd");
 /// // Result may contain path traversal patterns
 /// assert!(result.contains("etc") && result.contains("passwd"));
@@ -726,7 +726,7 @@ pub fn path_traversal(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::command_injection;
+/// use polystr::command_injection;
 /// let result = command_injection("ping example.com");
 /// // Result may contain command separators between words
 /// assert!(result.contains("ping") && result.len() >= "ping example.com".len());
@@ -759,7 +759,7 @@ pub fn command_injection(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::hex_encode;
+/// use polystr::hex_encode;
 /// let result = hex_encode("test");
 /// assert_eq!(result, "74657374");
 /// ```
@@ -777,7 +777,7 @@ pub fn hex_encode(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::hex_encode_mixed;
+/// use polystr::hex_encode_mixed;
 /// let result = hex_encode_mixed("ab");
 /// assert!(result.contains("\\x") || result.contains("%") || result.contains("0x"));
 /// ```
@@ -804,7 +804,7 @@ pub fn hex_encode_mixed(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::random_user_agent;
+/// use polystr::random_user_agent;
 /// let ua = random_user_agent();
 /// assert!(ua.len() > 0);
 /// ```
@@ -832,7 +832,7 @@ pub fn random_user_agent() -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::whitespace_padding;
+/// use polystr::whitespace_padding;
 /// let result = whitespace_padding("test");
 /// assert!(result.len() >= 4);
 /// ```
@@ -860,7 +860,7 @@ pub fn whitespace_padding(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::domain_typosquat;
+/// use polystr::domain_typosquat;
 /// let result = domain_typosquat("example.com");
 /// assert!(result.len() > 0);
 /// ```
@@ -940,7 +940,7 @@ pub fn domain_typosquat(domain: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::html_entity_encode;
+/// use polystr::html_entity_encode;
 /// let result = html_entity_encode("test");
 /// assert!(result.contains("&#") || result.contains("&"));
 /// ```
@@ -978,7 +978,7 @@ pub fn html_entity_encode(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::js_string_concat;
+/// use polystr::js_string_concat;
 /// let result = js_string_concat("alert");
 /// assert!(result.contains("+") || result.len() >= 5);
 /// ```
@@ -1028,7 +1028,7 @@ pub fn js_string_concat(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::unicode_normalize_variants;
+/// use polystr::unicode_normalize_variants;
 /// let result = unicode_normalize_variants("café");
 /// assert!(result.len() >= 4);
 /// ```
@@ -1063,7 +1063,7 @@ pub fn unicode_normalize_variants(input: &str) -> String {
 /// # Examples
 ///
 /// ```
-/// use random_cap::TransformBuilder;
+/// use polystr::TransformBuilder;
 /// let result = TransformBuilder::new("test")
 ///     .leetspeak()
 ///     .base64()
@@ -1101,7 +1101,7 @@ impl TransformBuilder {
     }
     
     /// Applies random capitalization.
-    pub fn random_caps(mut self) -> Self {
+    pub fn polystrs(mut self) -> Self {
         self.text = randomize_capitalization(&self.text);
         self
     }
@@ -1397,7 +1397,7 @@ mod tests {
         assert!(result.len() > 0);
         
         let result2 = TransformBuilder::new("hello")
-            .random_caps()
+            .polystrs()
             .base64()
             .build();
         assert!(result2.len() > 0);

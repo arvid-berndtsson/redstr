@@ -1,9 +1,9 @@
 /// Example: Integration patterns for security testing tools
 ///
-/// This example demonstrates how to integrate random-cap into professional
+/// This example demonstrates how to integrate polystr into professional
 /// security testing tools like Caido, EvilJinx, urlscan.io, and bot detection systems.
 
-use random_cap::*;
+use polystr::*;
 
 fn main() {
     println!("=== Tool Integration Examples ===\n");

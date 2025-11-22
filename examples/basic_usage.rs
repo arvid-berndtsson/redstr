@@ -1,4 +1,4 @@
-use random_cap::*;
+use polystr::*;
 
 fn main() {
     println!("=== Random Cap Library Examples ===\n");
