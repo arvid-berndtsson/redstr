@@ -1,5 +1,17 @@
 # redstr - Cursor Rules
 
+## ⚠️ CRITICAL FOR AI AGENTS: COMMIT MESSAGES AND PR TITLES
+
+**ALL commits and PR titles MUST follow conventional commits format:**
+- Format: `[TASK-ID] <type>(<scope>): <subject>`
+- Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`
+- Examples:
+  - `[CF-001] feat(cloudflare): add Turnstile challenge variation`
+  - `fix(encoding): correct URL encoding for special characters`
+  - `docs(readme): update installation instructions`
+- **CI will FAIL if commits or PR titles don't follow this format**
+- **See "Commit Messages" section below for full details**
+
 ## Project Overview
 redstr is a Rust library for string obfuscation and transformation designed for security testing (red team, blue team, purple team activities). The library provides 30+ transformation functions for WAF bypass, XSS evasion, SQL injection testing, phishing detection, and bot detection evasion.
 
@@ -118,6 +130,7 @@ redstr is a Rust library for string obfuscation and transformation designed for 
 
 #### Commit Messages
 - **MANDATORY**: All commits MUST follow conventional commits format
+- **CRITICAL FOR AI AGENTS**: When making commits, ALWAYS use conventional commits format
 - Format: `[TASK-ID] <type>(<scope>): <subject>`
 - Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`
 - Task ID is optional but recommended (e.g., `[CF-001]`)
@@ -126,7 +139,19 @@ redstr is a Rust library for string obfuscation and transformation designed for 
   - `fix(encoding): correct URL encoding for special characters`
   - `docs(readme): update installation instructions`
 - Commit messages are automatically validated using `cc-check` in CI
+- **AI AGENTS MUST**: Before committing, verify the commit message follows the format above
+- **AI AGENTS MUST**: Use the exact format - no variations, no exceptions
 - See `CONTRIBUTING.md` for detailed commit message guidelines
+
+#### Pull Request Titles (AI Agents)
+- **MANDATORY**: PR titles MUST also follow conventional commits format
+- Format: `[TASK-ID] <type>(<scope>): <subject>`
+- PR titles are validated in CI and will fail if not in conventional commits format
+- Examples:
+  - `[CF-001] feat(cloudflare): add Turnstile challenge variation`
+  - `fix(encoding): correct URL encoding for special characters`
+  - `docs(readme): update installation instructions`
+- **AI AGENTS MUST**: When creating PRs, use conventional commits format for the title
 
 #### Imports
 - Group imports: std, external crates, local modules
@@ -223,9 +248,11 @@ pub fn rot13(input: &str) -> String {
 6. ❌ Don't add features that don't relate to security testing
 7. ❌ Don't commit code that doesn't pass `cargo test` and `cargo clippy -- -D warnings`
 8. ❌ Don't break the zero-dependency principle
-9. ❌ Don't commit without following conventional commits format - commits are validated in CI
-10. ❌ Don't commit without running `cargo fmt` - formatting is enforced in CI
-11. ❌ Don't commit without running `cargo check` - code must compile
+9. ❌ Don't commit without following conventional commits format - commits are validated in CI and will FAIL
+10. ❌ Don't create PRs without conventional commits format in title - PR titles are validated in CI and will FAIL
+11. ❌ Don't commit without running `cargo fmt` - formatting is enforced in CI
+12. ❌ Don't commit without running `cargo check` - code must compile
+13. ❌ **AI AGENTS: NEVER use generic commit messages like "Update code" or "Fix bug" - ALWAYS use conventional commits format**
 
 ## Workflow
 
@@ -238,7 +265,9 @@ pub fn rot13(input: &str) -> String {
 7. Check that examples still work: `cargo run --example basic_usage`
 8. Verify no new dependencies were added (check `Cargo.toml`)
 9. **Write commit message following conventional commits format** (see Commit Messages section above)
-10. Commit messages are validated in CI - ensure format is correct before pushing
+10. **AI AGENTS: Before committing, double-check the commit message matches: `[TASK-ID] <type>(<scope>): <subject>`**
+11. Commit messages are validated in CI - ensure format is correct before pushing
+12. **AI AGENTS: When creating PRs, use conventional commits format for PR title as well**
 
 **Pre-commit Checklist:**
 - ✅ `cargo fmt` - Code is formatted (automatically checked by pre-commit hook)
