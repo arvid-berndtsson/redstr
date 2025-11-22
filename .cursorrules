@@ -111,6 +111,18 @@ redstr is a Rust library for string obfuscation and transformation designed for 
 - Prefer clippy suggestions for idiomatic Rust
 - Suppress clippy warnings only when necessary with justification
 
+#### Commit Messages
+- **MANDATORY**: All commits MUST follow conventional commits format
+- Format: `[TASK-ID] <type>(<scope>): <subject>`
+- Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`
+- Task ID is optional but recommended (e.g., `[CF-001]`)
+- Examples:
+  - `[CF-001] feat(cloudflare): add Turnstile challenge variation`
+  - `fix(encoding): correct URL encoding for special characters`
+  - `docs(readme): update installation instructions`
+- Commit messages are automatically validated using `cc-check` in CI
+- See `CONTRIBUTING.md` for detailed commit message guidelines
+
 #### Imports
 - Group imports: std, external crates, local modules
 - Use `use redstr::*;` in examples for simplicity
@@ -206,6 +218,7 @@ pub fn rot13(input: &str) -> String {
 6. ❌ Don't add features that don't relate to security testing
 7. ❌ Don't commit code that doesn't pass `cargo test` and `cargo clippy`
 8. ❌ Don't break the zero-dependency principle
+9. ❌ Don't commit without following conventional commits format - commits are validated in CI
 
 ## Workflow
 
@@ -216,6 +229,8 @@ pub fn rot13(input: &str) -> String {
 5. Update documentation if needed
 6. Check that examples still work: `cargo run --example basic_usage`
 7. Verify no new dependencies were added (check `Cargo.toml`)
+8. **Write commit message following conventional commits format** (see Commit Messages section above)
+9. Commit messages are validated in CI - ensure format is correct before pushing
 
 ## Integration Examples
 When suggesting code for integration with tools like Caido, Burp Suite, or EvilJinx, focus on:
