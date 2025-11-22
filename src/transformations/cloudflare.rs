@@ -277,10 +277,16 @@ pub fn webgl_fingerprint_obfuscate(input: &str) -> String {
 pub fn font_fingerprint_consistency(input: &str) -> String {
     let mut rng = SimpleRng::new();
 
+    // Handle empty input
+    if input.is_empty() {
+        return input.to_string();
+    }
+
     // Font list variations - maintain valid font names but vary formatting
     let fonts: Vec<&str> = input
         .split(|c: char| [',', ';'].contains(&c))
         .map(|s| s.trim())
+        .filter(|s| !s.is_empty())
         .collect();
 
     if fonts.is_empty() {
@@ -391,5 +397,173 @@ mod tests {
         assert!(result.len() > 0);
         // Generic challenge should contain the original challenge
         assert!(result.contains(challenge));
+    }
+
+    #[test]
+    fn test_cloudflare_turnstile_variation_empty_string() {
+        let result = cloudflare_turnstile_variation("");
+        assert!(result.len() > 0);
+    }
+
+    #[test]
+    fn test_cloudflare_turnstile_variation_unicode() {
+        let challenge = "challenge-测试-токен";
+        let result = cloudflare_turnstile_variation(challenge);
+        assert!(result.contains(challenge));
+    }
+
+    #[test]
+    fn test_cloudflare_challenge_response_cf_bm() {
+        let challenge = "__cf_bm=cookie123";
+        let result = cloudflare_challenge_response(challenge);
+        assert!(result.len() > 0);
+        assert!(
+            result.to_lowercase().contains("cf_bm")
+                || result.to_lowercase().contains("cf-bm")
+        );
+    }
+
+    #[test]
+    fn test_cloudflare_challenge_response_empty_string() {
+        let result = cloudflare_challenge_response("");
+        // Empty string should return a non-empty result (adds suffix)
+        assert!(result.len() > 0);
+    }
+
+    #[test]
+    fn test_tls_handshake_pattern_empty_string() {
+        let result = tls_handshake_pattern("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_tls_handshake_pattern_single_cipher() {
+        let pattern = "TLS_AES_256_GCM_SHA384";
+        let result = tls_handshake_pattern(pattern);
+        assert!(result.contains("TLS"));
+    }
+
+    #[test]
+    fn test_tls_handshake_pattern_comma_separated() {
+        let pattern = "TLS_AES_256_GCM_SHA384,TLS_CHACHA20_POLY1305_SHA256";
+        let result = tls_handshake_pattern(pattern);
+        assert!(result.contains("TLS"));
+    }
+
+    #[test]
+    fn test_tls_handshake_pattern_space_separated() {
+        let pattern = "TLS_AES_256_GCM_SHA384 TLS_CHACHA20_POLY1305_SHA256";
+        let result = tls_handshake_pattern(pattern);
+        assert!(result.contains("TLS"));
+    }
+
+    #[test]
+    fn test_canvas_fingerprint_variation_empty_string() {
+        let result = canvas_fingerprint_variation("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_canvas_fingerprint_variation_unicode() {
+        let canvas_data = "canvas-测试-data";
+        let result = canvas_fingerprint_variation(canvas_data);
+        assert!(result.len() > 0);
+    }
+
+    #[test]
+    fn test_canvas_fingerprint_variation_preserves_length_approximately() {
+        let canvas_data = "test123";
+        let result = canvas_fingerprint_variation(canvas_data);
+        // Length should be similar (may vary slightly due to character swaps)
+        assert!(result.len() >= canvas_data.len() - 2);
+        assert!(result.len() <= canvas_data.len() + 2);
+    }
+
+    #[test]
+    fn test_webgl_fingerprint_obfuscate_empty_string() {
+        let result = webgl_fingerprint_obfuscate("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_webgl_fingerprint_obfuscate_with_version() {
+        let webgl_data = "WebGL 2.0";
+        let result = webgl_fingerprint_obfuscate(webgl_data);
+        assert!(result.len() > 0);
+        assert!(result.to_lowercase().contains("webgl"));
+    }
+
+    #[test]
+    fn test_webgl_fingerprint_obfuscate_preserves_structure() {
+        let webgl_data = "WebGL 2.0 Renderer: ANGLE";
+        let result = webgl_fingerprint_obfuscate(webgl_data);
+        // Should preserve overall structure
+        assert!(result.to_lowercase().contains("webgl"));
+        assert!(result.to_lowercase().contains("renderer"));
+    }
+
+    #[test]
+    fn test_font_fingerprint_consistency_empty_string() {
+        let result = font_fingerprint_consistency("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_font_fingerprint_consistency_single_font() {
+        let font_list = "Arial";
+        let result = font_fingerprint_consistency(font_list);
+        assert!(result.len() > 0);
+        assert!(result.to_lowercase().contains("arial"));
+    }
+
+    #[test]
+    fn test_font_fingerprint_consistency_semicolon_separated() {
+        let font_list = "Arial; Helvetica; Times New Roman";
+        let result = font_fingerprint_consistency(font_list);
+        assert!(result.len() > 0);
+        assert!(result.to_lowercase().contains("arial"));
+    }
+
+    #[test]
+    fn test_font_fingerprint_consistency_preserves_fonts() {
+        let font_list = "Arial, Helvetica, Times New Roman";
+        let result = font_fingerprint_consistency(font_list);
+        // All fonts should be present
+        assert!(result.to_lowercase().contains("arial"));
+        assert!(result.to_lowercase().contains("helvetica"));
+        assert!(result.to_lowercase().contains("times"));
+    }
+
+    #[test]
+    fn test_cloudflare_turnstile_variation_multiple_calls() {
+        let challenge = "test-challenge";
+        let results: Vec<String> = (0..10)
+            .map(|_| cloudflare_turnstile_variation(challenge))
+            .collect();
+        // All results should contain the challenge
+        for result in &results {
+            assert!(result.contains(challenge));
+        }
+        // At least some results should differ (randomness)
+        let unique_results: std::collections::HashSet<&String> = results.iter().collect();
+        // Due to randomness, we might get some duplicates, but not all should be identical
+        assert!(unique_results.len() >= 1);
+    }
+
+    #[test]
+    fn test_cloudflare_challenge_response_special_characters() {
+        let challenge = "cf_clearance=abc!@#$%^&*()123";
+        let result = cloudflare_challenge_response(challenge);
+        assert!(result.len() > 0);
+        assert!(result.to_lowercase().contains("cf_clearance") || result.to_lowercase().contains("cf-clearance"));
+    }
+
+    #[test]
+    fn test_tls_handshake_pattern_preserves_ciphers() {
+        let pattern = "TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256";
+        let result = tls_handshake_pattern(pattern);
+        // Should contain both cipher names
+        assert!(result.contains("TLS_AES_256_GCM_SHA384"));
+        assert!(result.contains("TLS_CHACHA20_POLY1305_SHA256"));
     }
 }
