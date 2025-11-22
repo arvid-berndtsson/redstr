@@ -1,0 +1,15 @@
+#!/bin/bash
+# This script will help create the module structure
+echo "Creating module structure..."
+echo "Modules to create:"
+echo "  - transformations/encoding.rs"
+echo "  - transformations/unicode.rs"
+echo "  - transformations/injection.rs"
+echo "  - transformations/obfuscation.rs"
+echo "  - transformations/phishing.rs"
+echo "  - transformations/bot_detection.rs"
+echo "  - transformations/web_security.rs"
+echo "  - transformations/shell.rs"
+echo "  - builder.rs"
+echo ""
+echo "This is a large refactoring. Proceeding with manual module creation..."
