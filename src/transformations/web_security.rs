@@ -57,7 +57,8 @@ pub fn http_header_variation(input: &str) -> String {
 /// use redstr::api_endpoint_variation;
 /// let endpoint = "/api/v1/users";
 /// let result = api_endpoint_variation(endpoint);
-/// assert!(result.contains("api"));
+/// // Result should contain the endpoint in some form (case may vary)
+/// assert!(result.to_lowercase().contains("api"));
 /// ```
 pub fn api_endpoint_variation(endpoint: &str) -> String {
     let mut rng = SimpleRng::new();
