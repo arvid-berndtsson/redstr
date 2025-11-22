@@ -27,6 +27,8 @@ jobs:
         run: cargo install cc-check
 
       - name: Check commit messages
+        env:
+          PATH: ${{ env.PATH }}:$HOME/.cargo/bin
         run: |
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             # Get commits in PR
@@ -36,7 +38,8 @@ jobs:
             # Check each commit
             for commit in $(git rev-list $BASE_SHA..$HEAD_SHA); do
               echo "Checking commit: $commit"
-              git log -1 --format=%B $commit | cc-check --check-stdin || {
+              COMMIT_MSG=$(git log -1 --format=%B $commit)
+              echo "$COMMIT_MSG" | cc-check || {
                 echo "❌ Commit $commit does not follow conventional commits format"
                 echo ""
                 echo "Expected format: [TASK-ID] <type>(<scope>): <subject>"
@@ -44,13 +47,20 @@ jobs:
                 echo "Types: feat, fix, docs, style, refactor, test, chore, perf"
                 echo ""
                 echo "Example: [CF-001] feat(cloudflare): add Turnstile challenge variation"
+                echo ""
+                echo "Commit message was:"
+                echo "$COMMIT_MSG"
                 exit 1
               }
             done
           else
             # For push events, check the latest commit
-            git log -1 --format=%B HEAD | cc-check --check-stdin || {
+            COMMIT_MSG=$(git log -1 --format=%B HEAD)
+            echo "$COMMIT_MSG" | cc-check || {
               echo "❌ Commit does not follow conventional commits format"
+              echo ""
+              echo "Commit message was:"
+              echo "$COMMIT_MSG"
               exit 1
             }
           fi
