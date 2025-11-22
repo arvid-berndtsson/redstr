@@ -1,20 +1,12 @@
 # Pull Request
 
-## ⚠️ IMPORTANT: PR Title Format
-
-**PR titles MUST follow conventional commits format:**
-- Format: `[TASK-ID] <type>(<scope>): <subject>`
-- Examples:
-  - `[CF-001] feat(cloudflare): add Turnstile challenge variation`
-  - `fix(encoding): correct URL encoding for special characters`
-  - `docs(readme): update installation instructions`
-- **CI will fail if PR title doesn't follow this format**
-
 ## Task Information
 
 **Task ID:** [e.g., CF-001]  
 **Related Issue:** #[issue-number]  
 **Phase:** [1/2/3/4]
+
+> **Note:** PR title should follow conventional commits format: `[TASK-ID] <type>(<scope>): <subject>` (e.g., `[CF-001] feat(cloudflare): add feature`)
 
 ## Description
 
