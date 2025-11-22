@@ -2,7 +2,6 @@
 ///
 /// This demonstrates how to integrate the library into a security tool
 /// for generating test payloads and obfuscated strings.
-
 use redstr::*;
 
 fn main() {

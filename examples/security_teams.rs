@@ -2,7 +2,6 @@
 ///
 /// This example demonstrates how to use redstr transformations for various
 /// security testing scenarios across different security team roles.
-
 use redstr::*;
 
 fn main() {
@@ -141,7 +140,7 @@ fn main() {
         ("Command", "; cat /etc/passwd"),
         ("Path", "../../../etc/passwd"),
     ];
-    
+
     println!("  Generating test cases for security controls:");
     for (attack_type, payload) in baseline_payloads {
         println!("  {} Attack:", attack_type);
@@ -155,8 +154,14 @@ fn main() {
     println!("  Phishing Domain Detection Training:");
     let training_domain = "secure-login.paypal.com";
     println!("    Legitimate: {}", training_domain);
-    println!("    Spoofed 1:  {}", homoglyph_substitution(training_domain));
-    println!("    Spoofed 2:  {}", homoglyph_substitution(training_domain));
+    println!(
+        "    Spoofed 1:  {}",
+        homoglyph_substitution(training_domain)
+    );
+    println!(
+        "    Spoofed 2:  {}",
+        homoglyph_substitution(training_domain)
+    );
     println!();
 
     println!("16. Coverage Testing:");
@@ -164,7 +169,10 @@ fn main() {
     println!("  Testing detection coverage for: {}", critical_input);
     println!("  Transformation variants to test:");
     println!("    1. Case variation:  {}", case_swap(critical_input));
-    println!("    2. With comments:   {}", sql_comment_injection(critical_input));
+    println!(
+        "    2. With comments:   {}",
+        sql_comment_injection(critical_input)
+    );
     println!("    3. URL encoded:     {}", url_encode(critical_input));
     println!("    4. Hex encoded:     {}", hex_encode(critical_input));
     println!("    5. Mixed encoding:  {}", mixed_encoding(critical_input));
