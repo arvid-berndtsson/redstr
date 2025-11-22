@@ -1,0 +1,33 @@
+{
+  "agent": {
+    "instructions": {
+      "commitMessageFormat": "[TASK-ID] <type>(<scope>): <subject>",
+      "requiredTypes": ["feat", "fix", "docs", "style", "refactor", "test", "chore", "perf"],
+      "enforceConventionalCommits": true,
+      "enforcePRTitleFormat": true
+    },
+    "rules": [
+      "ALL commits MUST follow conventional commits format",
+      "ALL PR titles MUST follow conventional commits format",
+      "Format: [TASK-ID] <type>(<scope>): <subject>",
+      "OR: <type>(<scope>): <subject>",
+      "Valid types: feat, fix, docs, style, refactor, test, chore, perf",
+      "CI will FAIL if format is not followed",
+      "Git hooks will BLOCK commits that don't follow format"
+    ],
+    "examples": {
+      "correct": [
+        "[CF-001] feat(cloudflare): add Turnstile challenge variation",
+        "fix(encoding): correct URL encoding for special characters",
+        "docs(readme): update installation instructions"
+      ],
+      "incorrect": [
+        "Update code",
+        "Fix bug",
+        "Add feature",
+        "Changes",
+        "WIP"
+      ]
+    }
+  }
+}
