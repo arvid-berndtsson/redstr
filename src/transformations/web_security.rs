@@ -1,4 +1,3 @@
-#![allow(clippy::manual_is_multiple_of)]
 
 use crate::rng::SimpleRng;
 use crate::transformations::case::case_swap;
@@ -41,7 +40,7 @@ pub fn http_header_variation(input: &str) -> String {
     } else {
         // Apply case and whitespace variations
         let result = case_swap(input);
-        if rng.next().is_multiple_of(2) {
+        if rng.next() % 2 == 0 {
             result.replace(" ", "").replace(";", "; ")
         } else {
             result
@@ -122,18 +121,18 @@ pub fn graphql_obfuscate(query: &str) -> String {
             }
             '{' | '}' => {
                 // Sometimes add spaces, sometimes not
-                if rng.next().is_multiple_of(2) {
+                if rng.next() % 2 == 0 {
                     result.push(c);
                 } else {
                     result.push(c);
-                    if rng.next().is_multiple_of(2) {
+                    if rng.next() % 2 == 0 {
                         result.push(' ');
                     }
                 }
             }
             _ => {
                 // Case variation for field names
-                if c.is_alphabetic() && rng.next().is_multiple_of(4) {
+                if c.is_alphabetic() && rng.next() % 4 == 0 {
                     if c.is_uppercase() {
                         result.push_str(&c.to_lowercase().to_string());
                     } else {

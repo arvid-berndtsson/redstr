@@ -1,4 +1,3 @@
-#![allow(clippy::manual_is_multiple_of)]
 
 use crate::rng::SimpleRng;
 
@@ -22,7 +21,7 @@ pub fn leetspeak(input: &str) -> String {
             let lower = c.to_lowercase().to_string();
             match lower.as_str() {
                 "a" => {
-                    if rng.next().is_multiple_of(2) {
+                    if rng.next() % 2 == 0 {
                         "4"
                     } else {
                         "@"
@@ -30,7 +29,7 @@ pub fn leetspeak(input: &str) -> String {
                 }
                 "e" => "3",
                 "i" => {
-                    if rng.next().is_multiple_of(2) {
+                    if rng.next() % 2 == 0 {
                         "1"
                     } else {
                         "!"
@@ -38,7 +37,7 @@ pub fn leetspeak(input: &str) -> String {
                 }
                 "o" => "0",
                 "s" => {
-                    if rng.next().is_multiple_of(2) {
+                    if rng.next() % 2 == 0 {
                         "5"
                     } else {
                         "$"
@@ -134,7 +133,7 @@ pub fn double_characters(input: &str) -> String {
     input
         .chars()
         .map(|c| {
-            if c.is_alphabetic() && rng.next().is_multiple_of(3) {
+            if c.is_alphabetic() && rng.next() % 3 == 0 {
                 format!("{}{}", c, c)
             } else {
                 c.to_string()
@@ -172,7 +171,7 @@ pub fn whitespace_padding(input: &str) -> String {
 
     for c in input.chars() {
         result.push(c);
-        if c.is_alphanumeric() && rng.next().is_multiple_of(3) {
+        if c.is_alphanumeric() && rng.next() % 3 == 0 {
             let spaces = (rng.next() % 3) + 1;
             for _ in 0..spaces {
                 result.push(' ');
@@ -206,7 +205,7 @@ pub fn js_string_concat(input: &str) -> String {
     let mut i = 0;
 
     while i < chars.len() {
-        if rng.next().is_multiple_of(3) && i < chars.len() - 1 {
+        if rng.next() % 3 == 0 && i < chars.len() - 1 {
             // Split into multiple strings
             result.push('\'');
             result.push(chars[i]);

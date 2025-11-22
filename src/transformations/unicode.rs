@@ -1,4 +1,3 @@
-#![allow(clippy::manual_is_multiple_of)]
 
 use crate::rng::SimpleRng;
 
@@ -90,7 +89,7 @@ pub fn homoglyph_substitution(input: &str) -> String {
     input
         .chars()
         .map(|c| {
-            if !rng.next().is_multiple_of(3) {
+            if !rng.next() % 3 == 0 {
                 return c.to_string();
             }
 

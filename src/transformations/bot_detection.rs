@@ -1,4 +1,3 @@
-#![allow(clippy::manual_is_multiple_of)]
 
 use crate::rng::SimpleRng;
 use crate::transformations::case::case_swap;
@@ -111,7 +110,7 @@ pub fn tls_fingerprint_variation(input: &str) -> String {
                 0..=7 => c.to_string(),
                 8 => {
                     // Occasionally add a space or hyphen variation
-                    if c == '_' && rng.next().is_multiple_of(2) {
+                    if c == '_' && rng.next() % 2 == 0 {
                         "-".to_string()
                     } else {
                         c.to_string()
@@ -119,7 +118,7 @@ pub fn tls_fingerprint_variation(input: &str) -> String {
                 }
                 _ => {
                     // Case variation for some characters
-                    if c.is_alphabetic() && rng.next().is_multiple_of(3) {
+                    if c.is_alphabetic() && rng.next() % 3 == 0 {
                         if c.is_uppercase() {
                             c.to_lowercase().to_string()
                         } else {
@@ -155,9 +154,9 @@ pub fn cloudflare_challenge_variation(input: &str) -> String {
         input
             .chars()
             .map(|c| {
-                if c == '=' && rng.next().is_multiple_of(3) {
+                if c == '=' && rng.next() % 3 == 0 {
                     " = ".to_string() // Add spaces around equals
-                } else if c == '_' && rng.next().is_multiple_of(4) {
+                } else if c == '_' && rng.next() % 4 == 0 {
                     "-".to_string() // Replace underscore with hyphen
                 } else {
                     c.to_string()
@@ -194,14 +193,14 @@ pub fn accept_language_variation(input: &str) -> String {
         "en-US,en;q=0.9,*;q=0.8",
     ];
 
-    if rng.next().is_multiple_of(3) {
+    if rng.next() % 3 == 0 {
         variations[rng.next() as usize % variations.len()].to_string()
     } else {
         // Slight variation of input
         input
             .chars()
             .map(|c| {
-                if c == ',' && rng.next().is_multiple_of(2) {
+                if c == ',' && rng.next() % 2 == 0 {
                     ", ".to_string() // Add space after comma
                 } else {
                     c.to_string()

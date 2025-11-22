@@ -1,4 +1,3 @@
-#![allow(clippy::manual_is_multiple_of)]
 
 use crate::rng::SimpleRng;
 
@@ -38,7 +37,7 @@ pub fn powershell_obfuscate(cmd: &str) -> String {
             }
             _ => {
                 // Case variation
-                if c.is_alphabetic() && rng.next().is_multiple_of(3) {
+                if c.is_alphabetic() && rng.next() % 3 == 0 {
                     if c.is_uppercase() {
                         result.push_str(&c.to_lowercase().to_string());
                     } else {
@@ -123,7 +122,7 @@ pub fn env_var_obfuscate(input: &str) -> String {
                     2 => "$(".to_string(), // Command substitution start
                     _ => "$".to_string(),
                 }
-            } else if c.is_alphabetic() && rng.next().is_multiple_of(4) {
+            } else if c.is_alphabetic() && rng.next() % 4 == 0 {
                 // Case variation
                 if c.is_uppercase() {
                     c.to_lowercase().to_string()
@@ -161,7 +160,7 @@ pub fn file_path_obfuscate(path: &str) -> String {
                     0 => result.push('/'),
                     1 => {
                         // Add path traversal
-                        if rng.next().is_multiple_of(2) {
+                        if rng.next() % 2 == 0 {
                             result.push_str("../");
                         } else {
                             result.push('/');
@@ -181,7 +180,7 @@ pub fn file_path_obfuscate(path: &str) -> String {
             }
             _ => {
                 // Case variation for filenames
-                if c.is_alphabetic() && rng.next().is_multiple_of(5) {
+                if c.is_alphabetic() && rng.next() % 5 == 0 {
                     if c.is_uppercase() {
                         result.push_str(&c.to_lowercase().to_string());
                     } else {
