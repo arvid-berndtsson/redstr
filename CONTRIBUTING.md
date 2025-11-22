@@ -90,6 +90,28 @@ Update status in `roadmap/TASKS.md` when:
 - Keep line length < 100 characters
 - Follow Rust naming conventions
 
+### Pre-commit Hooks
+
+A pre-commit hook is automatically installed that runs the following checks before each commit:
+
+1. **Code Formatting** (`cargo fmt --check`)
+   - Ensures code follows Rust standard formatting
+   - If formatting fails, run `cargo fmt` to auto-format
+
+2. **Clippy** (`cargo clippy -- -D warnings`)
+   - Catches common mistakes and enforces idiomatic Rust
+   - All warnings must be fixed before committing
+
+3. **Compilation Check** (`cargo check`)
+   - Verifies code compiles successfully
+   - Catches compilation errors early
+
+4. **Tests** (`cargo test`)
+   - Runs all tests to ensure nothing is broken
+   - All tests must pass before committing
+
+**Note:** If you need to skip the pre-commit hook (e.g., for WIP commits), use `git commit --no-verify`. However, **never skip hooks for final commits** - all checks must pass before merging.
+
 ### Zero Dependencies Principle
 
 **CRITICAL:** The core library must use only Rust's standard library.
