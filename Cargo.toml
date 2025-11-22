@@ -1,8 +1,8 @@
 [package]
 name = "redstr"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
-authors = ["Arvid Berndtsson <103070833+arvid-berndtsson@users.noreply.github.com>"]
+authors = ["Arvid Berndtsson <dev@arvid.tech>"]
 description = "Red team string obfuscation and transformation for offensive security, WAF bypass, XSS, SQL injection, phishing, and evasion testing"
 license = "MIT"
 repository = "https://github.com/arvid-berndtsson/redstr"
@@ -29,3 +29,7 @@ serde = ["dep:serde"]
 
 [dependencies]
 serde = { version = "1.0", optional = true, features = ["derive"] }
+
+[package.metadata.docs.rs]
+# Build documentation with all features to show complete API
+all-features = true
