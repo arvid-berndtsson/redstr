@@ -1,6 +1,21 @@
 [package]
 name = "random-cap"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+authors = ["Arvid Berndtsson <103070833+arvid-berndtsson@users.noreply.github.com>"]
+description = "A versatile string obfuscation and transformation library for security testing"
+license = "MIT"
+repository = "https://github.com/arvid-berndtsson/random-cap"
+keywords = ["security", "obfuscation", "testing", "red-team", "penetration-testing"]
+categories = ["development-tools", "text-processing"]
+readme = "README.md"
+
+[lib]
+name = "random_cap"
+path = "src/lib.rs"
+
+[[bin]]
+name = "random-cap"
+path = "src/main.rs"
 
 [dependencies]
