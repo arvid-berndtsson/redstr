@@ -13,6 +13,9 @@ This directory contains all strategic planning, roadmap, and task management doc
 - **[QUICK_START.md](./QUICK_START.md)** - Quick start guide for developers and agents
 - **[SUMMARY.md](./SUMMARY.md)** - Executive summary
 
+### Implementation
+- **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** - Detailed implementation breakdown
+
 ## 🎯 Getting Started
 
 1. **New to the project?** Start with [QUICK_START.md](./QUICK_START.md)

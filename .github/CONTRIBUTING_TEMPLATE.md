@@ -28,6 +28,7 @@ Thank you for your interest in contributing to redstr! This document provides gu
 4. **Create Feature Branch**
    ```bash
    git checkout -b task/{TASK-ID}-{short-description}
+   # Example: task/CF-001-cloudflare-turnstile
    ```
 
 5. **Make Changes**
@@ -38,7 +39,7 @@ Thank you for your interest in contributing to redstr! This document provides gu
 
 6. **Submit PR**
    - Push your branch
-   - Create PR with task ID in title
+   - Create PR with task ID in title: `[TASK-ID] Description`
    - Use PR template
    - Update task status: 🟡 → ✅
 
@@ -97,7 +98,7 @@ Update status in `roadmap/TASKS.md` when:
 - ✅ Use `std` only for core functionality
 - ✅ Optional features (like `serde`) behind feature flags
 - ❌ Never add dependencies to core library
-- ✅ Dev-dependencies (like `criterion`) are OK for benchmarks
+- ✅ Dev-dependencies (like `criterion`, `cc-check`) are OK
 
 ### Testing
 
@@ -179,7 +180,7 @@ Fixes #456
 
 ### Validation
 
-Commit messages are automatically validated in CI. The format must be:
+Commit messages are automatically validated using `cc-check`. The format must be:
 
 ```
 [TASK-ID] <type>(<scope>): <subject>
@@ -191,12 +192,30 @@ Where:
 - `scope` is optional (module name)
 - `subject` is required (brief description)
 
+### Pre-commit Hook (Optional)
+
+You can install a pre-commit hook to validate commits locally:
+
+```bash
+# Install cc-check if not already installed
+cargo install cc-check
+
+# Create pre-commit hook
+cat > .git/hooks/pre-commit << 'EOF'
+#!/bin/bash
+cargo run --bin cc-check -- --check HEAD
+EOF
+
+chmod +x .git/hooks/pre-commit
+```
+
 ## 🔍 Code Review Process
 
 1. **Automated Checks**
    - Tests must pass
    - Clippy must pass
    - Formatting must be correct
+   - Commit messages must follow conventional commits
 
 2. **Review Criteria**
    - Code follows style guide
