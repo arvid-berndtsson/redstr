@@ -12,6 +12,9 @@ jobs:
   publish:
     name: Publish crate
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,8 +24,12 @@ jobs:
         with:
           toolchain: stable
 
+      - name: Authenticate with crates.io (Trusted Publishing)
+        id: auth
+        uses: rust-lang/crates-io-auth-action@v1
+
       - name: Publish to crates.io
         run: cargo publish --all-features
-        # For trusted publishing, no token is needed once configured on crates.io
-        # Configure the trusted publisher at: https://crates.io/settings/publishing
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
 
