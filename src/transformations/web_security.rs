@@ -484,7 +484,7 @@ mod tests {
     fn test_http_header_variation() {
         let header = "application/json";
         let result = http_header_variation(header);
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
         // Should contain application or json (case may vary)
         assert!(
             result.to_lowercase().contains("application") || result.to_lowercase().contains("json")
@@ -509,14 +509,14 @@ mod tests {
     fn test_session_token_variation() {
         let token = "abc123xyz";
         let result = session_token_variation(token);
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
     }
 
     #[test]
     fn test_graphql_variable_injection() {
         let query = "query($id: ID!) { user(id: $id) { name } }";
         let result = graphql_variable_injection(query);
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
         assert!(result.contains("user") || result.contains("query"));
     }
 
@@ -524,7 +524,7 @@ mod tests {
     fn test_graphql_introspection_bypass() {
         let query = "{ __schema { types { name } } }";
         let result = graphql_introspection_bypass(query);
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
         assert!(result.contains("schema") || result.contains("__"));
     }
 
@@ -532,28 +532,28 @@ mod tests {
     fn test_jwt_header_manipulation() {
         let header = r#"{"alg":"HS256","typ":"JWT"}"#;
         let result = jwt_header_manipulation(header);
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
     }
 
     #[test]
     fn test_jwt_payload_obfuscate() {
         let payload = r#"{"sub":"user123","role":"admin"}"#;
         let result = jwt_payload_obfuscate(payload);
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
     }
 
     #[test]
     fn test_jwt_algorithm_confusion() {
         let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
         let result = jwt_algorithm_confusion(token);
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
     }
 
     #[test]
     fn test_jwt_signature_bypass() {
         let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
         let result = jwt_signature_bypass(token);
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
         // Should contain at least the first two parts
         assert!(result.contains("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"));
     }

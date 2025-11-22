@@ -602,7 +602,7 @@ mod nosql_ssti_tests {
     fn test_mongodb_injection() {
         let query = r#"{"username": "admin", "password": "secret"}"#;
         let result = mongodb_injection(query);
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
         assert!(result.contains("username") || result.contains("password"));
     }
 
@@ -610,41 +610,41 @@ mod nosql_ssti_tests {
     fn test_couchdb_injection() {
         let query = r#"{"selector": {"name": "admin"}}"#;
         let result = couchdb_injection(query);
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
     }
 
     #[test]
     fn test_dynamodb_obfuscate() {
         let query = r#"{"Key": {"id": {"S": "123"}}}"#;
         let result = dynamodb_obfuscate(query);
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
     }
 
     #[test]
     fn test_nosql_operator_injection() {
         let query = r#"{"username": "admin"}"#;
         let result = nosql_operator_injection(query);
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
     }
 
     #[test]
     fn test_ssti_injection() {
         let template = "Hello {{ name }}";
         let result = ssti_injection(template);
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
     }
 
     #[test]
     fn test_ssti_framework_variation() {
         let template = "Hello {{ name }}";
         let result = ssti_framework_variation(template, "jinja2");
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
     }
 
     #[test]
     fn test_ssti_syntax_obfuscate() {
         let template = "{{ name }}";
         let result = ssti_syntax_obfuscate(template);
-        assert!(result.len() > 0);
+        assert!(!result.is_empty());
     }
 }
