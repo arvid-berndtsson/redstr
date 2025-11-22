@@ -1,5 +1,8 @@
 use crate::transformations::bot_detection::cloudflare_challenge_variation;
 use crate::transformations::case::{case_swap, randomize_capitalization};
+use crate::transformations::cloudflare::{
+    cloudflare_challenge_response, cloudflare_turnstile_variation,
+};
 use crate::transformations::encoding::{base64_encode, hex_encode, url_encode};
 use crate::transformations::obfuscation::{leetspeak, rot13};
 use crate::transformations::phishing::{advanced_domain_spoof, email_obfuscation};
@@ -109,6 +112,18 @@ impl TransformBuilder {
         self
     }
 
+    /// Applies Cloudflare Turnstile challenge variation.
+    pub fn cloudflare_turnstile(mut self) -> Self {
+        self.text = cloudflare_turnstile_variation(&self.text);
+        self
+    }
+
+    /// Applies Cloudflare challenge response pattern.
+    pub fn cloudflare_challenge_response(mut self) -> Self {
+        self.text = cloudflare_challenge_response(&self.text);
+        self
+    }
+
     /// Applies GraphQL obfuscation (for Caido).
     pub fn graphql_obfuscate(mut self) -> Self {
         self.text = graphql_obfuscate(&self.text);
@@ -148,6 +163,30 @@ mod tests {
 
         let result3 = TransformBuilder::new("Get-Process")
             .powershell_obfuscate()
+            .build();
+        assert!(result3.len() > 0);
+    }
+
+    #[test]
+    fn test_transform_builder_cloudflare_functions() {
+        let result = TransformBuilder::new("challenge-token")
+            .cloudflare_turnstile()
+            .build();
+        assert!(result.len() > 0);
+        assert!(result.contains("challenge-token"));
+
+        let result2 = TransformBuilder::new("cf_clearance=abc123")
+            .cloudflare_challenge_response()
+            .build();
+        assert!(result2.len() > 0);
+        assert!(
+            result2.to_lowercase().contains("cf_clearance")
+                || result2.to_lowercase().contains("cf-clearance")
+        );
+
+        let result3 = TransformBuilder::new("test")
+            .cloudflare_turnstile()
+            .cloudflare_challenge_response()
             .build();
         assert!(result3.len() > 0);
     }
