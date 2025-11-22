@@ -1,0 +1,32 @@
+Source: redstr
+Section: devel
+Priority: optional
+Maintainer: Arvid Berndtsson <dev@arvid.tech>
+Build-Depends: debhelper-compat (= 13), cargo, rustc (>= 1.70), libssl-dev, pkg-config
+Standards-Version: 4.6.2
+Homepage: https://github.com/arvid-berndtsson/redstr
+Vcs-Browser: https://github.com/arvid-berndtsson/redstr
+Vcs-Git: https://github.com/arvid-berndtsson/redstr.git
+Rules-Requires-Root: no
+
+Package: redstr
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Red team string obfuscation and transformation tool
+ Red team string transformation library and CLI tool for offensive security
+ operations, penetration testing, and evasion techniques.
+ .
+ A comprehensive Rust library providing 30+ string obfuscation and
+ transformation functions for red team operations, blue team defense testing,
+ and purple team collaboration. Perfect for security professionals building
+ tools like Caido, Burp Suite extensions, phishing frameworks (EvilJinx), WAF
+ bypass testing, XSS detection, SQL injection testing, and bot detection
+ evasion.
+ .
+ Features:
+  - Zero required dependencies (core library uses only Rust std)
+  - 30+ transformation functions
+  - Builder pattern API
+  - Command-line interface included
+  - Performance optimized
+  - Security-focused design

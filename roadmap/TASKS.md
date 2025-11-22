@@ -190,7 +190,7 @@ debian/
 **Estimated Time:** 2 weeks  
 **Status:** ⬜ Not Started  
 **Assignee:** _Available_  
-**Tags:** `packaging` `parrotos` `phase:1`
+**Tags:** `[AGENT-FRIENDLY]` `packaging` `parrotos` `phase:1`
 
 **Description:**
 Prepare and submit redstr package to ParrotOS repository.
@@ -218,7 +218,7 @@ Prepare and submit redstr package to ParrotOS repository.
 **Estimated Time:** 2 weeks  
 **Status:** ⬜ Not Started  
 **Assignee:** _Available_  
-**Tags:** `packaging` `kali` `phase:1`
+**Tags:** `[AGENT-FRIENDLY]` `packaging` `kali` `phase:1`
 
 **Description:**
 Prepare and submit redstr package to Kali Linux repository.
