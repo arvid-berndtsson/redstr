@@ -3,11 +3,13 @@ name = "polystr"
 version = "0.1.0"
 edition = "2021"
 authors = ["Arvid Berndtsson <103070833+arvid-berndtsson@users.noreply.github.com>"]
-description = "Polymorphic string transformation library for security testing, penetration testing tools, and bot detection"
+description = "Polymorphic string obfuscation and transformation for red team, blue team security testing, WAF bypass, XSS, SQL injection, and phishing detection"
 license = "MIT"
 repository = "https://github.com/arvid-berndtsson/random-cap"
-keywords = ["security", "obfuscation", "penetration-testing", "web-security", "phishing"]
-categories = ["development-tools", "text-processing", "web-programming"]
+documentation = "https://docs.rs/polystr"
+homepage = "https://github.com/arvid-berndtsson/random-cap"
+keywords = ["security", "obfuscation", "red-team", "waf-bypass", "xss"]
+categories = ["development-tools", "text-processing", "web-programming", "encoding"]
 readme = "README.md"
 
 [lib]

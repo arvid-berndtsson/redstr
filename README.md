@@ -1,19 +1,84 @@
 # polystr
 
-A Rust library for string obfuscation and transformation designed for security testing and penetration testing tools. Ideal for integration into tools like Caido, EvilJinx, urlscan.io, and bot detection systems.
+[![Crates.io](https://img.shields.io/crates/v/polystr.svg)](https://crates.io/crates/polystr)
+[![Documentation](https://docs.rs/polystr/badge.svg)](https://docs.rs/polystr)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Features
+**Polymorphic string transformation library for offensive security, penetration testing, and evasion techniques.**
 
-Production-ready library for security professionals and tool developers:
+A comprehensive Rust library providing 30+ string obfuscation and transformation functions for red team operations, blue team defense testing, and purple team collaboration. Perfect for security professionals building tools like Caido, Burp Suite extensions, phishing frameworks (EvilJinx), WAF bypass testing, XSS detection, SQL injection testing, and bot detection evasion.
+
+## 🎯 Use Cases
+
+**Red Team / Offensive Security:**
+- WAF (Web Application Firewall) bypass techniques
+- XSS (Cross-Site Scripting) payload obfuscation
+- SQL injection evasion patterns
+- Phishing domain generation (typosquatting, homoglyphs)
+- Command injection testing
+- Path traversal attacks
+- Bot detection evasion
+- Payload encoding and obfuscation
+
+**Blue Team / Defensive Security:**
+- Security control testing
+- Filter and detection validation
+- Input sanitization testing
+- Threat intelligence enrichment
+- Malicious content detection
+- Log analysis and normalization
+
+**Purple Team / Security Testing:**
+- Collaborative red/blue exercises
+- Baseline security testing
+- Security awareness training
+- Vulnerability assessment
+- Penetration testing automation
+
+## 🚀 Features
+
+**Production-ready library for security professionals and tool developers:**
 
 - **Zero required dependencies** - Core library uses only Rust's standard library
 - **30+ transformation functions** - Encoding, obfuscation, injection testing, and web-focused transformations
-- **Builder pattern** - Chain multiple transformations fluently
-- **Serialization support** - Optional serde integration for web APIs
+- **Builder pattern API** - Chain multiple transformations fluently with `TransformBuilder`
+- **Serialization support** - Optional serde integration for web APIs and tool integration
+- **Performance optimized** - Efficient string operations for high-throughput scenarios
 - **Security-focused** - Designed for red/blue/purple team workflows and bot detection testing
 - **Well-documented** - Complete API documentation with real-world integration examples
+- **CLI tool included** - Optional command-line interface for quick testing
 
-## Installation
+## 🤔 Why polystr?
+
+**For Security Tool Developers:**
+- Integrate into Caido, Burp Suite, or custom security proxies
+- Build phishing frameworks and social engineering tools
+- Create WAF testing and bypass automation
+- Develop bot detection evasion systems
+- Build URL scanners and malware analysis tools
+
+**For Penetration Testers:**
+- Generate payload variations for manual testing
+- Bypass security controls and filters
+- Test input validation and encoding
+- Create phishing campaigns with typosquatting
+- Obfuscate attack payloads
+
+**For Security Researchers:**
+- Test detection engines and security controls
+- Research evasion techniques
+- Validate security implementations
+- Create proof-of-concept exploits
+- Analyze filter bypass methods
+
+**Compared to alternatives:**
+- **Native Rust performance** - No Python or JavaScript overhead
+- **Type-safe API** - Compile-time guarantees
+- **Zero dependencies** - No supply chain risks
+- **Comprehensive coverage** - 30+ functions in one library
+- **Active development** - Modern security techniques
+
+## 📦 Installation
 
 ### Basic Installation
 
@@ -444,6 +509,82 @@ cargo build --release --features cli
 ```bash
 cargo test
 ```
+
+## 📚 Complete Function Reference
+
+### Encoding & Obfuscation
+- **base64_encode** - Base64 encoding for payload obfuscation
+- **url_encode** - RFC 3986 URL/percent encoding with UTF-8 support
+- **hex_encode** - Hexadecimal encoding (lowercase)
+- **hex_encode_mixed** - Mixed hex formats (`\x`, `%`, `0x`, `&#x`)
+- **html_entity_encode** - HTML entity encoding for XSS testing
+- **mixed_encoding** - Mixed character encodings (HTML entities + Unicode)
+
+### String Transformation
+- **randomize_capitalization** - Random case for each character
+- **alternate_case** - Alternating upper/lowercase
+- **inverse_case** - Invert case of all characters
+- **case_swap** - Random case mutation for WAF bypass
+- **leetspeak** - Convert to 1337speak for filter evasion
+- **rot13** - ROT13 cipher transformation
+- **reverse_string** - Reverse string order
+
+### Unicode & Homoglyphs
+- **homoglyph_substitution** - Lookalike character substitution for phishing
+- **unicode_variations** - Random Unicode character variations
+- **unicode_normalize_variants** - Unicode normalization testing
+- **zalgo_text** - Combining characters for display corruption
+
+### Case Conversion
+- **to_camel_case** - Convert to camelCase
+- **to_snake_case** - Convert to snake_case
+- **to_kebab_case** - Convert to kebab-case
+
+### Injection Testing
+- **sql_comment_injection** - SQL comment patterns (`--`, `/**/`, `#`)
+- **xss_tag_variations** - XSS tag obfuscation and encoding
+- **command_injection** - OS command separators (`;`, `|`, `&&`)
+- **path_traversal** - Directory traversal patterns (`../`, `..\\`)
+- **null_byte_injection** - Null byte representations (`%00`, `\0`)
+
+### Web Security
+- **random_user_agent** - Generate random browser user-agents
+- **domain_typosquat** - Typosquatting variations for phishing
+- **js_string_concat** - JavaScript string concatenation obfuscation
+- **whitespace_padding** - Random whitespace for filter bypass
+
+### Utility Functions
+- **vowel_swap** - Swap vowels for pattern matching tests
+- **double_characters** - Random character doubling
+- **space_variants** - Various Unicode space characters
+
+### Builder Pattern
+- **TransformBuilder** - Fluent API for chaining transformations
+
+## 🔍 SEO Keywords
+
+**Security Testing:** WAF bypass, XSS evasion, SQL injection, phishing detection, bot detection, security automation, penetration testing tools, red team tools, blue team defense, purple team testing
+
+**Techniques:** String obfuscation, payload encoding, filter bypass, evasion techniques, homoglyph attacks, typosquatting, domain spoofing, Unicode normalization, character encoding
+
+**Tool Integration:** Caido integration, Burp Suite, EvilJinx, urlscan.io, Cloudflare bypass, security proxies, phishing frameworks, malware analysis
+
+**Technologies:** Rust security library, zero-dependency Rust, type-safe security, polymorphic strings, transformation library
+
+## 🤝 Contributing
+
+Contributions are welcome! This library is designed for the security community. Whether you're adding new transformation functions, improving documentation, or reporting issues, your input helps make security testing more effective.
+
+## 📖 Learn More
+
+- **Documentation**: [docs.rs/polystr](https://docs.rs/polystr)
+- **Repository**: [GitHub](https://github.com/arvid-berndtsson/random-cap)
+- **Examples**: See the `examples/` directory for comprehensive integration patterns
+- **Blog Posts**: Check for community blog posts and integration guides (coming soon)
+
+## ⚠️ Responsible Use
+
+This library is intended for authorized security testing, research, and defensive security purposes only. Users are responsible for ensuring they have proper authorization before using these techniques on systems they do not own or have explicit permission to test.
 
 ## License
 
