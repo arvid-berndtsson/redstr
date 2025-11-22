@@ -1,15 +1,17 @@
 # random-cap
 
-A versatile string obfuscation and transformation library for security testing, useful for red team, blue team, and purple team activities.
+A Rust library for string obfuscation and transformation designed for security testing. Provides tools for red team, blue team, and purple team activities.
 
 ## Features
 
-This library provides multiple string transformation functions designed to help security professionals test various scenarios. It can be used both as a library in your Rust projects or as a command-line tool.
+This library provides multiple string transformation functions to help security professionals test various scenarios in their Rust applications.
 
-**Primary use case:** Library for integration into security tools  
-**Secondary use case:** Command-line binary for quick testing
+- **Zero dependencies** - Uses only Rust's standard library
+- **Comprehensive API** - 24+ transformation functions covering encoding, obfuscation, and injection testing
+- **Security-focused** - Designed specifically for red/blue/purple team workflows
+- **Well-documented** - Complete API documentation and examples
 
-## Library Usage
+## Installation
 
 Add this to your `Cargo.toml`:
 
@@ -55,14 +57,22 @@ fn main() {
 
 See the [examples directory](examples/) for more detailed usage examples.
 
-## Command-Line Usage
+## Optional Command-Line Tool
+
+An optional CLI binary is available for quick testing and experimentation.
 
 ### Installation
 
+To install with the CLI tool:
+
 ```bash
-cargo install random-cap
-# Or build from source:
-cargo build --release
+cargo install random-cap --features cli
+```
+
+Or build from source with the CLI feature:
+
+```bash
+cargo build --release --features cli
 ```
 
 The binary will be available at `target/release/random-cap`.
@@ -294,12 +304,20 @@ See the [library documentation](https://docs.rs/random-cap) for detailed API doc
 
 ## No Dependencies
 
-This tool uses only Rust's standard library and has zero external dependencies, making it lightweight and easy to audit.
+This library uses only Rust's standard library and has zero external dependencies, making it lightweight and easy to audit.
 
 ## Building
 
+To build the library:
+
 ```bash
 cargo build --release
+```
+
+To build with the optional CLI tool:
+
+```bash
+cargo build --release --features cli
 ```
 
 ## Running Tests
