@@ -1,3 +1,5 @@
+#![allow(clippy::manual_is_multiple_of)]
+
 use crate::rng::SimpleRng;
 
 /// Applies random capitalization to each letter in the input string.
@@ -18,7 +20,7 @@ pub fn randomize_capitalization(input: &str) -> String {
         .chars()
         .map(|c| {
             if c.is_alphabetic() {
-                if rng.next() % 2 == 0 {
+                if rng.next().is_multiple_of(2) {
                     c.to_uppercase().to_string()
                 } else {
                     c.to_lowercase().to_string()
@@ -98,7 +100,7 @@ pub fn case_swap(input: &str) -> String {
     input
         .chars()
         .map(|c| {
-            if c.is_alphabetic() && rng.next() % 2 == 0 {
+            if c.is_alphabetic() && rng.next().is_multiple_of(2) {
                 if c.is_uppercase() {
                     c.to_lowercase().to_string()
                 } else {

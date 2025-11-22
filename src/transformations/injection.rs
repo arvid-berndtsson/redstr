@@ -1,3 +1,5 @@
+#![allow(clippy::manual_is_multiple_of)]
+
 use crate::rng::SimpleRng;
 
 /// Inserts SQL comment patterns for SQL injection testing.
@@ -21,7 +23,7 @@ pub fn sql_comment_injection(input: &str) -> String {
         .iter()
         .enumerate()
         .map(|(i, word)| {
-            if i > 0 && rng.next() % 3 == 0 {
+            if i > 0 && rng.next().is_multiple_of(3) {
                 let comment = comments[rng.next() as usize % comments.len()];
                 format!("{}{}", comment, word)
             } else {
@@ -64,8 +66,8 @@ pub fn xss_tag_variations(input: &str) -> String {
                     2 => "&#x3E;".to_string(),
                     _ => "%3E".to_string(),
                 }
-            } else if c.is_alphabetic() && rng.next() % 3 == 0 {
-                if rng.next() % 2 == 0 {
+            } else if c.is_alphabetic() && rng.next().is_multiple_of(3) {
+                if rng.next().is_multiple_of(2) {
                     c.to_uppercase().to_string()
                 } else {
                     c.to_lowercase().to_string()
@@ -99,7 +101,7 @@ pub fn null_byte_injection(input: &str) -> String {
         .chars()
         .enumerate()
         .map(|(i, c)| {
-            if i > 0 && i < input_len - 1 && rng.next() % 4 == 0 {
+            if i > 0 && i < input_len - 1 && rng.next().is_multiple_of(4) {
                 let null = null_variants[rng.next() as usize % null_variants.len()];
                 format!("{}{}", null, c)
             } else {
@@ -130,7 +132,7 @@ pub fn path_traversal(input: &str) -> String {
 
     for (i, part) in parts.iter().enumerate() {
         if i > 0 {
-            if rng.next() % 2 == 0 {
+            if rng.next().is_multiple_of(2) {
                 let traversal = traversals[rng.next() as usize % traversals.len()];
                 result.push_str(traversal);
             } else {
@@ -164,7 +166,7 @@ pub fn command_injection(input: &str) -> String {
         .iter()
         .enumerate()
         .map(|(i, word)| {
-            if i > 0 && rng.next() % 3 == 0 {
+            if i > 0 && rng.next().is_multiple_of(3) {
                 let sep = separators[rng.next() as usize % separators.len()];
                 format!("{}{}", sep, word)
             } else {
