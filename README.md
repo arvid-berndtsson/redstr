@@ -578,7 +578,7 @@ Contributions are welcome! This library is designed for the security community. 
 ## 📖 Learn More
 
 - **Documentation**: [docs.rs/redstr](https://docs.rs/redstr)
-- **Repository**: [GitHub](https://github.com/arvid-berndtsson/random-cap)
+- **Repository**: [GitHub](https://github.com/arvid-berndtsson/redstr)
 - **Examples**: See the `examples/` directory for comprehensive integration patterns
 - **Blog Posts**: Check for community blog posts and integration guides (coming soon)
 

@@ -1,0 +1,28 @@
+name: Publish to crates.io
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish crate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Publish to crates.io
+        run: cargo publish --all-features
+        # For trusted publishing, no token is needed once configured on crates.io
+        # Configure the trusted publisher at: https://crates.io/settings/publishing
+
