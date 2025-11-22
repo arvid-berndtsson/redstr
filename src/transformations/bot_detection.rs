@@ -233,7 +233,8 @@ mod tests {
         let cipher = "TLS_AES_256_GCM_SHA384";
         let result = tls_fingerprint_variation(cipher);
         assert!(result.len() > 0);
-        assert!(result.contains("TLS"));
+        // Check case-insensitive since function can vary case
+        assert!(result.to_uppercase().contains("TLS"));
     }
 
     #[test]

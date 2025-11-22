@@ -1,5 +1,6 @@
 pub mod bot_detection;
 pub mod case;
+pub mod cloudflare;
 pub mod encoding;
 pub mod injection;
 pub mod obfuscation;
