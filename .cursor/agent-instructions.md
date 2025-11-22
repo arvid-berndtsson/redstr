@@ -2,7 +2,7 @@
 
 ## ⚠️ CRITICAL: COMMIT MESSAGES AND PR TITLES
 
-**YOU MUST ALWAYS follow conventional commits format for ALL commits and PR titles.**
+**YOU MUST ALWAYS follow conventional commits format for ALL commits and PR titles. This is enforced in CI.**
 
 ### Commit Message Format
 
@@ -66,7 +66,6 @@
 
 - CI will **FAIL** if commits don't follow this format
 - CI will **FAIL** if PR titles don't follow this format
-- Git hooks will **BLOCK** commits that don't follow this format
 - **There are NO exceptions to this rule**
 
 ### How to Write a Good Commit Message

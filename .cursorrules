@@ -1,14 +1,8 @@
 # redstr - Cursor Rules
 
-## 🚨🚨🚨 CURSOR CLOUD AGENT: READ THIS FIRST 🚨🚨🚨
-
-**BEFORE MAKING ANY COMMIT OR CREATING ANY PR, YOU MUST READ THIS SECTION!**
-
 ## ⚠️ CRITICAL FOR AI AGENTS: COMMIT MESSAGES AND PR TITLES
 
-**🚨 CURSOR CLOUD AGENT: READ THIS FIRST 🚨**
-
-**ALL commits and PR titles MUST follow conventional commits format. NO EXCEPTIONS.**
+**ALL commits and PR titles MUST follow conventional commits format. This is enforced in CI.**
 
 ### Format (REQUIRED)
 ```
@@ -46,15 +40,7 @@
 
 ### Enforcement
 - **CI will FAIL** if commits or PR titles don't follow this format
-- **Git hooks will BLOCK** commits that don't follow this format
-- **There are NO exceptions**
-
-### Before Every Commit/PR
-1. **STOP** and verify your message/title matches the format above
-2. If it doesn't match, **REWRITE IT** before committing/creating PR
-3. Check the type is one of: feat, fix, docs, style, refactor, test, chore, perf
-
-**See `.cursor/agent-instructions.md` for detailed instructions.**
+- **See "Commit Messages" section below for full details**
 
 ## Project Overview
 redstr is a Rust library for string obfuscation and transformation designed for security testing (red team, blue team, purple team activities). The library provides 30+ transformation functions for WAF bypass, XSS evasion, SQL injection testing, phishing detection, and bot detection evasion.

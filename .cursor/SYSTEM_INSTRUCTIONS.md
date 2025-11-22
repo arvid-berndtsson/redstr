@@ -39,7 +39,6 @@
 ## ENFORCEMENT
 
 - CI will FAIL if format is wrong
-- Git hooks will BLOCK commits
 - NO EXCEPTIONS
 
 ## BEFORE COMMITTING

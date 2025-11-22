@@ -144,9 +144,7 @@ A pre-commit hook is automatically installed that runs the following checks befo
 
 ## 📝 Commit Messages
 
-**We enforce conventional commits using `cc-check`.**
-
-**⚠️ CURSOR CLOUD AGENT USERS:** See `.cursor/agent-instructions.md` and `.cursor/SYSTEM_INSTRUCTIONS.md` for detailed instructions.
+**We enforce conventional commits using `cc-check` in CI.**
 
 ### Format
 
@@ -214,6 +212,8 @@ Where:
 - `type` is required (feat, fix, docs, etc.)
 - `scope` is optional (module name)
 - `subject` is required (brief description)
+
+**CI will fail if commits don't follow this format.**
 
 ## 🔍 Code Review Process
 
