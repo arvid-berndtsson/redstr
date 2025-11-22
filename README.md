@@ -1,27 +1,111 @@
-# random-cap
+# redstr
 
-A versatile string obfuscation and transformation library for security testing, useful for red team, blue team, and purple team activities.
+[![Crates.io](https://img.shields.io/crates/v/redstr.svg)](https://crates.io/crates/redstr)
+[![Documentation](https://docs.rs/redstr/badge.svg)](https://docs.rs/redstr)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Features
+**Red team string transformation library for offensive security operations, penetration testing, and evasion techniques.**
 
-This library provides multiple string transformation functions designed to help security professionals test various scenarios. It can be used both as a library in your Rust projects or as a command-line tool.
+A comprehensive Rust library providing 30+ string obfuscation and transformation functions for red team operations, blue team defense testing, and purple team collaboration. Perfect for security professionals building tools like Caido, Burp Suite extensions, phishing frameworks (EvilJinx), WAF bypass testing, XSS detection, SQL injection testing, and bot detection evasion.
 
-**Primary use case:** Library for integration into security tools  
-**Secondary use case:** Command-line binary for quick testing
+## 🎯 Use Cases
 
-## Library Usage
+**Red Team / Offensive Security:**
+- WAF (Web Application Firewall) bypass techniques
+- XSS (Cross-Site Scripting) payload obfuscation
+- SQL injection evasion patterns
+- Phishing domain generation (typosquatting, homoglyphs)
+- Command injection testing
+- Path traversal attacks
+- Bot detection evasion
+- Payload encoding and obfuscation
+
+**Blue Team / Defensive Security:**
+- Security control testing
+- Filter and detection validation
+- Input sanitization testing
+- Threat intelligence enrichment
+- Malicious content detection
+- Log analysis and normalization
+
+**Purple Team / Security Testing:**
+- Collaborative red/blue exercises
+- Baseline security testing
+- Security awareness training
+- Vulnerability assessment
+- Penetration testing automation
+
+## 🚀 Features
+
+**Production-ready library for security professionals and tool developers:**
+
+- **Zero required dependencies** - Core library uses only Rust's standard library
+- **30+ transformation functions** - Encoding, obfuscation, injection testing, and web-focused transformations
+- **Builder pattern API** - Chain multiple transformations fluently with `TransformBuilder`
+- **Serialization support** - Optional serde integration for web APIs and tool integration
+- **Performance optimized** - Efficient string operations for high-throughput scenarios
+- **Security-focused** - Designed for red/blue/purple team workflows and bot detection testing
+- **Well-documented** - Complete API documentation with real-world integration examples
+- **CLI tool included** - Optional command-line interface for quick testing
+
+## 🤔 Why redstr?
+
+**For Security Tool Developers:**
+- Integrate into Caido, Burp Suite, or custom security proxies
+- Build phishing frameworks and social engineering tools
+- Create WAF testing and bypass automation
+- Develop bot detection evasion systems
+- Build URL scanners and malware analysis tools
+
+**For Penetration Testers:**
+- Generate payload variations for manual testing
+- Bypass security controls and filters
+- Test input validation and encoding
+- Create phishing campaigns with typosquatting
+- Obfuscate attack payloads
+
+**For Security Researchers:**
+- Test detection engines and security controls
+- Research evasion techniques
+- Validate security implementations
+- Create proof-of-concept exploits
+- Analyze filter bypass methods
+
+**Compared to alternatives:**
+- **Native Rust performance** - No Python or JavaScript overhead
+- **Type-safe API** - Compile-time guarantees
+- **Zero dependencies** - No supply chain risks
+- **Comprehensive coverage** - 30+ functions in one library
+- **Active development** - Modern security techniques
+
+## 📦 Installation
+
+### Basic Installation
 
 Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-random-cap = "0.1.0"
+redstr = "0.1.0"
 ```
 
-### Quick Example
+### With Serde Support (for web tools)
+
+```toml
+[dependencies]
+redstr = { version = "0.1.0", features = ["serde"] }
+```
+
+## Quick Start
+
+### Basic Usage
 
 ```rust
-use random_cap::{randomize_capitalization, leetspeak, homoglyph_substitution};
+use redstr::{
+    randomize_capitalization, leetspeak, homoglyph_substitution,
+    base64_encode, sql_comment_injection, xss_tag_variations,
+    random_user_agent, domain_typosquat
+};
 
 fn main() {
     // Random capitalization
@@ -35,27 +119,132 @@ fn main() {
     // Homoglyph substitution for phishing tests
     let spoofed = homoglyph_substitution("admin@example.com");
     println!("{}", spoofed);  // e.g., "аdmіn@еxаmple.com"
+
+    // Web scraping with random user agents
+    let ua = random_user_agent();
+    println!("{}", ua);  // Random modern browser UA
+
+    // Domain typosquatting for phishing detection
+    let typo = domain_typosquat("example.com");
+    println!("{}", typo);  // e.g., "examp1e.com", "exmaple.com"
 }
+```
+
+### Builder Pattern (New!)
+
+Chain multiple transformations fluently:
+
+```rust
+use redstr::TransformBuilder;
+
+fn main() {
+    // Chain transformations
+    let result = TransformBuilder::new("admin@example.com")
+        .homoglyphs()
+        .url_encode()
+        .build();
+    
+    // Perfect for creating complex payloads
+    let payload = TransformBuilder::new("SELECT * FROM users")
+        .case_swap()
+        .base64()
+        .build();
+}
+```
+
+## Integration Examples
+
+### Caido / Web Security Testing Tools
+
+```rust
+use redstr::{random_user_agent, url_encode, xss_tag_variations};
+
+// Randomize requests to avoid fingerprinting
+let headers = vec![
+    ("User-Agent", random_user_agent()),
+];
+
+// Test XSS payloads with variations
+let payload = "<script>alert(1)</script>";
+let variations = vec![
+    xss_tag_variations(payload),
+    url_encode(&xss_tag_variations(payload)),
+];
+```
+
+### EvilJinx / Phishing Frameworks
+
+```rust
+use redstr::{domain_typosquat, homoglyph_substitution, html_entity_encode};
+
+// Generate phishing domains
+let target = "paypal.com";
+let typosquat = domain_typosquat(target);
+let homoglyph = homoglyph_substitution(target);
+
+// Obfuscate phishing page content
+let link = "https://secure.paypal.com/login";
+let obfuscated = html_entity_encode(&homoglyph_substitution(link));
+```
+
+### Bot Detection Testing
+
+```rust
+use redstr::{
+    random_user_agent, 
+    js_string_concat, 
+    unicode_normalize_variants,
+    whitespace_padding
+};
+
+// Simulate various bot evasion techniques
+let user_agent = random_user_agent();
+let obfuscated_js = js_string_concat("document.cookie");
+let normalized = unicode_normalize_variants("robot");
+```
+
+### URL Scanner / Web Crawler Integration
+
+```rust
+use redstr::{url_encode, base64_encode, TransformBuilder};
+
+// Encode URLs for safe storage/transmission
+let suspicious_url = "http://example.com/path?param=<script>";
+let safe_url = url_encode(suspicious_url);
+
+// Create encoded payloads for analysis
+let payload = TransformBuilder::new("malicious-content")
+    .base64()
+    .url_encode()
+    .build();
 ```
 
 See the [examples directory](examples/) for more detailed usage examples.
 
-## Command-Line Usage
+## Optional Command-Line Tool
+
+An optional CLI binary is available for quick testing and experimentation.
 
 ### Installation
 
+To install with the CLI tool:
+
 ```bash
-cargo install random-cap
-# Or build from source:
-cargo build --release
+cargo install redstr --features cli
 ```
 
-The binary will be available at `target/release/random-cap`.
+Or build from source with the CLI feature:
+
+```bash
+cargo build --release --features cli
+```
+
+The binary will be available at `target/release/redstr`.
 
 ### CLI Usage
 
 ```bash
-random-cap [mode] <text>
+redstr [mode] <text>
 ```
 
 If no mode is specified, random capitalization is used by default.
@@ -86,98 +275,233 @@ All transformation functions accept a `&str` and return a `String`. Here are the
 - `space_variants(input: &str) -> String` - Use various space characters
 - `mixed_encoding(input: &str) -> String` - Mix character encodings
 
-See the [library documentation](https://docs.rs/random-cap) for detailed API documentation.
+### Encoding and Obfuscation Functions
+- `base64_encode(input: &str) -> String` - Encode to Base64
+- `url_encode(input: &str) -> String` - URL/percent encoding
+- `hex_encode(input: &str) -> String` - Encode to hexadecimal
+- `hex_encode_mixed(input: &str) -> String` - Mixed hex formats (\\x, %, 0x, &#x)
+
+### Injection Testing Functions
+- `sql_comment_injection(input: &str) -> String` - Insert SQL comment patterns
+- `xss_tag_variations(input: &str) -> String` - Generate XSS tag variations
+- `case_swap(input: &str) -> String` - Random case swapping for WAF bypass
+- `null_byte_injection(input: &str) -> String` - Insert null byte representations
+- `path_traversal(input: &str) -> String` - Generate path traversal patterns
+- `command_injection(input: &str) -> String` - Insert command injection separators
+
+### Web Security Functions (NEW!)
+- `random_user_agent() -> String` - Generate random browser user-agent strings
+- `domain_typosquat(domain: &str) -> String` - Create typosquatting variations for phishing
+- `html_entity_encode(input: &str) -> String` - Encode using HTML entities
+- `js_string_concat(input: &str) -> String` - JavaScript string concatenation obfuscation
+- `unicode_normalize_variants(input: &str) -> String` - Unicode normalization variations
+- `whitespace_padding(input: &str) -> String` - Add random whitespace for filter bypass
+
+### Builder API (NEW!)
+- `TransformBuilder::new(input: &str)` - Create a transformation chain
+  - `.leetspeak()` - Apply leetspeak
+  - `.base64()` - Apply base64 encoding
+  - `.url_encode()` - Apply URL encoding
+  - `.redstrs()` - Apply random capitalization
+  - `.homoglyphs()` - Apply homoglyph substitution
+  - `.case_swap()` - Apply case swapping
+  - `.hex_encode()` - Apply hex encoding
+  - `.rot13()` - Apply ROT13
+  - `.build()` - Get the final result
+
+See the [library documentation](https://docs.rs/redstr) for detailed API documentation.
 
 ### CLI Transformation Modes
 
 #### Basic Transformations
 
 - **random, r** - Random capitalization (default)
-  - Example: `random-cap "Hello World"` → `HeLlO wOrLd`
+  - Example: `redstr "Hello World"` → `HeLlO wOrLd`
   
 - **alternate, a** - Alternate upper/lower case
-  - Example: `random-cap alternate "Hello World"` → `HeLlO wOrLd`
+  - Example: `redstr alternate "Hello World"` → `HeLlO wOrLd`
   
 - **inverse, i** - Invert the case of each letter
-  - Example: `random-cap inverse "Hello World"` → `hELLO wORLD`
+  - Example: `redstr inverse "Hello World"` → `hELLO wORLD`
 
 - **reverse, rv** - Reverse the string
-  - Example: `random-cap reverse "Hello World"` → `dlroW olleH`
+  - Example: `redstr reverse "Hello World"` → `dlroW olleH`
 
 #### Case Conversion
 
 - **camel, c** - Convert to camelCase
-  - Example: `random-cap camel "hello world test"` → `helloWorldTest`
+  - Example: `redstr camel "hello world test"` → `helloWorldTest`
   
 - **snake, s** - Convert to snake_case
-  - Example: `random-cap snake "HelloWorldTest"` → `hello_world_test`
+  - Example: `redstr snake "HelloWorldTest"` → `hello_world_test`
   
 - **kebab, k** - Convert to kebab-case
-  - Example: `random-cap kebab "HelloWorldTest"` → `hello-world-test`
+  - Example: `redstr kebab "HelloWorldTest"` → `hello-world-test`
 
 #### Security Testing Modes
 
 - **leetspeak, l** - Convert to leetspeak
   - Useful for testing password filters and content detection
-  - Example: `random-cap leetspeak "password123"` → `p@55w0rd123`
+  - Example: `redstr leetspeak "password123"` → `p@55w0rd123`
 
 - **homoglyph, h** - Substitute with similar-looking characters
   - Useful for testing homograph attacks and IDN spoofing
-  - Example: `random-cap homoglyph "admin@example.com"` → `аdmіn@еxаmple.com`
+  - Example: `redstr homoglyph "admin@example.com"` → `аdmіn@еxаmple.com`
 
 - **unicode, u** - Random unicode variations
   - Useful for testing Unicode handling and normalization
-  - Example: `random-cap unicode "administrator"` → `ádmïnïštrâtör`
+  - Example: `redstr unicode "administrator"` → `ádmïnïštrâtör`
 
 - **zalgo, z** - Add zalgo combining characters
   - Useful for testing display issues and Unicode handling
-  - Example: `random-cap zalgo "test"` → `t̃̂e̊̋s̈̃t̂̃`
+  - Example: `redstr zalgo "test"` → `t̃̂e̊̋s̈̃t̂̃`
 
 - **rot13** - Apply ROT13 cipher
   - Classic cipher transformation
-  - Example: `random-cap rot13 "Hello World"` → `Uryyb Jbeyq`
+  - Example: `redstr rot13 "Hello World"` → `Uryyb Jbeyq`
 
 - **vowel-swap, vs** - Swap vowels randomly
   - Useful for testing pattern matching and filters
-  - Example: `random-cap vowel-swap "testing"` → `tistong`
+  - Example: `redstr vowel-swap "testing"` → `tistong`
 
 - **double, d** - Double random characters
   - Useful for testing input validation
-  - Example: `random-cap double "test"` → `tteesstt`
+  - Example: `redstr double "test"` → `tteesstt`
 
 - **space-variants, sv** - Use various space characters
   - Useful for testing whitespace handling (uses various Unicode spaces)
-  - Example: `random-cap space-variants "hello world"`
+  - Example: `redstr space-variants "hello world"`
 
 - **mixed-encoding, me** - Mix character encodings
   - Useful for testing encoding vulnerabilities and XSS
-  - Example: `random-cap mixed-encoding "test"` → Mix of HTML entities and Unicode escapes
+  - Example: `redstr mixed-encoding "test"` → Mix of HTML entities and Unicode escapes
+
+#### Encoding and Obfuscation Modes
+
+- **base64, b64** - Encode to Base64
+  - Useful for red team payload obfuscation
+  - Example: `redstr base64 "hello"` → `aGVsbG8=`
+
+- **url-encode, url** - URL/percent encoding
+  - Useful for web security testing
+  - Example: `redstr url-encode "test @example.com"` → `test%20%40example.com`
+
+- **hex-encode, hex** - Encode to hexadecimal
+  - Useful for encoding obfuscation
+  - Example: `redstr hex-encode "test"` → `74657374`
+
+- **hex-mixed, hm** - Mixed hex formats (\\x, %, 0x, &#x)
+  - Useful for testing encoding detection
+  - Example: `redstr hex-mixed "ab"` → `\x61%62` (varies)
+
+#### Injection Testing Modes
+
+- **sql-comment, sql** - Insert SQL comment patterns
+  - Useful for red team SQL injection testing
+  - Example: `redstr sql-comment "SELECT * FROM users"` → `SELECT --* FROM users`
+
+- **xss-tags, xss** - Generate XSS tag variations
+  - Useful for testing XSS filters
+  - Example: `redstr xss-tags "<script>alert(1)</script>"` → Encoded variations
+
+- **case-swap, cs** - Random case swapping
+  - Useful for WAF/filter bypass testing
+  - Example: `redstr case-swap "SELECT"` → `SeLeCt`
+
+- **null-byte, nb** - Insert null byte representations
+  - Useful for testing null byte vulnerabilities
+  - Example: `redstr null-byte "test.txt"` → `test%00.txt` (varies)
+
+- **path-traversal, pt** - Generate path traversal patterns
+  - Useful for directory traversal testing
+  - Example: `redstr path-traversal "/etc/passwd"` → `../etc/../passwd` (varies)
+
+- **command-injection, ci** - Insert command injection separators
+  - Useful for OS command injection testing
+  - Example: `redstr command-injection "ping example.com"` → `ping;example.com` (varies)
 
 ## Security Testing Use Cases
 
 ### Red Team Activities
-- **Phishing campaigns**: Use homoglyph substitution to create convincing lookalike domains
-- **Filter evasion**: Use leetspeak, unicode variations, or character doubling to bypass content filters
-- **Payload obfuscation**: Mix encodings to evade detection systems
+
+#### Phishing and Social Engineering
+- **Domain spoofing**: Use `homoglyph_substitution` to create convincing lookalike domains
+  - `paypal.com` → `pаypаl.com` (using Cyrillic characters)
+- **Email obfuscation**: Combine unicode variations with case swapping to evade email filters
+
+#### Filter and WAF Evasion
+- **Content filter bypass**: Use `leetspeak`, `unicode_variations`, or `case_swap` to bypass content filters
+  - `malware` → `m@1w@r3` or `mAlWaRe`
+- **SQL injection**: Use `sql_comment_injection` to insert SQL comments and evade WAF detection
+  - `SELECT * FROM users` → `SELECT --* FROM /**/users`
+- **XSS filter evasion**: Use `xss_tag_variations` to bypass XSS filters
+  - `<script>` → `&#x3C;sCrIpT&#x3E;`
+- **Command injection**: Use `command_injection` to test command separator filtering
+
+#### Payload Obfuscation
+- **Encoding obfuscation**: Use `base64_encode`, `url_encode`, `hex_encode`, or `hex_encode_mixed`
+- **Mixed encoding**: Combine `mixed_encoding` with other transformations to evade detection systems
+- **Path traversal**: Use `path_traversal` to test directory traversal vulnerabilities
+  - `/etc/passwd` → `../etc/../passwd`
+- **Null byte injection**: Use `null_byte_injection` to test null byte vulnerabilities
+  - `file.txt` → `file%00.txt`
 
 ### Blue Team Activities
-- **Detection testing**: Test if your filters catch variations like leetspeak or homoglyphs
+
+#### Detection and Validation Testing
+- **Filter testing**: Test if your content filters catch variations like leetspeak or homoglyphs
+  - Generate test cases for blocked words using multiple transformations
+- **XSS detection**: Verify your XSS filters catch obfuscated payloads
+- **SQL injection detection**: Test if your WAF detects SQL injection patterns with comments
 - **Input validation**: Verify systems handle Unicode properly and reject malformed input
-- **Log analysis**: Test logging systems with various character encodings
+- **Encoding detection**: Test if your systems properly detect and decode various encoding schemes
+
+#### Security Control Testing
+- **URL encoding validation**: Use `url_encode` to test URL parsers and validators
+- **Path validation**: Use `path_traversal` to test path sanitization functions
+- **Command validation**: Use `command_injection` to test command sanitization
+- **Null byte handling**: Use `null_byte_injection` to verify proper null byte handling
+
+#### Monitoring and Logging
+- **Log analysis**: Test logging systems with various character encodings to ensure proper logging
+- **Alert generation**: Verify security monitoring systems trigger on obfuscated attacks
+- **Normalization testing**: Test if logs properly normalize Unicode and encoded strings
 
 ### Purple Team Activities
-- **Collaboration**: Share obfuscated test data between red and blue teams
-- **Baseline testing**: Create test cases for security controls
-- **Training**: Generate examples for security awareness training
+
+#### Collaborative Testing
+- **Shared test cases**: Use transformations to create consistent test payloads for both teams
+- **Baseline establishment**: Generate standard test cases for security controls
+- **Detection validation**: Red team uses transformations, blue team validates detection
+
+#### Training and Documentation
+- **Security awareness**: Generate examples for security training programs
+  - Show how phishing domains can be spoofed with homoglyphs
+  - Demonstrate filter evasion techniques
+- **Playbook development**: Create standard attack patterns and detection rules
+- **Tool validation**: Test security tools against various obfuscation techniques
+
+#### Continuous Improvement
+- **Coverage testing**: Ensure security controls cover all transformation variations
+- **Gap analysis**: Identify missing detection rules using transformation permutations
+- **Effectiveness metrics**: Measure detection rates across different obfuscation techniques
 
 ## No Dependencies
 
-This tool uses only Rust's standard library and has zero external dependencies, making it lightweight and easy to audit.
+This library uses only Rust's standard library and has zero external dependencies, making it lightweight and easy to audit.
 
 ## Building
 
+To build the library:
+
 ```bash
 cargo build --release
+```
+
+To build with the optional CLI tool:
+
+```bash
+cargo build --release --features cli
 ```
 
 ## Running Tests
@@ -185,6 +509,82 @@ cargo build --release
 ```bash
 cargo test
 ```
+
+## 📚 Complete Function Reference
+
+### Encoding & Obfuscation
+- **base64_encode** - Base64 encoding for payload obfuscation
+- **url_encode** - RFC 3986 URL/percent encoding with UTF-8 support
+- **hex_encode** - Hexadecimal encoding (lowercase)
+- **hex_encode_mixed** - Mixed hex formats (`\x`, `%`, `0x`, `&#x`)
+- **html_entity_encode** - HTML entity encoding for XSS testing
+- **mixed_encoding** - Mixed character encodings (HTML entities + Unicode)
+
+### String Transformation
+- **randomize_capitalization** - Random case for each character
+- **alternate_case** - Alternating upper/lowercase
+- **inverse_case** - Invert case of all characters
+- **case_swap** - Random case mutation for WAF bypass
+- **leetspeak** - Convert to 1337speak for filter evasion
+- **rot13** - ROT13 cipher transformation
+- **reverse_string** - Reverse string order
+
+### Unicode & Homoglyphs
+- **homoglyph_substitution** - Lookalike character substitution for phishing
+- **unicode_variations** - Random Unicode character variations
+- **unicode_normalize_variants** - Unicode normalization testing
+- **zalgo_text** - Combining characters for display corruption
+
+### Case Conversion
+- **to_camel_case** - Convert to camelCase
+- **to_snake_case** - Convert to snake_case
+- **to_kebab_case** - Convert to kebab-case
+
+### Injection Testing
+- **sql_comment_injection** - SQL comment patterns (`--`, `/**/`, `#`)
+- **xss_tag_variations** - XSS tag obfuscation and encoding
+- **command_injection** - OS command separators (`;`, `|`, `&&`)
+- **path_traversal** - Directory traversal patterns (`../`, `..\\`)
+- **null_byte_injection** - Null byte representations (`%00`, `\0`)
+
+### Web Security
+- **random_user_agent** - Generate random browser user-agents
+- **domain_typosquat** - Typosquatting variations for phishing
+- **js_string_concat** - JavaScript string concatenation obfuscation
+- **whitespace_padding** - Random whitespace for filter bypass
+
+### Utility Functions
+- **vowel_swap** - Swap vowels for pattern matching tests
+- **double_characters** - Random character doubling
+- **space_variants** - Various Unicode space characters
+
+### Builder Pattern
+- **TransformBuilder** - Fluent API for chaining transformations
+
+## 🔍 SEO Keywords
+
+**Security Testing:** WAF bypass, XSS evasion, SQL injection, phishing detection, bot detection, security automation, penetration testing tools, red team tools, blue team defense, purple team testing
+
+**Techniques:** String obfuscation, payload encoding, filter bypass, evasion techniques, homoglyph attacks, typosquatting, domain spoofing, Unicode normalization, character encoding
+
+**Tool Integration:** Caido integration, Burp Suite, EvilJinx, urlscan.io, Cloudflare bypass, security proxies, phishing frameworks, malware analysis
+
+**Technologies:** Rust security library, zero-dependency Rust, type-safe security, polymorphic strings, transformation library
+
+## 🤝 Contributing
+
+Contributions are welcome! This library is designed for the security community. Whether you're adding new transformation functions, improving documentation, or reporting issues, your input helps make security testing more effective.
+
+## 📖 Learn More
+
+- **Documentation**: [docs.rs/redstr](https://docs.rs/redstr)
+- **Repository**: [GitHub](https://github.com/arvid-berndtsson/random-cap)
+- **Examples**: See the `examples/` directory for comprehensive integration patterns
+- **Blog Posts**: Check for community blog posts and integration guides (coming soon)
+
+## ⚠️ Responsible Use
+
+This library is intended for authorized security testing, research, and defensive security purposes only. Users are responsible for ensuring they have proper authorization before using these techniques on systems they do not own or have explicit permission to test.
 
 ## License
 

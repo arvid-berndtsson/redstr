@@ -1,21 +1,31 @@
 [package]
-name = "random-cap"
+name = "redstr"
 version = "0.1.0"
 edition = "2021"
 authors = ["Arvid Berndtsson <103070833+arvid-berndtsson@users.noreply.github.com>"]
-description = "A versatile string obfuscation and transformation library for security testing"
+description = "Red team string obfuscation and transformation for offensive security, WAF bypass, XSS, SQL injection, phishing, and evasion testing"
 license = "MIT"
 repository = "https://github.com/arvid-berndtsson/random-cap"
-keywords = ["security", "obfuscation", "testing", "red-team", "penetration-testing"]
-categories = ["development-tools", "text-processing"]
+documentation = "https://docs.rs/redstr"
+homepage = "https://github.com/arvid-berndtsson/random-cap"
+keywords = ["red-team", "security", "obfuscation", "waf-bypass", "evasion"]
+categories = ["development-tools", "text-processing", "web-programming", "encoding"]
 readme = "README.md"
 
 [lib]
-name = "random_cap"
+name = "redstr"
 path = "src/lib.rs"
 
+# Optional CLI binary - only built when specifically requested
 [[bin]]
-name = "random-cap"
+name = "redstr"
 path = "src/main.rs"
+required-features = ["cli"]
+
+[features]
+default = []
+cli = []
+serde = ["dep:serde"]
 
 [dependencies]
+serde = { version = "1.0", optional = true, features = ["derive"] }
