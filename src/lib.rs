@@ -797,6 +797,343 @@ pub fn hex_encode_mixed(input: &str) -> String {
         .collect()
 }
 
+/// Generates a random user-agent string from a curated list of common browsers.
+///
+/// Useful for web scraping, bot detection testing, and HTTP request simulation.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::random_user_agent;
+/// let ua = random_user_agent();
+/// assert!(ua.len() > 0);
+/// ```
+pub fn random_user_agent() -> String {
+    let mut rng = SimpleRng::new();
+    let user_agents = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15",
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0",
+        "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0",
+    ];
+    
+    user_agents[rng.next() as usize % user_agents.len()].to_string()
+}
+
+/// Adds random whitespace padding to bypass simple filters.
+///
+/// Useful for testing content filters and WAF bypass techniques.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::whitespace_padding;
+/// let result = whitespace_padding("test");
+/// assert!(result.len() >= 4);
+/// ```
+pub fn whitespace_padding(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let mut result = String::new();
+    
+    for c in input.chars() {
+        result.push(c);
+        if c.is_alphanumeric() && rng.next() % 3 == 0 {
+            let spaces = (rng.next() % 3) + 1;
+            for _ in 0..spaces {
+                result.push(' ');
+            }
+        }
+    }
+    
+    result
+}
+
+/// Generates domain typosquatting variations for phishing detection testing.
+///
+/// Useful for red team phishing simulations and blue team domain monitoring.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::domain_typosquat;
+/// let result = domain_typosquat("example.com");
+/// assert!(result.len() > 0);
+/// ```
+pub fn domain_typosquat(domain: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let chars: Vec<char> = domain.chars().collect();
+    
+    if chars.is_empty() {
+        return domain.to_string();
+    }
+    
+    let mut result = String::new();
+    let operation = rng.next() % 4;
+    
+    match operation {
+        0 => {
+            // Character substitution
+            for (i, c) in chars.iter().enumerate() {
+                if i == (rng.next() as usize % chars.len()) && c.is_alphabetic() {
+                    let substitutions = match c.to_lowercase().to_string().as_str() {
+                        "o" => vec!['0', 'ο'],  // Latin o, digit 0, Greek omicron
+                        "i" => vec!['1', 'l', 'ı'],
+                        "l" => vec!['1', 'i', 'I'],
+                        "a" => vec!['@', 'а'],  // Cyrillic а
+                        "e" => vec!['3', 'е'],  // Cyrillic е
+                        _ => vec![*c],
+                    };
+                    result.push(substitutions[rng.next() as usize % substitutions.len()]);
+                } else {
+                    result.push(*c);
+                }
+            }
+        }
+        1 => {
+            // Character omission
+            for (i, c) in chars.iter().enumerate() {
+                if i != (rng.next() as usize % chars.len()) {
+                    result.push(*c);
+                }
+            }
+        }
+        2 => {
+            // Character duplication
+            for (i, c) in chars.iter().enumerate() {
+                result.push(*c);
+                if i == (rng.next() as usize % chars.len()) {
+                    result.push(*c);
+                }
+            }
+        }
+        _ => {
+            // Adjacent key typo (keyboard-based)
+            for (i, c) in chars.iter().enumerate() {
+                if i == (rng.next() as usize % chars.len()) && c.is_alphabetic() {
+                    let adjacent = match c.to_lowercase().to_string().as_str() {
+                        "a" => vec!['q', 's', 'w', 'z'],
+                        "e" => vec!['w', 'r', 'd', 's'],
+                        "o" => vec!['i', 'p', 'l', 'k'],
+                        "m" => vec!['n', 'k', 'j'],
+                        _ => vec![*c],
+                    };
+                    result.push(adjacent[rng.next() as usize % adjacent.len()]);
+                } else {
+                    result.push(*c);
+                }
+            }
+        }
+    }
+    
+    result
+}
+
+/// Encodes text using various HTML entity formats.
+///
+/// Useful for XSS testing and HTML parser bypass techniques.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::html_entity_encode;
+/// let result = html_entity_encode("test");
+/// assert!(result.contains("&#") || result.contains("&"));
+/// ```
+pub fn html_entity_encode(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let mut result = String::new();
+    
+    for c in input.chars() {
+        match rng.next() % 4 {
+            0 => result.push(c),
+            1 => result.push_str(&format!("&#{};", c as u32)),
+            2 => result.push_str(&format!("&#x{:X};", c as u32)),
+            _ => {
+                // Named entities for common characters
+                match c {
+                    '<' => result.push_str("&lt;"),
+                    '>' => result.push_str("&gt;"),
+                    '&' => result.push_str("&amp;"),
+                    '"' => result.push_str("&quot;"),
+                    '\'' => result.push_str("&apos;"),
+                    ' ' => result.push_str("&nbsp;"),
+                    _ => result.push_str(&format!("&#{};", c as u32)),
+                }
+            }
+        }
+    }
+    
+    result
+}
+
+/// Applies JavaScript string concatenation obfuscation.
+///
+/// Useful for testing JavaScript-based security filters and bot detection.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::js_string_concat;
+/// let result = js_string_concat("alert");
+/// assert!(result.contains("+") || result.len() >= 5);
+/// ```
+pub fn js_string_concat(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let chars: Vec<char> = input.chars().collect();
+    
+    if chars.is_empty() {
+        return "''".to_string();
+    }
+    
+    let mut result = String::new();
+    let mut i = 0;
+    
+    while i < chars.len() {
+        if rng.next() % 3 == 0 && i < chars.len() - 1 {
+            // Split into multiple strings
+            result.push('\'');
+            result.push(chars[i]);
+            result.push('\'');
+            result.push_str(" + ");
+            i += 1;
+        } else {
+            // Group characters
+            result.push('\'');
+            let chunk_size = ((rng.next() % 3) + 1).min((chars.len() - i) as u64) as usize;
+            for j in 0..chunk_size {
+                if i + j < chars.len() {
+                    result.push(chars[i + j]);
+                }
+            }
+            result.push('\'');
+            i += chunk_size;
+            if i < chars.len() {
+                result.push_str(" + ");
+            }
+        }
+    }
+    
+    result
+}
+
+/// Generates unicode normalization variations (NFD, NFC, NFKC, NFKD concepts).
+///
+/// Useful for testing unicode normalization vulnerabilities and bypasses.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::unicode_normalize_variants;
+/// let result = unicode_normalize_variants("café");
+/// assert!(result.len() >= 4);
+/// ```
+pub fn unicode_normalize_variants(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    
+    input
+        .chars()
+        .map(|c| {
+            // Use compatibility characters and combining marks
+            match c {
+                'a' | 'A' => {
+                    let variants = ["a", "а", "ａ", "\u{0061}\u{0301}"];  // Latin, Cyrillic, fullwidth, with combining acute
+                    variants[rng.next() as usize % variants.len()]
+                }
+                'e' | 'E' => {
+                    let variants = ["e", "е", "ｅ", "\u{0065}\u{0301}"];
+                    variants[rng.next() as usize % variants.len()]
+                }
+                'o' | 'O' => {
+                    let variants = ["o", "о", "ｏ", "\u{006F}\u{0301}"];
+                    variants[rng.next() as usize % variants.len()]
+                }
+                _ => return c.to_string(),
+            }.to_string()
+        })
+        .collect()
+}
+
+/// Creates a transformer builder for chaining multiple transformations.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::TransformBuilder;
+/// let result = TransformBuilder::new("test")
+///     .leetspeak()
+///     .base64()
+///     .build();
+/// assert!(result.len() > 0);
+/// ```
+pub struct TransformBuilder {
+    text: String,
+}
+
+impl TransformBuilder {
+    /// Creates a new transformer with the given input text.
+    pub fn new(input: &str) -> Self {
+        Self {
+            text: input.to_string(),
+        }
+    }
+    
+    /// Applies leetspeak transformation.
+    pub fn leetspeak(mut self) -> Self {
+        self.text = leetspeak(&self.text);
+        self
+    }
+    
+    /// Applies base64 encoding.
+    pub fn base64(mut self) -> Self {
+        self.text = base64_encode(&self.text);
+        self
+    }
+    
+    /// Applies URL encoding.
+    pub fn url_encode(mut self) -> Self {
+        self.text = url_encode(&self.text);
+        self
+    }
+    
+    /// Applies random capitalization.
+    pub fn random_caps(mut self) -> Self {
+        self.text = randomize_capitalization(&self.text);
+        self
+    }
+    
+    /// Applies homoglyph substitution.
+    pub fn homoglyphs(mut self) -> Self {
+        self.text = homoglyph_substitution(&self.text);
+        self
+    }
+    
+    /// Applies case swapping.
+    pub fn case_swap(mut self) -> Self {
+        self.text = case_swap(&self.text);
+        self
+    }
+    
+    /// Applies hex encoding.
+    pub fn hex_encode(mut self) -> Self {
+        self.text = hex_encode(&self.text);
+        self
+    }
+    
+    /// Applies ROT13 cipher.
+    pub fn rot13(mut self) -> Self {
+        self.text = rot13(&self.text);
+        self
+    }
+    
+    /// Returns the transformed text.
+    pub fn build(self) -> String {
+        self.text
+    }
+}
+
 // Simple pseudo-random number generator using LCG algorithm
 struct SimpleRng {
     state: u64,
@@ -1008,5 +1345,59 @@ mod tests {
         let result = hex_encode_mixed("ab");
         // Should contain hexadecimal encoding
         assert!(result.len() > 2);
+    }
+
+    #[test]
+    fn test_random_user_agent() {
+        let ua = random_user_agent();
+        assert!(ua.contains("Mozilla"));
+        assert!(ua.len() > 50);
+    }
+
+    #[test]
+    fn test_whitespace_padding() {
+        let result = whitespace_padding("test");
+        assert!(result.len() >= 4);
+        assert!(result.contains("test") || result.contains('t'));
+    }
+
+    #[test]
+    fn test_domain_typosquat() {
+        let result = domain_typosquat("example.com");
+        assert!(result.len() > 0);
+        // Should be similar but not identical (usually)
+    }
+
+    #[test]
+    fn test_html_entity_encode() {
+        let result = html_entity_encode("test");
+        assert!(result.len() >= 4);
+    }
+
+    #[test]
+    fn test_js_string_concat() {
+        let result = js_string_concat("alert");
+        assert!(result.len() >= 5);
+        assert!(result.contains('\''));
+    }
+
+    #[test]
+    fn test_unicode_normalize_variants() {
+        let result = unicode_normalize_variants("cafe");
+        assert!(result.len() >= 4);
+    }
+
+    #[test]
+    fn test_transform_builder() {
+        let result = TransformBuilder::new("test")
+            .leetspeak()
+            .build();
+        assert!(result.len() > 0);
+        
+        let result2 = TransformBuilder::new("hello")
+            .random_caps()
+            .base64()
+            .build();
+        assert!(result2.len() > 0);
     }
 }

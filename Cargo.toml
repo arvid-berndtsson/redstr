@@ -3,11 +3,11 @@ name = "random-cap"
 version = "0.1.0"
 edition = "2021"
 authors = ["Arvid Berndtsson <103070833+arvid-berndtsson@users.noreply.github.com>"]
-description = "A versatile string obfuscation and transformation library for security testing"
+description = "String obfuscation and transformation library for security testing, penetration testing tools, and bot detection"
 license = "MIT"
 repository = "https://github.com/arvid-berndtsson/random-cap"
-keywords = ["security", "obfuscation", "testing", "red-team", "penetration-testing"]
-categories = ["development-tools", "text-processing"]
+keywords = ["security", "obfuscation", "penetration-testing", "web-security", "phishing"]
+categories = ["development-tools", "text-processing", "web-programming"]
 readme = "README.md"
 
 [lib]
@@ -23,5 +23,7 @@ required-features = ["cli"]
 [features]
 default = []
 cli = []
+serde = ["dep:serde"]
 
 [dependencies]
+serde = { version = "1.0", optional = true, features = ["derive"] }

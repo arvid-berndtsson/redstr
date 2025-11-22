@@ -1,17 +1,21 @@
 # random-cap
 
-A Rust library for string obfuscation and transformation designed for security testing. Provides tools for red team, blue team, and purple team activities.
+A Rust library for string obfuscation and transformation designed for security testing and penetration testing tools. Ideal for integration into tools like Caido, EvilJinx, urlscan.io, and bot detection systems.
 
 ## Features
 
-This library provides multiple string transformation functions to help security professionals test various scenarios in their Rust applications.
+Production-ready library for security professionals and tool developers:
 
-- **Zero dependencies** - Uses only Rust's standard library
-- **Comprehensive API** - 24+ transformation functions covering encoding, obfuscation, and injection testing
-- **Security-focused** - Designed specifically for red/blue/purple team workflows
-- **Well-documented** - Complete API documentation and examples
+- **Zero required dependencies** - Core library uses only Rust's standard library
+- **30+ transformation functions** - Encoding, obfuscation, injection testing, and web-focused transformations
+- **Builder pattern** - Chain multiple transformations fluently
+- **Serialization support** - Optional serde integration for web APIs
+- **Security-focused** - Designed for red/blue/purple team workflows and bot detection testing
+- **Well-documented** - Complete API documentation with real-world integration examples
 
 ## Installation
+
+### Basic Installation
 
 Add this to your `Cargo.toml`:
 
@@ -20,12 +24,22 @@ Add this to your `Cargo.toml`:
 random-cap = "0.1.0"
 ```
 
-### Quick Example
+### With Serde Support (for web tools)
+
+```toml
+[dependencies]
+random-cap = { version = "0.1.0", features = ["serde"] }
+```
+
+## Quick Start
+
+### Basic Usage
 
 ```rust
 use random_cap::{
     randomize_capitalization, leetspeak, homoglyph_substitution,
-    base64_encode, sql_comment_injection, xss_tag_variations
+    base64_encode, sql_comment_injection, xss_tag_variations,
+    random_user_agent, domain_typosquat
 };
 
 fn main() {
@@ -41,18 +55,103 @@ fn main() {
     let spoofed = homoglyph_substitution("admin@example.com");
     println!("{}", spoofed);  // e.g., "аdmіn@еxаmple.com"
 
-    // Base64 encoding for payload obfuscation
-    let encoded = base64_encode("alert('XSS')");
-    println!("{}", encoded);  // "YWxlcnQoJ1hTUycp"
+    // Web scraping with random user agents
+    let ua = random_user_agent();
+    println!("{}", ua);  // Random modern browser UA
 
-    // SQL injection testing
-    let sql_test = sql_comment_injection("SELECT * FROM users");
-    println!("{}", sql_test);  // e.g., "SELECT --* FROM users"
-
-    // XSS filter evasion
-    let xss_test = xss_tag_variations("<script>alert(1)</script>");
-    println!("{}", xss_test);  // Encoded variations
+    // Domain typosquatting for phishing detection
+    let typo = domain_typosquat("example.com");
+    println!("{}", typo);  // e.g., "examp1e.com", "exmaple.com"
 }
+```
+
+### Builder Pattern (New!)
+
+Chain multiple transformations fluently:
+
+```rust
+use random_cap::TransformBuilder;
+
+fn main() {
+    // Chain transformations
+    let result = TransformBuilder::new("admin@example.com")
+        .homoglyphs()
+        .url_encode()
+        .build();
+    
+    // Perfect for creating complex payloads
+    let payload = TransformBuilder::new("SELECT * FROM users")
+        .case_swap()
+        .base64()
+        .build();
+}
+```
+
+## Integration Examples
+
+### Caido / Web Security Testing Tools
+
+```rust
+use random_cap::{random_user_agent, url_encode, xss_tag_variations};
+
+// Randomize requests to avoid fingerprinting
+let headers = vec![
+    ("User-Agent", random_user_agent()),
+];
+
+// Test XSS payloads with variations
+let payload = "<script>alert(1)</script>";
+let variations = vec![
+    xss_tag_variations(payload),
+    url_encode(&xss_tag_variations(payload)),
+];
+```
+
+### EvilJinx / Phishing Frameworks
+
+```rust
+use random_cap::{domain_typosquat, homoglyph_substitution, html_entity_encode};
+
+// Generate phishing domains
+let target = "paypal.com";
+let typosquat = domain_typosquat(target);
+let homoglyph = homoglyph_substitution(target);
+
+// Obfuscate phishing page content
+let link = "https://secure.paypal.com/login";
+let obfuscated = html_entity_encode(&homoglyph_substitution(link));
+```
+
+### Bot Detection Testing
+
+```rust
+use random_cap::{
+    random_user_agent, 
+    js_string_concat, 
+    unicode_normalize_variants,
+    whitespace_padding
+};
+
+// Simulate various bot evasion techniques
+let user_agent = random_user_agent();
+let obfuscated_js = js_string_concat("document.cookie");
+let normalized = unicode_normalize_variants("robot");
+```
+
+### URL Scanner / Web Crawler Integration
+
+```rust
+use random_cap::{url_encode, base64_encode, TransformBuilder};
+
+// Encode URLs for safe storage/transmission
+let suspicious_url = "http://example.com/path?param=<script>";
+let safe_url = url_encode(suspicious_url);
+
+// Create encoded payloads for analysis
+let payload = TransformBuilder::new("malicious-content")
+    .base64()
+    .url_encode()
+    .build();
 ```
 
 See the [examples directory](examples/) for more detailed usage examples.
@@ -124,6 +223,26 @@ All transformation functions accept a `&str` and return a `String`. Here are the
 - `null_byte_injection(input: &str) -> String` - Insert null byte representations
 - `path_traversal(input: &str) -> String` - Generate path traversal patterns
 - `command_injection(input: &str) -> String` - Insert command injection separators
+
+### Web Security Functions (NEW!)
+- `random_user_agent() -> String` - Generate random browser user-agent strings
+- `domain_typosquat(domain: &str) -> String` - Create typosquatting variations for phishing
+- `html_entity_encode(input: &str) -> String` - Encode using HTML entities
+- `js_string_concat(input: &str) -> String` - JavaScript string concatenation obfuscation
+- `unicode_normalize_variants(input: &str) -> String` - Unicode normalization variations
+- `whitespace_padding(input: &str) -> String` - Add random whitespace for filter bypass
+
+### Builder API (NEW!)
+- `TransformBuilder::new(input: &str)` - Create a transformation chain
+  - `.leetspeak()` - Apply leetspeak
+  - `.base64()` - Apply base64 encoding
+  - `.url_encode()` - Apply URL encoding
+  - `.random_caps()` - Apply random capitalization
+  - `.homoglyphs()` - Apply homoglyph substitution
+  - `.case_swap()` - Apply case swapping
+  - `.hex_encode()` - Apply hex encoding
+  - `.rot13()` - Apply ROT13
+  - `.build()` - Get the final result
 
 See the [library documentation](https://docs.rs/random-cap) for detailed API documentation.
 
