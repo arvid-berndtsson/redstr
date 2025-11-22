@@ -59,13 +59,24 @@ fi
 
 # Update Cargo.toml
 echo "📝 Updating Cargo.toml..."
+# Use cargo metadata to verify we're updating the right package
+# More robust than sed - handles edge cases better
 sed -i.bak "s/^version = \".*\"/version = \"$VERSION\"/" Cargo.toml
-rm Cargo.toml.bak
+rm -f Cargo.toml.bak
 
-# Verify the change
-NEW_VERSION=$(grep '^version = ' Cargo.toml | sed 's/version = "\(.*\)"/\1/')
+# Verify the change using cargo metadata (more reliable)
+NEW_VERSION=$(cargo metadata --format-version 1 --no-deps 2>/dev/null | \
+  grep -o '"version":"[^"]*"' | head -1 | cut -d'"' -f4)
+
+# Fallback to grep if cargo metadata fails
+if [ -z "$NEW_VERSION" ]; then
+    NEW_VERSION=$(grep '^version = ' Cargo.toml | sed 's/version = "\(.*\)"/\1/')
+fi
+
 if [ "$NEW_VERSION" != "$VERSION" ]; then
     echo "❌ Error: Failed to update version in Cargo.toml"
+    echo "   Expected: $VERSION"
+    echo "   Got: $NEW_VERSION"
     exit 1
 fi
 

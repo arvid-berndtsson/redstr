@@ -29,8 +29,14 @@ jobs:
           # Extract version from tag (e.g., v0.2.0 -> 0.2.0)
           TAG_VERSION="${GITHUB_REF#refs/tags/v}"
           
-          # Extract version from Cargo.toml
-          CARGO_VERSION=$(grep '^version = ' Cargo.toml | sed 's/version = "\(.*\)"/\1/')
+          # Extract version from Cargo.toml using cargo metadata (more reliable)
+          CARGO_VERSION=$(cargo metadata --format-version 1 --no-deps | \
+            grep -o '"version":"[^"]*"' | head -1 | cut -d'"' -f4)
+          
+          # Fallback to grep if cargo metadata fails
+          if [ -z "$CARGO_VERSION" ]; then
+            CARGO_VERSION=$(grep '^version = ' Cargo.toml | sed 's/version = "\(.*\)"/\1/')
+          fi
           
           echo "Tag version: $TAG_VERSION"
           echo "Cargo.toml version: $CARGO_VERSION"
@@ -42,6 +48,8 @@ jobs:
             echo ""
             echo "The version in Cargo.toml must match the tag version."
             echo "Please update Cargo.toml to version $TAG_VERSION before creating the tag."
+            echo ""
+            echo "Tip: Use './scripts/release.sh $TAG_VERSION' to automate this process."
             exit 1
           fi
           
