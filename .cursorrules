@@ -59,7 +59,8 @@ redstr is a Rust library for string obfuscation and transformation designed for 
 - Test deterministic functions for exact output
 - Test non-deterministic functions for expected properties (length, character preservation, etc.)
 - Use `#[cfg(test)]` for test modules
-- Run `cargo test` before committing changes
+- **MANDATORY**: Run `cargo test` before committing changes
+- All tests must pass before committing
 
 ### 5. API Design
 
@@ -102,14 +103,18 @@ redstr is a Rust library for string obfuscation and transformation designed for 
 ### 9. Code Style Guidelines
 
 #### Formatting
-- Run `cargo fmt` before committing
+- **MANDATORY**: Run `cargo fmt` before every commit
+- Formatting is automatically checked in CI and will fail if not formatted
 - Use 4 spaces for indentation
 - Keep line length reasonable (aim for < 100 characters)
+- Run `cargo fmt --check` to verify formatting without modifying files
 
 #### Clippy
-- Run `cargo clippy` and fix warnings
+- **MANDATORY**: Run `cargo clippy -- -D warnings` before every commit
+- All clippy warnings must be fixed or explicitly allowed with justification
 - Prefer clippy suggestions for idiomatic Rust
 - Suppress clippy warnings only when necessary with justification
+- CI runs `cargo clippy -- -D warnings` and will fail on warnings
 
 #### Commit Messages
 - **MANDATORY**: All commits MUST follow conventional commits format
@@ -216,21 +221,31 @@ pub fn rot13(input: &str) -> String {
 4. ❌ Don't write functions that mutate input (always return new String)
 5. ❌ Don't ignore Unicode - always use `char` iteration, not byte iteration
 6. ❌ Don't add features that don't relate to security testing
-7. ❌ Don't commit code that doesn't pass `cargo test` and `cargo clippy`
+7. ❌ Don't commit code that doesn't pass `cargo test` and `cargo clippy -- -D warnings`
 8. ❌ Don't break the zero-dependency principle
 9. ❌ Don't commit without following conventional commits format - commits are validated in CI
+10. ❌ Don't commit without running `cargo fmt` - formatting is enforced in CI
+11. ❌ Don't commit without running `cargo check` - code must compile
 
 ## Workflow
 
 1. Make changes to code
-2. Run `cargo fmt` to format code
-3. Run `cargo clippy` to check for issues
-4. Run `cargo test` to ensure all tests pass
-5. Update documentation if needed
-6. Check that examples still work: `cargo run --example basic_usage`
-7. Verify no new dependencies were added (check `Cargo.toml`)
-8. **Write commit message following conventional commits format** (see Commit Messages section above)
-9. Commit messages are validated in CI - ensure format is correct before pushing
+2. **ALWAYS run `cargo fmt` before committing** - Formatting is enforced in CI
+3. **ALWAYS run `cargo check` before committing** - Ensures code compiles
+4. Run `cargo clippy -- -D warnings` to check for issues
+5. Run `cargo test` to ensure all tests pass
+6. Update documentation if needed
+7. Check that examples still work: `cargo run --example basic_usage`
+8. Verify no new dependencies were added (check `Cargo.toml`)
+9. **Write commit message following conventional commits format** (see Commit Messages section above)
+10. Commit messages are validated in CI - ensure format is correct before pushing
+
+**Pre-commit Checklist:**
+- ✅ `cargo fmt` - Code is formatted
+- ✅ `cargo check` - Code compiles
+- ✅ `cargo clippy -- -D warnings` - No clippy warnings
+- ✅ `cargo test` - All tests pass
+- ✅ Commit message follows conventional commits format
 
 ## Integration Examples
 When suggesting code for integration with tools like Caido, Burp Suite, or EvilJinx, focus on:
