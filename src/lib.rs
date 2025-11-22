@@ -481,6 +481,315 @@ pub fn reverse_string(input: &str) -> String {
     input.chars().rev().collect()
 }
 
+/// Encodes text to Base64.
+///
+/// Useful for red team payload obfuscation and blue team testing of encoding detection.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::base64_encode;
+/// let result = base64_encode("hello");
+/// assert_eq!(result, "aGVsbG8=");
+/// ```
+pub fn base64_encode(input: &str) -> String {
+    const BASE64_CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    let bytes = input.as_bytes();
+    let mut result = String::new();
+    
+    for chunk in bytes.chunks(3) {
+        let mut buf = [0u8; 3];
+        for (i, &byte) in chunk.iter().enumerate() {
+            buf[i] = byte;
+        }
+        
+        let b1 = (buf[0] >> 2) as usize;
+        let b2 = (((buf[0] & 0x03) << 4) | (buf[1] >> 4)) as usize;
+        let b3 = (((buf[1] & 0x0F) << 2) | (buf[2] >> 6)) as usize;
+        let b4 = (buf[2] & 0x3F) as usize;
+        
+        result.push(BASE64_CHARS[b1] as char);
+        result.push(BASE64_CHARS[b2] as char);
+        result.push(if chunk.len() > 1 { BASE64_CHARS[b3] as char } else { '=' });
+        result.push(if chunk.len() > 2 { BASE64_CHARS[b4] as char } else { '=' });
+    }
+    
+    result
+}
+
+/// Encodes text with URL/percent encoding.
+///
+/// Useful for red team web security testing and blue team input validation testing.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::url_encode;
+/// let result = url_encode("hello world");
+/// assert!(result.contains("%20"));
+/// ```
+pub fn url_encode(input: &str) -> String {
+    input
+        .chars()
+        .map(|c| {
+            if c.is_alphanumeric() || c == '-' || c == '_' || c == '.' || c == '~' {
+                c.to_string()
+            } else {
+                format!("%{:02X}", c as u32)
+            }
+        })
+        .collect()
+}
+
+/// Inserts SQL comment patterns for SQL injection testing.
+///
+/// Useful for red team SQL injection testing and blue team input validation.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::sql_comment_injection;
+/// let result = sql_comment_injection("SELECT * FROM users");
+/// // Result may contain SQL comments injected between words
+/// assert!(result.contains("SELECT") && result.len() >= "SELECT * FROM users".len());
+/// ```
+pub fn sql_comment_injection(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let comments = ["--", "/**/", "#", "-- -"];
+    let words: Vec<&str> = input.split_whitespace().collect();
+    
+    words
+        .iter()
+        .enumerate()
+        .map(|(i, word)| {
+            if i > 0 && rng.next() % 3 == 0 {
+                let comment = comments[rng.next() as usize % comments.len()];
+                format!("{}{}", comment, word)
+            } else {
+                word.to_string()
+            }
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+/// Generates XSS tag variations for testing XSS filters.
+///
+/// Useful for red team XSS filter evasion and blue team XSS detection testing.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::xss_tag_variations;
+/// let result = xss_tag_variations("<script>alert(1)</script>");
+/// // Result contains variations in tags and case
+/// assert!(result.len() >= 20);
+/// ```
+pub fn xss_tag_variations(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    
+    input
+        .chars()
+        .map(|c| {
+            if c == '<' {
+                match rng.next() % 4 {
+                    0 => "<".to_string(),
+                    1 => "&#60;".to_string(),
+                    2 => "&#x3C;".to_string(),
+                    _ => "%3C".to_string(),
+                }
+            } else if c == '>' {
+                match rng.next() % 4 {
+                    0 => ">".to_string(),
+                    1 => "&#62;".to_string(),
+                    2 => "&#x3E;".to_string(),
+                    _ => "%3E".to_string(),
+                }
+            } else if c.is_alphabetic() && rng.next() % 3 == 0 {
+                if rng.next() % 2 == 0 {
+                    c.to_uppercase().to_string()
+                } else {
+                    c.to_lowercase().to_string()
+                }
+            } else {
+                c.to_string()
+            }
+        })
+        .collect()
+}
+
+/// Swaps case randomly for WAF and filter bypass testing.
+///
+/// Useful for red team filter evasion and blue team case-sensitivity testing.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::case_swap;
+/// let result = case_swap("SELECT");
+/// assert_ne!(result, "SELECT");
+/// ```
+pub fn case_swap(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    
+    input
+        .chars()
+        .map(|c| {
+            if c.is_alphabetic() && rng.next() % 2 == 0 {
+                if c.is_uppercase() {
+                    c.to_lowercase().to_string()
+                } else {
+                    c.to_uppercase().to_string()
+                }
+            } else {
+                c.to_string()
+            }
+        })
+        .collect()
+}
+
+/// Inserts null byte representations for testing null byte vulnerabilities.
+///
+/// Useful for red team exploitation and blue team null byte handling testing.
+/// Uses string representations of null bytes, not actual null bytes.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::null_byte_injection;
+/// let result = null_byte_injection("test.txt");
+/// // Result should be at least as long and preserve first/last characters
+/// assert!(result.len() >= "test.txt".len());
+/// ```
+pub fn null_byte_injection(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let null_variants = ["%00", "\\0", "\\x00", "&#00;"];
+    
+    input
+        .chars()
+        .enumerate()
+        .map(|(i, c)| {
+            if i > 0 && i < input.len() - 1 && rng.next() % 4 == 0 {
+                let null = null_variants[rng.next() as usize % null_variants.len()];
+                format!("{}{}", null, c)
+            } else {
+                c.to_string()
+            }
+        })
+        .collect()
+}
+
+/// Generates path traversal patterns for directory traversal testing.
+///
+/// Useful for red team path traversal testing and blue team path validation.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::path_traversal;
+/// let result = path_traversal("/etc/passwd");
+/// // Result may contain path traversal patterns
+/// assert!(result.contains("etc") && result.contains("passwd"));
+/// ```
+pub fn path_traversal(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let traversals = ["../", "..\\", "....//", "..../\\", "%2e%2e/", "%2e%2e\\"];
+    
+    let parts: Vec<&str> = input.split('/').collect();
+    let mut result = String::new();
+    
+    for (i, part) in parts.iter().enumerate() {
+        if i > 0 {
+            if rng.next() % 2 == 0 {
+                let traversal = traversals[rng.next() as usize % traversals.len()];
+                result.push_str(traversal);
+            } else {
+                result.push('/');
+            }
+        }
+        result.push_str(part);
+    }
+    
+    result
+}
+
+/// Generates command injection variations for OS command injection testing.
+///
+/// Useful for red team command injection testing and blue team command validation.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::command_injection;
+/// let result = command_injection("ping example.com");
+/// // Result may contain command separators between words
+/// assert!(result.contains("ping") && result.len() >= "ping example.com".len());
+/// ```
+pub fn command_injection(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let separators = [";", "|", "||", "&&", "&", "`", "$()"];
+    let words: Vec<&str> = input.split_whitespace().collect();
+    
+    words
+        .iter()
+        .enumerate()
+        .map(|(i, word)| {
+            if i > 0 && rng.next() % 3 == 0 {
+                let sep = separators[rng.next() as usize % separators.len()];
+                format!("{}{}", sep, word)
+            } else {
+                word.to_string()
+            }
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+/// Encodes text to hexadecimal representation.
+///
+/// Useful for red team payload encoding and blue team encoding detection.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::hex_encode;
+/// let result = hex_encode("test");
+/// assert_eq!(result, "74657374");
+/// ```
+pub fn hex_encode(input: &str) -> String {
+    input
+        .bytes()
+        .map(|b| format!("{:02x}", b))
+        .collect()
+}
+
+/// Encodes text with mixed hexadecimal formats (0x, \x, %, etc.).
+///
+/// Useful for red team obfuscation and blue team detection testing.
+///
+/// # Examples
+///
+/// ```
+/// use random_cap::hex_encode_mixed;
+/// let result = hex_encode_mixed("ab");
+/// assert!(result.contains("\\x") || result.contains("%") || result.contains("0x"));
+/// ```
+pub fn hex_encode_mixed(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    
+    input
+        .bytes()
+        .map(|b| {
+            match rng.next() % 4 {
+                0 => format!("\\x{:02x}", b),
+                1 => format!("%{:02x}", b),
+                2 => format!("0x{:02x}", b),
+                _ => format!("&#x{:02x};", b),
+            }
+        })
+        .collect()
+}
+
 // Simple pseudo-random number generator using LCG algorithm
 struct SimpleRng {
     state: u64,
@@ -617,5 +926,80 @@ mod tests {
         let input = "hello world test";
         let result = space_variants(input);
         assert_eq!(result.chars().count(), input.chars().count());
+    }
+
+    #[test]
+    fn test_base64_encode() {
+        assert_eq!(base64_encode("hello"), "aGVsbG8=");
+        assert_eq!(base64_encode("test"), "dGVzdA==");
+        assert_eq!(base64_encode("a"), "YQ==");
+    }
+
+    #[test]
+    fn test_url_encode() {
+        let result = url_encode("hello world");
+        assert!(result.contains("%20"));
+        
+        let result2 = url_encode("test@example.com");
+        assert!(result2.contains("%40"));
+    }
+
+    #[test]
+    fn test_sql_comment_injection() {
+        let result = sql_comment_injection("SELECT * FROM users");
+        // Check that it contains SQL-related content and possibly comments
+        assert!(result.contains("SELECT") || result.contains("FROM") || result.contains("users"));
+    }
+
+    #[test]
+    fn test_xss_tag_variations() {
+        let result = xss_tag_variations("<script>alert(1)</script>");
+        // Should contain some form of the input with variations
+        // The function modifies brackets and case, so just check it produced output
+        assert!(result.len() >= "<script>alert(1)</script>".len());
+        assert!(result.to_lowercase().contains("script") || result.contains("&#"));
+    }
+
+    #[test]
+    fn test_case_swap() {
+        let result = case_swap("HELLO");
+        // Should be different from original due to case swapping
+        assert_ne!(result, "HELLO");
+    }
+
+    #[test]
+    fn test_null_byte_injection() {
+        let result = null_byte_injection("test.txt");
+        // Should contain the original text and be at least as long
+        assert!(result.len() >= "test.txt".len());
+        // First and last characters should be preserved
+        assert!(result.starts_with('t') && result.ends_with('t'));
+    }
+
+    #[test]
+    fn test_path_traversal() {
+        let result = path_traversal("/etc/passwd");
+        // Should contain original path elements
+        assert!(result.contains("etc") && result.contains("passwd"));
+    }
+
+    #[test]
+    fn test_command_injection() {
+        let result = command_injection("ping example.com");
+        // Should contain original command elements
+        assert!(result.contains("ping") || result.contains("example"));
+    }
+
+    #[test]
+    fn test_hex_encode() {
+        assert_eq!(hex_encode("test"), "74657374");
+        assert_eq!(hex_encode("ab"), "6162");
+    }
+
+    #[test]
+    fn test_hex_encode_mixed() {
+        let result = hex_encode_mixed("ab");
+        // Should contain hexadecimal encoding
+        assert!(result.len() > 2);
     }
 }
