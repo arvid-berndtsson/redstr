@@ -166,4 +166,28 @@ mod tests {
             .build();
         assert!(result3.len() > 0);
     }
+
+    #[test]
+    fn test_transform_builder_cloudflare_functions() {
+        let result = TransformBuilder::new("challenge-token")
+            .cloudflare_turnstile()
+            .build();
+        assert!(result.len() > 0);
+        assert!(result.contains("challenge-token"));
+
+        let result2 = TransformBuilder::new("cf_clearance=abc123")
+            .cloudflare_challenge_response()
+            .build();
+        assert!(result2.len() > 0);
+        assert!(
+            result2.to_lowercase().contains("cf_clearance")
+                || result2.to_lowercase().contains("cf-clearance")
+        );
+
+        let result3 = TransformBuilder::new("test")
+            .cloudflare_turnstile()
+            .cloudflare_challenge_response()
+            .build();
+        assert!(result3.len() > 0);
+    }
 }
