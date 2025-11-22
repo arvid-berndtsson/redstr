@@ -241,11 +241,13 @@ pub fn rot13(input: &str) -> String {
 10. Commit messages are validated in CI - ensure format is correct before pushing
 
 **Pre-commit Checklist:**
-- ✅ `cargo fmt` - Code is formatted
-- ✅ `cargo check` - Code compiles
-- ✅ `cargo clippy -- -D warnings` - No clippy warnings
-- ✅ `cargo test` - All tests pass
-- ✅ Commit message follows conventional commits format
+- ✅ `cargo fmt` - Code is formatted (automatically checked by pre-commit hook)
+- ✅ `cargo check` - Code compiles (automatically checked by pre-commit hook)
+- ✅ `cargo clippy -- -D warnings` - No clippy warnings (automatically checked by pre-commit hook)
+- ✅ `cargo test` - All tests pass (automatically checked by pre-commit hook)
+- ✅ Commit message follows conventional commits format (validated in CI)
+
+**Note:** A pre-commit hook automatically runs all the above checks (except commit message format) before each commit. All checks must pass before committing. Use `git commit --no-verify` only for WIP commits, never for final commits.
 
 ## Integration Examples
 When suggesting code for integration with tools like Caido, Burp Suite, or EvilJinx, focus on:
