@@ -2,7 +2,7 @@
 
 [![Crates.io](https://img.shields.io/crates/v/redstr.svg)](https://crates.io/crates/redstr)
 [![Documentation](https://docs.rs/redstr/badge.svg)](https://docs.rs/redstr)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/arvid-berndtsson/redstr/blob/main/LICENSE)
 
 **Red team string transformation library for offensive security operations, penetration testing, and evasion techniques.**
 
@@ -588,4 +588,4 @@ This library is intended for authorized security testing, research, and defensiv
 
 ## License
 
-See LICENSE file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/arvid-berndtsson/redstr/blob/main/LICENSE) file for details.
