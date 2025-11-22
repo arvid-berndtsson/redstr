@@ -1,0 +1,225 @@
+# redstr - Cursor Rules
+
+## Project Overview
+redstr is a Rust library for string obfuscation and transformation designed for security testing (red team, blue team, purple team activities). The library provides 30+ transformation functions for WAF bypass, XSS evasion, SQL injection testing, phishing detection, and bot detection evasion.
+
+## Core Principles
+
+### 1. Zero Dependencies
+- **CRITICAL**: The core library MUST use only Rust's standard library (`std`)
+- Never add external dependencies to core functionality
+- Optional features (like `serde`) should be behind feature flags
+- When suggesting dependencies, always question if `std` can handle it
+- Prefer implementing algorithms manually over adding crates
+
+### 2. Security-Focused Design
+- All functions should be designed with security testing use cases in mind
+- Consider red team (offensive), blue team (defensive), and purple team (collaborative) perspectives
+- Functions should help with:
+  - WAF bypass techniques
+  - XSS/SQL injection evasion
+  - Phishing domain generation
+  - Bot detection evasion
+  - Filter and detection validation
+- Document security use cases in function doc comments
+
+### 3. Performance Optimization
+- Use efficient string operations (prefer `String::with_capacity` when size is known)
+- Avoid unnecessary allocations
+- Use iterators and functional patterns where appropriate
+- Consider UTF-8 encoding implications for all string operations
+- Profile performance-critical paths
+
+### 4. Code Quality Standards
+
+#### Rust Best Practices
+- Use `edition = "2021"` Rust features
+- Follow Rust naming conventions:
+  - Functions: `snake_case`
+  - Types: `PascalCase`
+  - Constants: `SCREAMING_SNAKE_CASE`
+- Use `&str` for input parameters (borrowing)
+- Return `String` for transformed output
+- Prefer `&str` over `String` in function signatures when possible
+- Use `Result` types for operations that can fail (though most transformations should not fail)
+- Handle Unicode properly - use `char` iteration, not byte iteration for text transformations
+
+#### Documentation
+- Every public function MUST have:
+  - A doc comment with `///` describing what it does
+  - `# Examples` section with at least one usage example
+  - Security use case notes when relevant
+- Include real-world examples in doc comments
+- Document any non-obvious behavior or edge cases
+- Reference related functions in doc comments
+
+#### Testing
+- Write unit tests for all public functions
+- Test edge cases: empty strings, Unicode characters, special characters
+- Test deterministic functions for exact output
+- Test non-deterministic functions for expected properties (length, character preservation, etc.)
+- Use `#[cfg(test)]` for test modules
+- Run `cargo test` before committing changes
+
+### 5. API Design
+
+#### Function Signatures
+- All transformation functions should follow: `fn function_name(input: &str) -> String`
+- Functions should be pure (no side effects, deterministic when possible)
+- For non-deterministic functions (random transformations), use internal RNG seeded from system time
+- Keep functions focused on single responsibilities
+
+#### Builder Pattern
+- Use `TransformBuilder` for chaining multiple transformations
+- Builder methods should consume `self` and return `Self` (owned)
+- Builder should have a `.build()` method that returns the final `String`
+- Add new builder methods when new transformations are added
+
+#### Error Handling
+- Most transformations should not fail (they operate on strings)
+- If a transformation can fail, use `Result<String, Error>`
+- Prefer panicking over silent failures for programming errors (e.g., invalid indices)
+
+### 6. Project Structure
+- Library code: `src/lib.rs`
+- CLI binary: `src/main.rs` (only built with `cli` feature)
+- Examples: `examples/` directory
+- Tests: In `#[cfg(test)]` modules within source files
+- Documentation: Comprehensive README.md with use cases
+
+### 7. Feature Flags
+- `default`: Core library only (no dependencies)
+- `cli`: Enable CLI binary (`src/main.rs`)
+- `serde`: Optional serde integration for serialization
+- Always check feature flags when adding optional functionality
+
+### 8. Publishing and Versioning
+- Follow semantic versioning
+- Update version in `Cargo.toml` before releases
+- Publishing is automated via GitHub Actions on version tags (`v*`)
+- Ensure all features work correctly before tagging releases
+
+### 9. Code Style Guidelines
+
+#### Formatting
+- Run `cargo fmt` before committing
+- Use 4 spaces for indentation
+- Keep line length reasonable (aim for < 100 characters)
+
+#### Clippy
+- Run `cargo clippy` and fix warnings
+- Prefer clippy suggestions for idiomatic Rust
+- Suppress clippy warnings only when necessary with justification
+
+#### Imports
+- Group imports: std, external crates, local modules
+- Use `use redstr::*;` in examples for simplicity
+- Use explicit imports in library code for clarity
+
+### 10. Security Considerations
+- This library is for authorized security testing only
+- Always include responsible use warnings in documentation
+- Functions should not execute actual attacks, only generate test payloads
+- Be mindful of homoglyph and typosquatting functions - document ethical use
+
+### 11. When Adding New Functions
+1. Check if it fits the security testing use case
+2. Implement using only `std` library
+3. Add comprehensive documentation with examples
+4. Write unit tests covering edge cases
+5. Add to `TransformBuilder` if it makes sense to chain
+6. Update README.md with the new function
+7. Add CLI support if applicable (in `src/main.rs`)
+8. Consider adding to examples directory
+
+### 12. Common Patterns
+
+#### Random Number Generation
+- Use internal `SimpleRng` struct for deterministic randomness
+- Seed from system time: `SystemTime::now().duration_since(UNIX_EPOCH)`
+- Use LCG (Linear Congruential Generator) for simple randomness needs
+
+#### String Transformation Pattern
+```rust
+pub fn transformation(input: &str) -> String {
+    input
+        .chars()
+        .map(|c| {
+            // transformation logic
+            transformed_char
+        })
+        .collect()
+}
+```
+
+#### Builder Pattern Pattern
+```rust
+pub fn transformation(mut self) -> Self {
+    self.text = transformation_function(&self.text);
+    self
+}
+```
+
+## Examples of Good Code
+
+### Good Function Design
+```rust
+/// Applies ROT13 cipher to the input.
+///
+/// ROT13 is a simple letter substitution cipher that replaces each letter
+/// with the letter 13 positions after it in the alphabet.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::rot13;
+/// assert_eq!(rot13("Hello"), "Uryyb");
+/// assert_eq!(rot13("Uryyb"), "Hello"); // ROT13 is reversible
+/// ```
+pub fn rot13(input: &str) -> String {
+    input
+        .chars()
+        .map(|c| {
+            match c {
+                'a'..='z' => {
+                    let offset = ((c as u8 - b'a' + 13) % 26) + b'a';
+                    offset as char
+                }
+                'A'..='Z' => {
+                    let offset = ((c as u8 - b'A' + 13) % 26) + b'A';
+                    offset as char
+                }
+                _ => c,
+            }
+        })
+        .collect()
+}
+```
+
+## What NOT to Do
+
+1. ❌ Don't add external dependencies to core library
+2. ❌ Don't use `unsafe` code unless absolutely necessary
+3. ❌ Don't skip documentation for public functions
+4. ❌ Don't write functions that mutate input (always return new String)
+5. ❌ Don't ignore Unicode - always use `char` iteration, not byte iteration
+6. ❌ Don't add features that don't relate to security testing
+7. ❌ Don't commit code that doesn't pass `cargo test` and `cargo clippy`
+8. ❌ Don't break the zero-dependency principle
+
+## Workflow
+
+1. Make changes to code
+2. Run `cargo fmt` to format code
+3. Run `cargo clippy` to check for issues
+4. Run `cargo test` to ensure all tests pass
+5. Update documentation if needed
+6. Check that examples still work: `cargo run --example basic_usage`
+7. Verify no new dependencies were added (check `Cargo.toml`)
+
+## Integration Examples
+When suggesting code for integration with tools like Caido, Burp Suite, or EvilJinx, focus on:
+- Simple, clean API usage
+- Performance considerations for high-throughput scenarios
+- Real-world security testing patterns
+- Chain transformations using `TransformBuilder` for complex payloads
