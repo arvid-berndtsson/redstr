@@ -1,0 +1,9 @@
+redstr (0.1.1-1) unstable; urgency=medium
+
+  * Initial Debian package release
+  * Package redstr library and CLI tool
+  * Includes 30+ string transformation functions
+  * Zero dependencies for core library
+  * Optimized for security testing workflows
+
+ -- Arvid Berndtsson <dev@arvid.tech>  Mon, 25 Nov 2025 12:00:00 +0000

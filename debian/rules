@@ -1,0 +1,31 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export DEB_CARGO_PACKAGE = redstr
+export DEB_RUST_EXTRA_ARGS = --features cli
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	# Build the CLI binary with cli feature enabled
+	cargo build --release --features cli
+
+override_dh_auto_install:
+	# Install CLI binary
+	install -d debian/redstr/usr/bin
+	install -m 755 target/release/redstr debian/redstr/usr/bin/redstr
+	# Install documentation
+	install -d debian/redstr/usr/share/doc/redstr
+	install -m 644 README.md debian/redstr/usr/share/doc/redstr/
+	install -m 644 LICENSE debian/redstr/usr/share/doc/redstr/copyright
+	# Install man page if available (will be added in CLI optimization task)
+	# install -D -m 644 man/redstr.1 debian/redstr/usr/share/man/man1/redstr.1.gz
+
+override_dh_auto_test:
+	# Run tests before building package
+	cargo test --release
+
+override_dh_strip:
+	# Strip binaries
+	dh_strip --dbg-package=redstr-dbg
