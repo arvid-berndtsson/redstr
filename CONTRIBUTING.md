@@ -215,6 +215,70 @@ Where:
 
 **CI will fail if commits don't follow this format.**
 
+## 🚀 Release Process
+
+### Creating a Release
+
+We use [`cargo-release`](https://github.com/crate-ci/cargo-release) to automate the release process and prevent version mismatches.
+
+#### Prerequisites
+
+Install `cargo-release` (one-time setup):
+```bash
+cargo install cargo-release
+```
+
+#### Recommended: Use cargo-release
+
+The easiest way to create a release is using `cargo-release`:
+
+**For semantic versioning:**
+```bash
+cargo release patch   # 0.1.0 -> 0.1.1
+cargo release minor   # 0.1.0 -> 0.2.0
+cargo release major   # 0.1.0 -> 1.0.0
+```
+
+**For specific version:**
+```bash
+cargo release 0.2.0
+```
+
+**Dry run (preview changes without committing):**
+```bash
+cargo release --dry-run patch
+```
+
+`cargo-release` will:
+1. ✅ Update `Cargo.toml` version
+2. ✅ Update `Cargo.lock` if needed
+3. ✅ Create a git commit with the version change
+4. ✅ Create a git tag `v<version>`
+5. ✅ Optionally push to origin (use `--execute` flag)
+
+**Full release workflow:**
+```bash
+# Preview what will happen
+cargo release --dry-run minor
+
+# Execute the release (updates version, commits, tags)
+cargo release minor --execute
+
+# Push the commit and tag
+git push origin main
+git push origin --tags
+```
+
+### CI Validation & Publishing
+
+The GitHub Actions workflow automatically:
+- ✅ Validates that `Cargo.toml` version matches the tag version
+- ✅ Publishes to crates.io when validation passes
+- ✅ Uses Trusted Publishing (no API tokens needed)
+
+**Workflow:** Push tag → CI validates → Auto-publishes to crates.io
+
+
 ## 🔍 Code Review Process
 
 1. **Automated Checks**

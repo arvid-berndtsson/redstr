@@ -24,6 +24,21 @@ jobs:
         with:
           toolchain: stable
 
+      - name: Validate version matches tag
+        run: |
+          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          CARGO_VERSION=$(cargo metadata --format-version 1 --no-deps | grep -o '"version":"[^"]*"' | head -1 | cut -d'"' -f4)
+          
+          if [ -z "$CARGO_VERSION" ]; then
+            CARGO_VERSION=$(grep '^version = ' Cargo.toml | sed 's/version = "\(.*\)"/\1/')
+          fi
+          
+          if [ "$TAG_VERSION" != "$CARGO_VERSION" ]; then
+            echo "❌ Version mismatch: tag=$TAG_VERSION, Cargo.toml=$CARGO_VERSION"
+            echo "Use 'cargo release $TAG_VERSION --execute' to fix this."
+            exit 1
+          fi
+
       - name: Authenticate with crates.io (Trusted Publishing)
         id: auth
         uses: rust-lang/crates-io-auth-action@v1
