@@ -65,7 +65,7 @@ pub fn leetspeak(input: &str) -> String {
 /// ```
 pub fn rot13(input: &str) -> String {
     let mut result = String::with_capacity(input.len());
-    
+
     for c in input.chars() {
         let rotated = match c {
             'a'..='z' => {

@@ -44,7 +44,7 @@ pub fn randomize_capitalization(input: &str) -> String {
 pub fn alternate_case(input: &str) -> String {
     let mut upper = true;
     let mut result = String::with_capacity(input.len() * 2);
-    
+
     for c in input.chars() {
         if c.is_alphabetic() {
             if upper {
@@ -74,7 +74,7 @@ pub fn alternate_case(input: &str) -> String {
 /// ```
 pub fn inverse_case(input: &str) -> String {
     let mut result = String::with_capacity(input.len() * 2);
-    
+
     for c in input.chars() {
         if c.is_uppercase() {
             for lc in c.to_lowercase() {
