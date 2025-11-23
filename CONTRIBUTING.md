@@ -142,6 +142,16 @@ A pre-commit hook is automatically installed that runs the following checks befo
 - Profile performance-critical paths
 - Benchmark new functions
 
+### Performance Visualizations
+
+After making performance improvements, regenerate the comparison charts:
+
+```bash
+python3 scripts/generate_comparison.py
+```
+
+This creates visual comparisons showing redstr's performance against other libraries and a capability star chart.
+
 ## 📝 Commit Messages
 
 **We enforce conventional commits using `cc-check` in CI.**
