@@ -19,7 +19,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
 
       - name: Install Rust
@@ -37,10 +37,10 @@ jobs:
           
           if [ "$TAG_VERSION" != "$CARGO_VERSION" ]; then
             echo "🔄 Updating Cargo.toml version from $CARGO_VERSION to $TAG_VERSION"
-            sed -i "s/^version = \".*\"/version = \"$TAG_VERSION\"/" Cargo.toml
+            sed -i "0,/^version = \".*\"/s//version = \"$TAG_VERSION\"/" Cargo.toml
             
-            # Update Cargo.lock
-            cargo update --workspace --offline 2>/dev/null || cargo update --workspace
+            # Update Cargo.lock to reflect the version change
+            cargo check
             
             # Configure git
             git config user.name "github-actions[bot]"
@@ -49,7 +49,7 @@ jobs:
             # Commit and push the version update
             git add Cargo.toml Cargo.lock
             git commit -m "chore: bump version to $TAG_VERSION for release"
-            git push origin main
+            git push origin ${{ github.event.repository.default_branch }}
             
             echo "✅ Version updated and committed"
           else
