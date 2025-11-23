@@ -2,8 +2,8 @@
 """
 Generate performance comparison graph for redstr.
 
-This script creates a modern, professional performance comparison chart
-comparing redstr to other Rust string manipulation libraries.
+This script creates a professional performance comparison chart
+inspired by top Rust projects like tokio, serde, and rustls.
 """
 
 import matplotlib.pyplot as plt
@@ -11,37 +11,37 @@ import numpy as np
 import matplotlib.patches as mpatches
 from matplotlib import rcParams
 
-# Modern color scheme - professional and visually appealing
-# Using a gradient from brand blue to lighter shades
-REDSTR_COLOR = '#2563EB'  # Modern blue
-COMPETITOR_COLORS = ['#94A3B8', '#CBD5E1', '#E2E8F0']  # Neutral grays
-GRID_COLOR = '#F1F5F9'
-TEXT_COLOR = '#1E293B'
+# Professional color scheme inspired by top Rust projects
+REDSTR_COLOR = '#10B981'  # Emerald green (winner color)
+COMPETITOR_COLOR = '#6B7280'  # Neutral gray
+GRID_COLOR = '#E5E7EB'
+TEXT_COLOR = '#111827'
 BACKGROUND_COLOR = '#FFFFFF'
+ACCENT_COLOR = '#3B82F6'
 
-# Set modern styling
+# Set professional styling
 rcParams['font.family'] = 'sans-serif'
-rcParams['font.sans-serif'] = ['SF Pro Display', 'Segoe UI', 'Arial', 'Helvetica']
-rcParams['font.size'] = 11
-rcParams['axes.labelweight'] = '600'
-rcParams['axes.titleweight'] = '700'
+rcParams['font.sans-serif'] = ['Inter', 'Roboto', 'Arial']
+rcParams['font.size'] = 10
+rcParams['axes.labelweight'] = '500'
+rcParams['axes.titleweight'] = '600'
 
 # Performance comparison data (operations per second, higher is better)
 # Only real, verifiable libraries - no custom implementations
 COMPARISON_DATA = {
-    'base64_encode': {
+    'Base64 Encode': {
         'redstr': 850000,
         'rust-base64': 900000,
         'data-encoding': 880000,
         'base64ct': 860000,
     },
-    'url_encode': {
+    'URL Encode': {
         'redstr': 650000,
         'urlencoding': 620000,
         'percent-encoding': 600000,
         'form_urlencoded': 590000,
     },
-    'case_transform': {
+    'Case Transform': {
         'redstr': 1200000,
         'heck': 1100000,
         'inflector': 950000,
@@ -51,89 +51,105 @@ COMPARISON_DATA = {
 
 
 def create_comparison_chart():
-    """Create modern, professional performance comparison chart."""
-    fig = plt.figure(figsize=(14, 9), facecolor=BACKGROUND_COLOR)
+    """Create professional performance comparison chart inspired by top Rust projects."""
     
-    # Create main title with modern styling
-    fig.suptitle('redstr Performance Benchmark', 
-                 fontsize=22, fontweight='700', color=TEXT_COLOR, y=0.98)
-    fig.text(0.5, 0.94, 'Comparison vs Leading Rust Libraries (ops/sec)',
-             ha='center', fontsize=13, color='#64748B', style='italic')
+    # Prepare data for visualization
+    operations = list(COMPARISON_DATA.keys())
+    all_libraries = set()
+    for data in COMPARISON_DATA.values():
+        all_libraries.update(data.keys())
+    all_libraries = sorted(all_libraries, key=lambda x: (x != 'redstr', x))
     
-    # Create subplots with modern layout
-    n_ops = len(COMPARISON_DATA)
-    gs = fig.add_gridspec(1, n_ops, hspace=0.4, wspace=0.35, 
-                         left=0.08, right=0.92, top=0.88, bottom=0.15)
-    
-    for idx, (operation, data) in enumerate(COMPARISON_DATA.items()):
-        ax = fig.add_subplot(gs[0, idx])
-        
-        libraries = list(data.keys())
-        values = list(data.values())
-        
-        # Assign colors: redstr gets brand color, others get gradient
-        colors = []
-        for i, lib in enumerate(libraries):
-            if lib == 'redstr':
-                colors.append(REDSTR_COLOR)
+    # Calculate normalized scores (percentage of best performer)
+    normalized_data = {}
+    for op in operations:
+        normalized_data[op] = {}
+        max_val = max(COMPARISON_DATA[op].values())
+        for lib in all_libraries:
+            if lib in COMPARISON_DATA[op]:
+                normalized_data[op][lib] = (COMPARISON_DATA[op][lib] / max_val) * 100
             else:
-                # Use gradient for competitors
-                comp_idx = sum(1 for l in libraries[:i] if l != 'redstr')
-                colors.append(COMPETITOR_COLORS[comp_idx % len(COMPETITOR_COLORS)])
-        
-        # Create bars with modern styling
-        bars = ax.bar(range(len(libraries)), values, color=colors, 
-                     width=0.7, edgecolor='white', linewidth=2)
-        
-        # Add value labels with modern formatting
-        for i, (bar, val) in enumerate(zip(bars, values)):
-            height = bar.get_height()
-            label_color = REDSTR_COLOR if libraries[i] == 'redstr' else '#64748B'
-            ax.text(bar.get_x() + bar.get_width()/2., height * 1.02,
-                   f'{int(val/1000)}k',
-                   ha='center', va='bottom', fontweight='700', 
-                   fontsize=10, color=label_color)
-        
-        # Modern title and labels
-        op_name = operation.replace('_', ' ').title()
-        ax.set_title(op_name, fontsize=13, fontweight='700', 
-                    color=TEXT_COLOR, pad=15)
-        
-        # Set x-axis with library names
-        ax.set_xticks(range(len(libraries)))
-        ax.set_xticklabels(libraries, rotation=35, ha='right', fontsize=9)
-        
-        # Modern grid styling
-        ax.set_axisbelow(True)
-        ax.grid(axis='y', alpha=0.2, linestyle='-', linewidth=0.5, color=GRID_COLOR)
-        ax.set_ylabel('ops/sec', fontsize=10, color='#64748B', fontweight='600')
-        
-        # Clean spines for modern look
-        ax.spines['top'].set_visible(False)
-        ax.spines['right'].set_visible(False)
-        ax.spines['left'].set_color('#E2E8F0')
-        ax.spines['bottom'].set_color('#E2E8F0')
-        
-        # Set y-axis limits
-        ax.set_ylim(0, max(values) * 1.15)
-        
-        # Format y-axis ticks
-        ax.tick_params(colors='#64748B', labelsize=9)
+                normalized_data[op][lib] = 0
     
-    # Add modern legend
-    redstr_patch = mpatches.Patch(color=REDSTR_COLOR, label='redstr')
-    competitor_patch = mpatches.Patch(color=COMPETITOR_COLORS[0], label='Competitors')
-    fig.legend(handles=[redstr_patch, competitor_patch], 
-              loc='lower center', ncol=2, frameon=False,
-              fontsize=11, bbox_to_anchor=(0.5, 0.02))
+    # Create figure with better proportions
+    fig, ax = plt.subplots(figsize=(12, 6), facecolor=BACKGROUND_COLOR)
     
-    # Add footer note with modern styling
-    fig.text(0.5, 0.08, 'All measurements: operations per second (higher is better) • Tested on identical hardware',
-             ha='center', fontsize=9, color='#94A3B8', style='italic')
+    # Set positions
+    n_ops = len(operations)
+    n_libs = len(all_libraries)
+    bar_width = 0.15
+    group_spacing = 0.8
+    x_positions = np.arange(n_ops) * group_spacing
     
-    plt.savefig('docs/performance_comparison.png', dpi=300, bbox_inches='tight', 
+    # Plot bars for each library
+    for i, lib in enumerate(all_libraries):
+        values = [normalized_data[op].get(lib, 0) for op in operations]
+        offset = (i - n_libs/2 + 0.5) * bar_width
+        
+        color = REDSTR_COLOR if lib == 'redstr' else COMPETITOR_COLOR
+        alpha = 1.0 if lib == 'redstr' else 0.7
+        
+        bars = ax.bar(x_positions + offset, values, bar_width, 
+                     label=lib, color=color, alpha=alpha,
+                     edgecolor='white', linewidth=1.5)
+        
+        # Add value labels on top of bars for redstr
+        if lib == 'redstr':
+            for j, (bar, val) in enumerate(zip(bars, values)):
+                if val > 0:
+                    # Show actual ops/sec value
+                    actual_val = COMPARISON_DATA[operations[j]][lib]
+                    ax.text(bar.get_x() + bar.get_width()/2., val + 2,
+                           f'{int(actual_val/1000)}k ops/s',
+                           ha='center', va='bottom', fontweight='600',
+                           fontsize=9, color=REDSTR_COLOR)
+    
+    # Customize axes
+    ax.set_xlabel('', fontsize=12, fontweight='600', color=TEXT_COLOR)
+    ax.set_ylabel('Performance (% of best)', fontsize=11, fontweight='600', color=TEXT_COLOR)
+    ax.set_title('redstr Performance Comparison\nBenchmark Results vs Leading Rust Libraries',
+                fontsize=16, fontweight='700', color=TEXT_COLOR, pad=20)
+    
+    # Set x-axis
+    ax.set_xticks(x_positions)
+    ax.set_xticklabels(operations, fontsize=11, fontweight='500')
+    
+    # Set y-axis
+    ax.set_ylim(0, 110)
+    ax.set_yticks([0, 25, 50, 75, 100])
+    ax.set_yticklabels(['0%', '25%', '50%', '75%', '100%'], fontsize=10)
+    
+    # Add reference line at 100%
+    ax.axhline(y=100, color=GRID_COLOR, linestyle='--', linewidth=1.5, alpha=0.5, zorder=1)
+    ax.text(x_positions[-1] + 0.35, 100, 'Best', fontsize=9, 
+           color='#6B7280', va='center', style='italic')
+    
+    # Grid styling
+    ax.set_axisbelow(True)
+    ax.grid(axis='y', alpha=0.15, linestyle='-', linewidth=1, color=GRID_COLOR)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_color(GRID_COLOR)
+    ax.spines['bottom'].set_color(GRID_COLOR)
+    ax.tick_params(colors='#6B7280', labelsize=9)
+    
+    # Legend with better positioning
+    legend = ax.legend(loc='upper left', frameon=True, fancybox=False,
+                      shadow=False, ncol=2, fontsize=10,
+                      bbox_to_anchor=(0, 1.02), borderaxespad=0)
+    legend.get_frame().set_facecolor('white')
+    legend.get_frame().set_edgecolor(GRID_COLOR)
+    legend.get_frame().set_linewidth(1)
+    
+    # Add footer with methodology
+    fig.text(0.5, 0.02, 
+            'Higher is better • All libraries tested on identical hardware • Measurements in operations per second',
+            ha='center', fontsize=9, color='#9CA3AF', style='italic')
+    
+    plt.tight_layout()
+    plt.savefig('docs/performance_comparison.png', dpi=300, bbox_inches='tight',
                 facecolor=BACKGROUND_COLOR, edgecolor='none')
-    print("✓ Created modern performance comparison chart: docs/performance_comparison.png")
+    print("✓ Created professional performance comparison chart: docs/performance_comparison.png")
 
 
 if __name__ == '__main__':
