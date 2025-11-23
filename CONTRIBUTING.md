@@ -370,11 +370,24 @@ The GitHub Actions workflow automatically:
 
 ### Creating a New Integration
 
+**First, check where your integration should live!**
+
+See **[Integration Guidelines](docs/INTEGRATION_GUIDELINES.md)** for guidance on:
+- When to use a separate repository (e.g., Burp Suite, OWASP ZAP add-ons)
+- When to contribute to this repository (examples, docs)
+- How to structure your integration
+- Tool-specific guidance
+
+**For integrations in this repo:**
 1. Research integration points
 2. Create `docs/{platform}_integration.md`
-3. Create `integrations/{platform}/` directory
-4. Implement integration
-5. Add examples and documentation
+3. Add examples to `examples/` directory
+4. Update documentation
+
+**For separate repo integrations:**
+1. Follow the [Integration Guidelines](docs/INTEGRATION_GUIDELINES.md)
+2. Reference redstr in your documentation
+3. Let us know so we can feature it!
 
 ## 🤝 Community Guidelines
 
