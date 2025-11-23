@@ -111,3 +111,19 @@ Current PR title: "Add new feature"
 Correct PR title: "feat(cloudflare): add Turnstile challenge variation"
 ✅ This is CORRECT!
 ```
+
+## Working with Multiple Projects
+
+If this workspace contains multiple related projects (e.g., `redstr`, `redstr-server`, `redstr-burp`, etc.), see **[MULTI_PROJECT_WORKFLOW.md](./MULTI_PROJECT_WORKFLOW.md)** for detailed instructions on:
+
+- Navigating between projects
+- Working with project-specific code
+- Creating branches and commits for each project
+- Managing dependencies between projects
+- Creating PRs for multiple projects
+
+**Key points:**
+- Always verify your current directory with `pwd` before making changes
+- Use project-specific scopes in commit messages (e.g., `feat(server): ...` for redstr-server)
+- Test each project independently
+- Follow conventional commits format for ALL projects
