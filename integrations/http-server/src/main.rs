@@ -25,7 +25,9 @@ fn main() {
 }
 
 fn handle_client(mut stream: TcpStream) {
-    let mut buffer = [0; 4096];
+    // 8KB buffer for request handling - supports most use cases
+    // For larger requests, consider using a production HTTP server library
+    let mut buffer = [0; 8192];
     
     match stream.read(&mut buffer) {
         Ok(size) => {
@@ -55,7 +57,9 @@ fn handle_transform(stream: &mut TcpStream, request: &str) {
     if let Some(start) = body_start {
         let body = &request[start..];
         
-        // Simple JSON parsing (in production, use serde_json)
+        // Simple JSON parsing - suitable for basic use cases
+        // Limitations: Does not handle nested objects, arrays, or complex escaping
+        // For production use with complex JSON, consider adding serde_json dependency
         // Expected format: {"function":"method_name","input":"text"}
         let result = parse_and_transform(body);
         
@@ -171,7 +175,7 @@ fn parse_and_transform(json: &str) -> Result<String, String> {
         "file_path_obfuscate" => redstr::file_path_obfuscate(&input),
         
         // Bot detection
-        "random_user_agent" => redstr::random_user_agent(),
+        "random_user_agent" => redstr::random_user_agent(), // No input needed - generates random UA
         "http2_header_order" => redstr::http2_header_order(&input),
         "cloudflare_challenge_variation" => redstr::cloudflare_challenge_variation(&input),
         "accept_language_variation" => redstr::accept_language_variation(&input),
@@ -183,12 +187,36 @@ fn parse_and_transform(json: &str) -> Result<String, String> {
 }
 
 fn extract_json_field(json: &str, field: &str) -> Option<String> {
-    // Simple JSON field extraction
+    // Simple JSON field extraction - handles basic escaped quotes and backslashes
+    // Limitations: Does not handle nested objects or complex JSON structures
     let pattern = format!("\"{}\":\"", field);
     let start = json.find(&pattern)? + pattern.len();
     let remaining = &json[start..];
-    let end = remaining.find('"')?;
-    Some(remaining[..end].replace("\\\"", "\"").replace("\\\\", "\\"))
+    
+    // Find the closing quote, accounting for escaped quotes
+    let mut end = 0;
+    let mut escaped = false;
+    for (i, c) in remaining.chars().enumerate() {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        if c == '\\' {
+            escaped = true;
+            continue;
+        }
+        if c == '"' {
+            end = i;
+            break;
+        }
+    }
+    
+    if end == 0 && !remaining.is_empty() {
+        return None;
+    }
+    
+    Some(remaining[..end].replace("\\\"", "\"").replace("\\\\", "\\")
+        .replace("\\n", "\n").replace("\\r", "\r").replace("\\t", "\t"))
 }
 
 fn escape_json(s: &str) -> String {
