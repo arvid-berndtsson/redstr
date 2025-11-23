@@ -1,0 +1,14 @@
+[package]
+name = "redstr-http-server"
+version = "0.1.0"
+edition = "2021"
+authors = ["Arvid Berndtsson <dev@arvid.tech>"]
+description = "HTTP API server for redstr string transformations"
+license = "MIT"
+
+[[bin]]
+name = "redstr-serve"
+path = "src/main.rs"
+
+[dependencies]
+redstr = { path = "../.." }
