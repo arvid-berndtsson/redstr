@@ -4,13 +4,9 @@
 
 This document describes the performance characteristics of redstr transformation functions. All benchmarks are conducted using [Criterion.rs](https://github.com/bheisler/criterion.rs), a statistical benchmarking tool that provides reliable measurements.
 
-## Performance Visualization
+## Performance Comparison
 
-### Performance Comparison
-
-![Performance Comparison](performance_comparison.png)
-
-redstr's performance compared to other popular Rust string manipulation libraries across various operations. **Each operation is tested against at least 3 alternative implementations** to ensure fair comparison. Higher bars indicate better performance (more operations per second).
+redstr's performance compared to other popular Rust string manipulation libraries across various operations. **Each operation is tested against at least 3 alternative implementations** to ensure fair comparison.
 
 **Tested Libraries:**
 - **Base64 encoding**: rust-base64, data-encoding, base64ct
@@ -21,17 +17,6 @@ redstr's performance compared to other popular Rust string manipulation librarie
 - **Base64 encoding**: Competitive with specialized base64 libraries (rust-base64, data-encoding, base64ct)
 - **URL encoding**: 5-8% faster than urlencoding, percent-encoding, and form_urlencoded crates
 - **Case transformations**: 9-26% faster than heck, inflector, and convert_case
-
-### Generating Chart
-
-To regenerate the performance comparison chart:
-
-```bash
-python3 scripts/generate_comparison.py
-```
-
-This script creates:
-- `performance_comparison.png` - Bar chart comparing redstr to 3+ libraries per operation
 
 ## Running Benchmarks
 
