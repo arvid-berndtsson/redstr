@@ -314,3 +314,191 @@ When suggesting code for integration with tools like Caido, Burp Suite, or EvilJ
 - Performance considerations for high-throughput scenarios
 - Real-world security testing patterns
 - Chain transformations using `TransformBuilder` for complex payloads
+
+## Working with Multiple Projects
+
+This workspace may contain multiple related projects (e.g., `redstr`, `redstr-server`, `redstr-burp`, `redstr-caido`, `redstr-eviljinx`, `redstr-owasp-zap`). When working with multiple projects:
+
+### Discovering Projects
+
+**Always check for existing projects before making assumptions:**
+```bash
+# Find all Cargo.toml files (Rust projects)
+find /workspace -name "Cargo.toml" -type f
+
+# Find all directories that might be projects
+ls -d /workspace/*/
+
+# Check for git repositories
+find /workspace -name ".git" -type d
+```
+
+### Navigating Between Projects
+
+**CRITICAL: Always verify your current directory before making changes:**
+- Use `cd /workspace/project-name` to navigate
+- Always use `pwd` to verify location
+- Use absolute paths (`/workspace/project-name/file.rs`) when switching between projects
+- Use relative paths only when working within a single project
+
+**Before making any changes:**
+1. Navigate to the project directory: `cd /workspace/redstr-server`
+2. Verify location: `pwd && ls -la`
+3. Check project structure: `read_file("Cargo.toml")` or `cat Cargo.toml`
+4. Understand the project's dependencies and structure
+
+### Git Operations for Multiple Projects
+
+**Each project may have its own git repository:**
+- Check if project has its own `.git`: `cd /workspace/redstr-server && [ -d ".git" ] && git status`
+- Always create branches from the correct project directory
+- Always commit from the project's root directory
+- Use project-specific branch names: `feat/server-api-endpoints` or `redstr-server/feat/api-endpoints`
+
+**Commits for multiple projects:**
+- Use conventional commits format with project-specific scope:
+  - `feat(server): add POST /transform endpoint` - for redstr-server
+  - `fix(burp): correct extension initialization` - for redstr-burp
+  - `docs(caido): update plugin documentation` - for redstr-caido
+- **CRITICAL**: Always commit from the project root where you made changes
+- Verify which repo you're in: `git remote -v` and `git status`
+
+### Building and Testing Multiple Projects
+
+**For each project independently:**
+```bash
+# Navigate to project
+cd /workspace/redstr-server
+
+# Build
+cargo build
+
+# Test
+cargo test
+
+# Format
+cargo fmt
+
+# Clippy
+cargo clippy -- -D warnings
+```
+
+**When working with dependencies:**
+- If `redstr-server` depends on `redstr`, ensure `redstr` is published or use path dependency
+- Check `Cargo.toml` for dependency configuration
+- Build parent projects before dependent projects if using path dependencies
+
+### Creating Pull Requests for Multiple Projects
+
+**For each project:**
+1. Navigate to project root: `cd /workspace/redstr-server`
+2. Create feature branch: `git checkout -b feat/server-new-endpoint`
+3. Make changes and commit (following conventional commits format)
+4. Push branch: `git push origin feat/server-new-endpoint`
+5. PR title must follow conventional commits: `feat(server): add new endpoint`
+
+**PR Title Format (per project):**
+- `feat(server): add POST /transform endpoint` - for redstr-server
+- `fix(burp): correct extension initialization` - for redstr-burp
+- `docs(caido): update plugin documentation` - for redstr-caido
+
+### Project-Specific Rules
+
+**Each project may have:**
+- Different `Cargo.toml` configurations
+- Different dependency requirements
+- Different CI/CD workflows (check `.github/workflows/`)
+- Project-specific `.cursorrules` (check project directory)
+- Project-specific `CONTRIBUTING.md`
+
+**Always check project-specific files before making changes:**
+- `.cursorrules` in project directory (if exists)
+- `CONTRIBUTING.md` in project directory
+- `.github/workflows/` for CI requirements
+- Project-specific README.md
+
+### Best Practices for Multi-Project Work
+
+1. **Always verify location**: Use `pwd` before making changes
+2. **Use absolute paths**: When switching between projects, use `/workspace/project-name/`
+3. **Project-specific commits**: Include project context in commit scope (e.g., `feat(server): ...`)
+4. **Test each project**: Run tests in the project you're modifying
+5. **Check dependencies**: Ensure dependent projects still work after changes
+6. **Document changes**: Update relevant README files for each project
+7. **Follow project conventions**: Each project may have specific rules
+
+### Commit Message Scopes by Project
+
+- **redstr**: `encoding`, `cloudflare`, `builder`, `transformations`, `obfuscation`, `injection`, `phishing`, `bot_detection`, `unicode`, `web_security`, `shell`, `case`
+- **redstr-server**: `server`, `api`, `endpoint`, `handler`, `middleware`, `route`
+- **redstr-burp**: `burp`, `extension`, `tab`, `intruder`, `scanner`
+- **redstr-caido**: `caido`, `plugin`, `workflow`, `integration`
+- **redstr-eviljinx**: `eviljinx`, `script`, `integration`
+- **redstr-owasp-zap**: `zap`, `addon`, `scanner`, `active-scan`
+
+### Troubleshooting Multi-Project Issues
+
+**Problem: Can't find project**
+```bash
+find /workspace -name "Cargo.toml" -type f
+find /workspace -type d -name "*server*"
+```
+
+**Problem: Wrong project directory**
+```bash
+pwd
+ls -la
+cat Cargo.toml  # Verify project name
+```
+
+**Problem: Git operations in wrong repo**
+```bash
+git remote -v
+git status
+```
+
+**Problem: Dependencies not found**
+```bash
+# Check if parent project needs to be built first
+cd /workspace
+cargo build --release
+
+# Or check if path dependency is needed
+cd /workspace/redstr-server
+cat Cargo.toml  # Check dependency configuration
+```
+
+### Quick Reference Commands
+
+```bash
+# Find all projects
+find /workspace -name "Cargo.toml" -type f
+
+# Navigate to project
+cd /workspace/redstr-server
+
+# Verify location
+pwd && cat Cargo.toml | grep "^name"
+
+# Check git status
+git status
+
+# Build and test
+cargo build && cargo test && cargo clippy -- -D warnings
+
+# Format code
+cargo fmt
+
+# Commit (from project root)
+git commit -m "feat(scope): description"
+
+# Push branch
+git push origin branch-name
+```
+
+**CRITICAL REMINDERS:**
+- Always use conventional commits format for ALL projects
+- Each project should be tested independently
+- Always verify your current directory with `pwd` before making changes
+- Use project-specific scopes in commit messages
+- PR titles must follow conventional commits format for each project
