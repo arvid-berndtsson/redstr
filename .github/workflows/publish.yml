@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   publish:
@@ -14,29 +14,46 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
-      contents: read
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
 
-      - name: Validate version matches tag
+      - name: Update Cargo.toml version to match tag
         run: |
           TAG_VERSION="${GITHUB_REF#refs/tags/v}"
-          CARGO_VERSION=$(cargo metadata --format-version 1 --no-deps | grep -o '"version":"[^"]*"' | head -1 | cut -d'"' -f4)
+          CARGO_VERSION=$(grep '^version = ' Cargo.toml | sed 's/version = "\(.*\)"/\1/')
           
-          if [ -z "$CARGO_VERSION" ]; then
-            CARGO_VERSION=$(grep '^version = ' Cargo.toml | sed 's/version = "\(.*\)"/\1/')
-          fi
+          echo "📦 Tag version: $TAG_VERSION"
+          echo "📦 Cargo.toml version: $CARGO_VERSION"
           
           if [ "$TAG_VERSION" != "$CARGO_VERSION" ]; then
-            echo "❌ Version mismatch: tag=$TAG_VERSION, Cargo.toml=$CARGO_VERSION"
-            echo "Use 'cargo release $TAG_VERSION --execute' to fix this."
-            exit 1
+            echo "🔄 Updating Cargo.toml version from $CARGO_VERSION to $TAG_VERSION"
+            sed -i "0,/^version = \".*\"/s//version = \"$TAG_VERSION\"/" Cargo.toml
+            
+            # Update Cargo.lock to reflect the version change
+            cargo check
+            
+            # Configure git
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            
+            # Commit and push the version update
+            git add Cargo.toml Cargo.lock
+            git commit -m "chore: bump version to $TAG_VERSION for release"
+            git push origin ${{ github.event.repository.default_branch }}
+            
+            echo "✅ Version updated and committed"
+          else
+            echo "✅ Version already matches tag"
           fi
 
       - name: Authenticate with crates.io (Trusted Publishing)

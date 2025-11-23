@@ -272,11 +272,14 @@ git push origin --tags
 ### CI Validation & Publishing
 
 The GitHub Actions workflow automatically:
-- ✅ Validates that `Cargo.toml` version matches the tag version
-- ✅ Publishes to crates.io when validation passes
+- ✅ Updates `Cargo.toml` version to match the tag version (if needed)
+- ✅ Commits the version update back to the repository
+- ✅ Publishes to crates.io with the correct version
 - ✅ Uses Trusted Publishing (no API tokens needed)
 
-**Workflow:** Push tag → CI validates → Auto-publishes to crates.io
+**Workflow:** Push tag → CI auto-updates version → Commits changes → Auto-publishes to crates.io
+
+**Note:** If you push a tag like `v0.2.1` and `Cargo.toml` has version `0.2.0`, the workflow will automatically update `Cargo.toml` to `0.2.1` and commit the change before publishing.
 
 
 ## 🔍 Code Review Process
