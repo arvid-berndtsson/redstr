@@ -137,11 +137,11 @@ cargo doc --open   # Build and view docs
 
 ## ⚠️ Critical Rules
 
-### Zero Dependencies
-- ✅ Core library: `std` only
-- ✅ Optional features: Behind feature flags
-- ✅ Dev-dependencies: OK for tests/benchmarks
-- ❌ Never add dependencies to core
+### Minimal Dependencies
+- ✅ Core library: `std` only (no required dependencies)
+- ✅ Optional features: Behind feature flags (e.g., serde)
+- ✅ Dev-dependencies: OK for tests/benchmarks (e.g., cc-check)
+- ❌ Never add required dependencies to core
 
 ### Code Quality
 - ✅ All tests pass
@@ -183,7 +183,7 @@ cargo doc --open   # Build and view docs
 - [ ] Code formatted: `cargo fmt`
 - [ ] Documentation updated
 - [ ] Examples added (if applicable)
-- [ ] Zero dependencies maintained
+- [ ] No new required dependencies added
 - [ ] Task status updated in `TASKS.md`
 
 ---

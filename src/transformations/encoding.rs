@@ -13,7 +13,7 @@ use crate::rng::SimpleRng;
 /// ```
 pub fn mixed_encoding(input: &str) -> String {
     let mut rng = SimpleRng::new();
-    let mut result = String::new();
+    let mut result = String::with_capacity(input.len() * 8); // Encoded chars are longer
 
     for c in input.chars() {
         match rng.next() % 4 {
@@ -40,7 +40,8 @@ pub fn mixed_encoding(input: &str) -> String {
 pub fn base64_encode(input: &str) -> String {
     const BASE64_CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     let bytes = input.as_bytes();
-    let mut result = String::new();
+    let capacity = ((bytes.len() + 2) / 3) * 4; // Base64 expands by ~33%
+    let mut result = String::with_capacity(capacity);
 
     for chunk in bytes.chunks(3) {
         let mut buf = [0u8; 3];
@@ -83,7 +84,7 @@ pub fn base64_encode(input: &str) -> String {
 /// assert!(result.contains("%20"));
 /// ```
 pub fn url_encode(input: &str) -> String {
-    let mut result = String::new();
+    let mut result = String::with_capacity(input.len() * 3); // URL encoding can triple size
     for c in input.chars() {
         if c.is_ascii_alphanumeric() || c == '-' || c == '_' || c == '.' || c == '~' {
             result.push(c);

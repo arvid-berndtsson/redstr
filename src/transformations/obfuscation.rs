@@ -13,44 +13,42 @@ use crate::rng::SimpleRng;
 /// ```
 pub fn leetspeak(input: &str) -> String {
     let mut rng = SimpleRng::new();
+    let mut result = String::with_capacity(input.len());
 
-    input
-        .chars()
-        .map(|c| {
-            let lower = c.to_lowercase().to_string();
-            match lower.as_str() {
-                "a" => {
-                    if rng.next() % 2 == 0 {
-                        "4"
-                    } else {
-                        "@"
-                    }
+    for c in input.chars() {
+        let replacement = match c.to_ascii_lowercase() {
+            'a' => {
+                if rng.next() % 2 == 0 {
+                    '4'
+                } else {
+                    '@'
                 }
-                "e" => "3",
-                "i" => {
-                    if rng.next() % 2 == 0 {
-                        "1"
-                    } else {
-                        "!"
-                    }
-                }
-                "o" => "0",
-                "s" => {
-                    if rng.next() % 2 == 0 {
-                        "5"
-                    } else {
-                        "$"
-                    }
-                }
-                "t" => "7",
-                "l" => "1",
-                "g" => "9",
-                "b" => "8",
-                _ => return c.to_string(),
             }
-            .to_string()
-        })
-        .collect()
+            'e' => '3',
+            'i' => {
+                if rng.next() % 2 == 0 {
+                    '1'
+                } else {
+                    '!'
+                }
+            }
+            'o' => '0',
+            's' => {
+                if rng.next() % 2 == 0 {
+                    '5'
+                } else {
+                    '$'
+                }
+            }
+            't' => '7',
+            'l' => '1',
+            'g' => '9',
+            'b' => '8',
+            _ => c,
+        };
+        result.push(replacement);
+    }
+    result
 }
 
 /// Applies ROT13 cipher to the input.
@@ -66,9 +64,10 @@ pub fn leetspeak(input: &str) -> String {
 /// assert_eq!(rot13("Uryyb"), "Hello"); // ROT13 is reversible
 /// ```
 pub fn rot13(input: &str) -> String {
-    input
-        .chars()
-        .map(|c| match c {
+    let mut result = String::with_capacity(input.len());
+
+    for c in input.chars() {
+        let rotated = match c {
             'a'..='z' => {
                 let offset = ((c as u8 - b'a' + 13) % 26) + b'a';
                 offset as char
@@ -78,8 +77,10 @@ pub fn rot13(input: &str) -> String {
                 offset as char
             }
             _ => c,
-        })
-        .collect()
+        };
+        result.push(rotated);
+    }
+    result
 }
 
 /// Randomly swaps vowels with other vowels.

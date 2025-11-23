@@ -13,21 +13,24 @@ use crate::rng::SimpleRng;
 /// ```
 pub fn randomize_capitalization(input: &str) -> String {
     let mut rng = SimpleRng::new();
+    let mut result = String::with_capacity(input.len() * 2); // Allocate extra for potential multi-byte chars
 
-    input
-        .chars()
-        .map(|c| {
-            if c.is_alphabetic() {
-                if rng.next() % 2 == 0 {
-                    c.to_uppercase().to_string()
-                } else {
-                    c.to_lowercase().to_string()
+    for c in input.chars() {
+        if c.is_alphabetic() {
+            if rng.next() % 2 == 0 {
+                for uc in c.to_uppercase() {
+                    result.push(uc);
                 }
             } else {
-                c.to_string()
+                for lc in c.to_lowercase() {
+                    result.push(lc);
+                }
             }
-        })
-        .collect()
+        } else {
+            result.push(c);
+        }
+    }
+    result
 }
 
 /// Alternates between uppercase and lowercase for each alphabetic character.
@@ -40,22 +43,25 @@ pub fn randomize_capitalization(input: &str) -> String {
 /// ```
 pub fn alternate_case(input: &str) -> String {
     let mut upper = true;
-    input
-        .chars()
-        .map(|c| {
-            if c.is_alphabetic() {
-                let result = if upper {
-                    c.to_uppercase().to_string()
-                } else {
-                    c.to_lowercase().to_string()
-                };
-                upper = !upper;
-                result
+    let mut result = String::with_capacity(input.len() * 2);
+
+    for c in input.chars() {
+        if c.is_alphabetic() {
+            if upper {
+                for uc in c.to_uppercase() {
+                    result.push(uc);
+                }
             } else {
-                c.to_string()
+                for lc in c.to_lowercase() {
+                    result.push(lc);
+                }
             }
-        })
-        .collect()
+            upper = !upper;
+        } else {
+            result.push(c);
+        }
+    }
+    result
 }
 
 /// Inverts the case of all alphabetic characters.
@@ -67,18 +73,22 @@ pub fn alternate_case(input: &str) -> String {
 /// assert_eq!(inverse_case("Hello World"), "hELLO wORLD");
 /// ```
 pub fn inverse_case(input: &str) -> String {
-    input
-        .chars()
-        .map(|c| {
-            if c.is_uppercase() {
-                c.to_lowercase().to_string()
-            } else if c.is_lowercase() {
-                c.to_uppercase().to_string()
-            } else {
-                c.to_string()
+    let mut result = String::with_capacity(input.len() * 2);
+
+    for c in input.chars() {
+        if c.is_uppercase() {
+            for lc in c.to_lowercase() {
+                result.push(lc);
             }
-        })
-        .collect()
+        } else if c.is_lowercase() {
+            for uc in c.to_uppercase() {
+                result.push(uc);
+            }
+        } else {
+            result.push(c);
+        }
+    }
+    result
 }
 
 /// Swaps case randomly for WAF and filter bypass testing.
@@ -94,21 +104,24 @@ pub fn inverse_case(input: &str) -> String {
 /// ```
 pub fn case_swap(input: &str) -> String {
     let mut rng = SimpleRng::new();
+    let mut result = String::with_capacity(input.len() * 2);
 
-    input
-        .chars()
-        .map(|c| {
-            if c.is_alphabetic() && rng.next() % 2 == 0 {
-                if c.is_uppercase() {
-                    c.to_lowercase().to_string()
-                } else {
-                    c.to_uppercase().to_string()
+    for c in input.chars() {
+        if c.is_alphabetic() && rng.next() % 2 == 0 {
+            if c.is_uppercase() {
+                for lc in c.to_lowercase() {
+                    result.push(lc);
                 }
             } else {
-                c.to_string()
+                for uc in c.to_uppercase() {
+                    result.push(uc);
+                }
             }
-        })
-        .collect()
+        } else {
+            result.push(c);
+        }
+    }
+    result
 }
 
 /// Converts a string to camelCase.

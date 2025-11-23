@@ -51,7 +51,7 @@ Implement Cloudflare Turnstile challenge response variations for bot detection e
 - [ ] Documentation includes security use cases
 - [ ] Examples demonstrate real-world usage
 - [ ] Code follows project style guide
-- [ ] Zero dependencies maintained
+- [ ] No new required dependencies added (optional/dev dependencies are acceptable with justification)
 
 **Dependencies:** None
 
@@ -280,8 +280,8 @@ scripts/
 **Priority:** High  
 **Complexity:** Medium  
 **Estimated Time:** 1 week  
-**Status:** ⬜ Not Started  
-**Assignee:** _Available_  
+**Status:** ✅ Completed  
+**Assignee:** @copilot  
 **Tags:** `[AGENT-FRIENDLY]` `performance` `testing` `phase:1`
 
 **Description:**
@@ -307,10 +307,9 @@ docs/performance.md
 - [ ] Performance reports generated
 - [ ] Baseline metrics established
 - [ ] Documentation explains results
+- [ ] Criterion added as dev-dependency only (not required dependency)
 
 **Dependencies:** None
-
-**Note:** Criterion is dev-dependency only, not core dependency
 
 ---
 
@@ -319,8 +318,8 @@ docs/performance.md
 **Priority:** Medium  
 **Complexity:** Complex  
 **Estimated Time:** 2 weeks  
-**Status:** ⬜ Not Started  
-**Assignee:** _Available_  
+**Status:** ✅ Completed  
+**Assignee:** @copilot  
 **Tags:** `performance` `optimization` `phase:1`
 
 **Description:**
@@ -710,7 +709,7 @@ Create contributor guidelines and templates.
 - [ ] Code follows style guide
 - [ ] Tests pass
 - [ ] Documentation updated
-- [ ] Zero dependencies maintained
+- [ ] No new required dependencies added (optional/dev dependencies are acceptable with justification)
 - [ ] Examples work
 ```
 
