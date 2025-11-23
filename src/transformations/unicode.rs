@@ -192,7 +192,8 @@ mod tests {
                 break;
             }
         }
-        assert!(found_cyrillic || true); // Always pass since it's random
+        // Note: Random nature means Cyrillic may or may not appear
+        // This test primarily ensures the function doesn't panic
     }
 
     #[test]
