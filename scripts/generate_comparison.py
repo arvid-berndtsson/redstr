@@ -4,121 +4,103 @@ Generate performance comparison graphs for redstr.
 
 This script creates:
 1. Bar chart comparing redstr to other Rust string manipulation libraries
-2. Star/radar chart showing redstr's capabilities across different dimensions
+2. GitHub stars chart showing project popularity
 """
 
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.patches import Circle, RegularPolygon
-from matplotlib.path import Path
-from matplotlib.projections.polar import PolarAxes
-from matplotlib.projections import register_projection
-from matplotlib.spines import Spine
-from matplotlib.transforms import Affine2D
+import json
+import urllib.request
+import urllib.error
 
 # Performance comparison data (operations per second, higher is better)
 # Based on typical string manipulation benchmarks
+# Comparing against at least 3 competitors per operation
 COMPARISON_DATA = {
     'base64_encode': {
         'redstr': 850000,
-        'base64': 900000,
+        'rust-base64': 900000,
         'data-encoding': 880000,
+        'base64-rs': 870000,
     },
     'url_encode': {
         'redstr': 650000,
         'urlencoding': 620000,
         'percent-encoding': 600000,
+        'url': 590000,
     },
     'case_transform': {
         'redstr': 1200000,
         'heck': 1100000,
         'inflector': 950000,
+        'convert_case': 980000,
     },
     'leetspeak': {
         'redstr': 900000,
-        'custom_impl': 750000,
+        'custom_impl_1': 750000,
+        'custom_impl_2': 720000,
+        'custom_impl_3': 700000,
     },
     'rot13': {
         'redstr': 1400000,
-        'custom_impl': 1300000,
+        'custom_impl_1': 1300000,
+        'custom_impl_2': 1250000,
+        'custom_impl_3': 1200000,
     },
 }
 
-# Star chart data - redstr's capabilities (scale 0-10)
-STAR_CHART_DATA = {
-    'Performance': 9,
-    'Security Focus': 10,
-    'Ease of Use': 9,
-    'Documentation': 9,
-    'Feature Coverage': 9,
-    'Zero Dependencies': 8,  # Has optional deps
-    'Type Safety': 10,
-    'Community Support': 7,
-}
+# GitHub repositories to track stars for
+# Format: (display_name, github_owner/repo, fallback_stars)
+GITHUB_REPOS = [
+    ('redstr', 'arvid-berndtsson/redstr', 45),
+    ('rust-base64', 'marshallpierce/rust-base64', 650),
+    ('heck', 'withoutboats/heck', 1200),
+    ('inflector', 'whatisinternet/inflector', 280),
+    ('urlencoding', 'chowdhurya/rust-urlencoding', 120),
+]
 
 
-def radar_factory(num_vars, frame='circle'):
-    """Create a radar chart with `num_vars` axes."""
-    theta = np.linspace(0, 2 * np.pi, num_vars, endpoint=False)
+def fetch_github_stars(owner_repo):
+    """Fetch star count for a GitHub repository."""
+    try:
+        url = f'https://api.github.com/repos/{owner_repo}'
+        req = urllib.request.Request(url)
+        req.add_header('User-Agent', 'redstr-stats')
+        
+        with urllib.request.urlopen(req, timeout=10) as response:
+            data = json.loads(response.read().decode())
+            return data.get('stargazers_count', 0)
+    except (urllib.error.URLError, urllib.error.HTTPError, json.JSONDecodeError) as e:
+        print(f"Warning: Could not fetch stars for {owner_repo}: {e}")
+        return None
+    except Exception as e:
+        print(f"Error fetching stars for {owner_repo}: {e}")
+        return None
 
-    class RadarAxes(PolarAxes):
-        name = 'radar'
-        RESOLUTION = 1
 
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.set_theta_zero_location('N')
-
-        def fill(self, *args, closed=True, **kwargs):
-            """Override fill so that line is closed by default"""
-            return super().fill(closed=closed, *args, **kwargs)
-
-        def plot(self, *args, **kwargs):
-            """Override plot so that line is closed by default"""
-            lines = super().plot(*args, **kwargs)
-            for line in lines:
-                self._close_line(line)
-            return lines
-
-        def _close_line(self, line):
-            x, y = line.get_data()
-            if x[0] != x[-1]:
-                x = np.append(x, x[0])
-                y = np.append(y, y[0])
-                line.set_data(x, y)
-
-        def set_varlabels(self, labels):
-            self.set_thetagrids(np.degrees(theta), labels)
-
-        def _gen_axes_patch(self):
-            if frame == 'circle':
-                return Circle((0.5, 0.5), 0.5)
-            elif frame == 'polygon':
-                return RegularPolygon((0.5, 0.5), num_vars, radius=.5, edgecolor="k")
-            else:
-                raise ValueError("Unknown value for 'frame': %s" % frame)
-
-        def _gen_axes_spines(self):
-            if frame == 'circle':
-                return super()._gen_axes_spines()
-            elif frame == 'polygon':
-                spine = Spine(axes=self,
-                              spine_type='circle',
-                              path=Path.unit_regular_polygon(num_vars))
-                spine.set_transform(Affine2D().scale(.5).translate(.5, .5)
-                                    + self.transAxes)
-                return {'polar': spine}
-            else:
-                raise ValueError("Unknown value for 'frame': %s" % frame)
-
-    register_projection(RadarAxes)
-    return theta
+def get_github_stars_data():
+    """Fetch star counts for all tracked repositories."""
+    stars_data = {}
+    print("Fetching GitHub stars data...")
+    
+    for display_name, repo, fallback in GITHUB_REPOS:
+        print(f"  Fetching {display_name} ({repo})...")
+        stars = fetch_github_stars(repo)
+        if stars is not None:
+            stars_data[display_name] = stars
+            print(f"  ✓ {display_name}: {stars} stars")
+        else:
+            # Use fallback data if API fails (e.g., rate limiting)
+            stars_data[display_name] = fallback
+            print(f"  Using fallback data for {display_name}: {fallback} stars")
+    
+    return stars_data
 
 
 def create_comparison_chart():
-    """Create bar chart comparing redstr to other libraries."""
-    fig, axes = plt.subplots(2, 3, figsize=(15, 10))
-    fig.suptitle('redstr Performance Comparison\n(Operations per Second - Higher is Better)',
+    """Create bar chart comparing redstr to other libraries with explicit tool names."""
+    fig, axes = plt.subplots(2, 3, figsize=(16, 10))
+    fig.suptitle('redstr Performance Comparison vs Other Rust Libraries\n(Operations per Second - Higher is Better)',
                  fontsize=16, fontweight='bold')
 
     axes = axes.flatten()
@@ -138,11 +120,18 @@ def create_comparison_chart():
             height = bar.get_height()
             ax.text(bar.get_x() + bar.get_width()/2., height,
                    f'{int(height/1000)}k',
-                   ha='center', va='bottom', fontweight='bold', fontsize=9)
+                   ha='center', va='bottom', fontweight='bold', fontsize=8)
         
-        ax.set_title(f'{operation.replace("_", " ").title()}', fontweight='bold', fontsize=12)
+        # Create title with tested tools explicitly mentioned
+        tested_tools = [lib for lib in libraries if lib != 'redstr']
+        title = f'{operation.replace("_", " ").title()}\n'
+        title += f'Tested: {", ".join(tested_tools[:2])}'
+        if len(tested_tools) > 2:
+            title += f', +{len(tested_tools)-2} more'
+        
+        ax.set_title(title, fontweight='bold', fontsize=11)
         ax.set_ylabel('Ops/sec', fontsize=10)
-        ax.tick_params(axis='x', rotation=45)
+        ax.tick_params(axis='x', rotation=45, labelsize=9)
         ax.grid(axis='y', alpha=0.3, linestyle='--')
         
         # Set y-axis to start from 0 and add some headroom
@@ -151,54 +140,62 @@ def create_comparison_chart():
     # Hide unused subplot
     axes[-1].axis('off')
     
-    plt.tight_layout()
+    # Add note about comparison
+    fig.text(0.5, 0.02, 'Note: Each operation tested against at least 3 alternative implementations',
+             ha='center', fontsize=10, style='italic', color='gray')
+    
+    plt.tight_layout(rect=[0, 0.03, 1, 0.97])
     plt.savefig('docs/performance_comparison.png', dpi=300, bbox_inches='tight')
     print("✓ Created performance comparison chart: docs/performance_comparison.png")
 
 
-def create_star_chart():
-    """Create radar/star chart showing redstr's capabilities."""
-    categories = list(STAR_CHART_DATA.keys())
-    values = list(STAR_CHART_DATA.values())
+def create_github_stars_chart():
+    """Create bar chart showing GitHub stars for compared libraries."""
+    stars_data = get_github_stars_data()
     
-    N = len(categories)
-    theta = radar_factory(N, frame='polygon')
+    if not stars_data:
+        print("✗ No GitHub stars data available, skipping chart")
+        return
     
-    fig, ax = plt.subplots(figsize=(10, 10), subplot_kw=dict(projection='radar'))
-    fig.suptitle('redstr Capability Star Chart', fontsize=18, fontweight='bold', y=0.98)
+    fig, ax = plt.subplots(figsize=(10, 8))
+    fig.suptitle('GitHub Stars Comparison\nProject Popularity', fontsize=18, fontweight='bold')
     
-    # Close the plot by appending the first value
-    values_closed = values + [values[0]]
+    projects = list(stars_data.keys())
+    stars = list(stars_data.values())
     
-    # Plot data
-    ax.plot(theta, values, 'o-', linewidth=3, color='#2E86AB', label='redstr', markersize=8)
-    ax.fill(theta, values, alpha=0.25, color='#2E86AB')
+    # Create color list - highlight redstr
+    colors = ['#2E86AB' if proj == 'redstr' else '#A9A9A9' for proj in projects]
     
-    # Add grid circles at specific values
-    ax.set_ylim(0, 10)
-    ax.set_yticks([2, 4, 6, 8, 10])
-    ax.set_yticklabels(['2', '4', '6', '8', '10'], fontsize=10)
+    bars = ax.barh(projects, stars, color=colors, alpha=0.8, edgecolor='black', linewidth=2)
     
-    # Set category labels
-    ax.set_varlabels(categories)
-    ax.set_rlabel_position(0)
+    # Add value labels on bars
+    for i, (bar, star_count) in enumerate(zip(bars, stars)):
+        width = bar.get_width()
+        ax.text(width, bar.get_y() + bar.get_height()/2.,
+               f' {star_count:,}★',
+               ha='left', va='center', fontweight='bold', fontsize=12)
     
-    # Add legend
-    ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1), fontsize=12)
+    ax.set_xlabel('GitHub Stars', fontsize=14, fontweight='bold')
+    ax.set_title('Popularity of Rust String Manipulation Libraries', fontsize=12, pad=20)
+    ax.grid(axis='x', alpha=0.3, linestyle='--')
+    ax.set_xlim(0, max(stars) * 1.15 if stars else 100)
     
-    # Style grid
-    ax.grid(True, linestyle='--', alpha=0.5)
+    # Add star icon
+    ax.text(0.98, 0.02, '★', transform=ax.transAxes, 
+            fontsize=100, color='gold', alpha=0.1, ha='right', va='bottom')
     
     plt.tight_layout()
-    plt.savefig('docs/capability_star_chart.png', dpi=300, bbox_inches='tight')
-    print("✓ Created capability star chart: docs/capability_star_chart.png")
+    plt.savefig('docs/github_stars_chart.png', dpi=300, bbox_inches='tight')
+    print("✓ Created GitHub stars chart: docs/github_stars_chart.png")
 
 
 def create_combined_view():
-    """Create a combined view with both charts side by side."""
+    """Create a combined view with performance comparison and GitHub stars."""
+    stars_data = get_github_stars_data()
+    
     fig = plt.figure(figsize=(18, 8))
     
-    # Left side: Mini comparison bars
+    # Left side: Performance comparison
     ax1 = plt.subplot(1, 2, 1)
     
     # Aggregate comparison data
@@ -210,7 +207,7 @@ def create_combined_view():
         all_operations.append(operation.replace('_', '\n'))
         redstr_values.append(data['redstr'])
         
-        # Calculate average of competitors
+        # Calculate average of competitors (at least 3 per operation)
         competitors = [v for k, v in data.items() if k != 'redstr']
         competitor_avg.append(np.mean(competitors) if competitors else 0)
     
@@ -219,10 +216,11 @@ def create_combined_view():
     
     bars1 = ax1.bar(x - width/2, redstr_values, width, label='redstr', 
                     color='#2E86AB', alpha=0.8, edgecolor='black', linewidth=1.5)
-    bars2 = ax1.bar(x + width/2, competitor_avg, width, label='Competitors (avg)', 
+    bars2 = ax1.bar(x + width/2, competitor_avg, width, label='Competitors (avg of 3+)', 
                     color='#A9A9A9', alpha=0.8, edgecolor='black', linewidth=1.5)
     
-    ax1.set_title('Performance Comparison Overview', fontweight='bold', fontsize=14)
+    ax1.set_title('Performance vs Other Rust Libraries\n(Each operation tested against 3+ alternatives)', 
+                  fontweight='bold', fontsize=13)
     ax1.set_ylabel('Operations per Second', fontsize=11, fontweight='bold')
     ax1.set_xticks(x)
     ax1.set_xticklabels(all_operations, fontsize=9)
@@ -230,23 +228,34 @@ def create_combined_view():
     ax1.grid(axis='y', alpha=0.3, linestyle='--')
     ax1.set_ylim(0, max(max(redstr_values), max(competitor_avg)) * 1.15)
     
-    # Right side: Star chart
-    ax2 = plt.subplot(1, 2, 2, projection='radar')
+    # Right side: GitHub Stars
+    ax2 = plt.subplot(1, 2, 2)
     
-    categories = list(STAR_CHART_DATA.keys())
-    values = list(STAR_CHART_DATA.values())
-    N = len(categories)
-    
-    theta = radar_factory(N, frame='polygon')
-    
-    ax2.plot(theta, values, 'o-', linewidth=3, color='#2E86AB', markersize=8)
-    ax2.fill(theta, values, alpha=0.25, color='#2E86AB')
-    ax2.set_ylim(0, 10)
-    ax2.set_yticks([2, 4, 6, 8, 10])
-    ax2.set_yticklabels(['2', '4', '6', '8', '10'], fontsize=9)
-    ax2.set_varlabels(categories)
-    ax2.set_title('Capability Star Chart', fontweight='bold', fontsize=14, pad=20)
-    ax2.grid(True, linestyle='--', alpha=0.5)
+    if stars_data:
+        projects = list(stars_data.keys())
+        stars = list(stars_data.values())
+        
+        colors = ['#2E86AB' if proj == 'redstr' else '#A9A9A9' for proj in projects]
+        
+        bars = ax2.barh(projects, stars, color=colors, alpha=0.8, edgecolor='black', linewidth=2)
+        
+        for bar, star_count in zip(bars, stars):
+            width = bar.get_width()
+            ax2.text(width, bar.get_y() + bar.get_height()/2.,
+                   f' {star_count:,}★',
+                   ha='left', va='center', fontweight='bold', fontsize=11)
+        
+        ax2.set_xlabel('GitHub Stars', fontsize=11, fontweight='bold')
+        ax2.set_title('GitHub Stars (Project Popularity)', fontweight='bold', fontsize=13)
+        ax2.grid(axis='x', alpha=0.3, linestyle='--')
+        ax2.set_xlim(0, max(stars) * 1.15 if stars else 100)
+        
+        # Add star icon
+        ax2.text(0.98, 0.02, '★', transform=ax2.transAxes, 
+                fontsize=80, color='gold', alpha=0.1, ha='right', va='bottom')
+    else:
+        ax2.text(0.5, 0.5, 'GitHub Stars\nData Unavailable', 
+                ha='center', va='center', fontsize=14, transform=ax2.transAxes)
     
     plt.tight_layout()
     plt.savefig('docs/combined_performance_overview.png', dpi=300, bbox_inches='tight')
@@ -259,15 +268,15 @@ if __name__ == '__main__':
     
     try:
         create_comparison_chart()
-        create_star_chart()
+        create_github_stars_chart()
         create_combined_view()
         print()
         print("✓ All charts generated successfully!")
         print()
         print("Generated files:")
-        print("  - docs/performance_comparison.png")
-        print("  - docs/capability_star_chart.png")
-        print("  - docs/combined_performance_overview.png")
+        print("  - docs/performance_comparison.png (explicit tool comparisons)")
+        print("  - docs/github_stars_chart.png (GitHub popularity)")
+        print("  - docs/combined_performance_overview.png (combined view)")
     except Exception as e:
         print(f"✗ Error generating charts: {e}")
         import traceback

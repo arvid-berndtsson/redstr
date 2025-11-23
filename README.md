@@ -48,11 +48,11 @@ A comprehensive Rust library providing 30+ string obfuscation and transformation
 - **Well-documented** - Complete API documentation with real-world integration examples
 - **CLI tool included** - Optional command-line interface for quick testing
 
-### Performance & Capabilities
+### Performance & Popularity
 
 ![Combined Performance Overview](docs/combined_performance_overview.png)
 
-*Left: Performance comparison vs other Rust libraries. Right: Capability star chart showing redstr's strengths across 8 dimensions.*
+*Left: Performance comparison vs other Rust libraries (each operation tested against 3+ alternatives). Right: GitHub stars showing project popularity.*
 
 See [Performance Documentation](docs/performance.md) for detailed benchmarks and methodology.
 

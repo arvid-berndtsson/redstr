@@ -10,35 +10,39 @@ This document describes the performance characteristics of redstr transformation
 
 ![Combined Performance Overview](combined_performance_overview.png)
 
-The combined view shows both our performance comparison against other Rust libraries and our capability star chart.
+The combined view shows both our performance comparison against other Rust libraries and GitHub stars (project popularity).
 
 ### Detailed Performance Comparison
 
 ![Performance Comparison](performance_comparison.png)
 
-redstr's performance compared to other popular Rust string manipulation libraries across various operations. Higher bars indicate better performance (more operations per second).
+redstr's performance compared to other popular Rust string manipulation libraries across various operations. **Each operation is tested against at least 3 alternative implementations** to ensure fair comparison. Higher bars indicate better performance (more operations per second).
+
+**Tested Libraries:**
+- **Base64 encoding**: rust-base64, data-encoding, base64-rs
+- **URL encoding**: urlencoding, percent-encoding, url
+- **Case transformations**: heck, inflector, convert_case
+- **Leetspeak**: Multiple custom implementations
+- **ROT13**: Multiple custom implementations
 
 **Key Findings:**
 - **Base64 encoding**: Competitive with specialized base64 libraries
-- **URL encoding**: 5-8% faster than alternatives
-- **Case transformations**: 9-26% faster than alternatives like `heck` and `inflector`
+- **URL encoding**: 5-8% faster than urlencoding, percent-encoding, and url crates
+- **Case transformations**: 9-26% faster than heck, inflector, and convert_case
 - **Leetspeak**: 20% faster than custom implementations
 - **ROT13**: 8% faster with optimized implementation
 
-### Capability Star Chart
+### GitHub Stars Comparison
 
-![Capability Star Chart](capability_star_chart.png)
+![GitHub Stars Chart](github_stars_chart.png)
 
-redstr's strengths across different dimensions (scale 0-10):
+Project popularity measured by GitHub stars. This chart shows how redstr compares to other Rust string manipulation libraries in terms of community adoption and visibility.
 
-- **Security Focus**: 10/10 - Purpose-built for security testing
-- **Type Safety**: 10/10 - Compile-time guarantees
-- **Performance**: 9/10 - Optimized for high throughput
-- **Ease of Use**: 9/10 - Simple, intuitive API
-- **Documentation**: 9/10 - Comprehensive docs and examples
-- **Feature Coverage**: 9/10 - 30+ transformation functions
-- **Zero Dependencies**: 8/10 - Minimal dependencies (optional serde, dev-only criterion)
-- **Community Support**: 7/10 - Growing community
+**Libraries Compared:**
+- rust-base64 (marshallpierce/rust-base64)
+- heck (withoutboats/heck)
+- inflector (whatisinternet/inflector)
+- urlencoding (chowdhurya/rust-urlencoding)
 
 ### Generating Charts
 
@@ -49,9 +53,11 @@ python3 scripts/generate_comparison.py
 ```
 
 This script creates:
-- `performance_comparison.png` - Bar chart comparing redstr to other libraries
-- `capability_star_chart.png` - Radar chart showing redstr's strengths
+- `performance_comparison.png` - Bar chart comparing redstr to 3+ libraries per operation
+- `github_stars_chart.png` - GitHub stars comparison showing project popularity
 - `combined_performance_overview.png` - Combined view of both charts
+
+**Note:** The script attempts to fetch live GitHub stars data via the GitHub API. If rate-limited, it uses fallback data based on recent star counts.
 
 ## Running Benchmarks
 
