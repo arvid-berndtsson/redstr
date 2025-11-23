@@ -571,15 +571,41 @@ cargo test
 
 **Technologies:** Rust security library, zero-dependency Rust, type-safe security, polymorphic strings, transformation library
 
+## 🔌 Building Integrations
+
+### Want to integrate redstr with your security tool?
+
+**For tool-specific add-ons/extensions (Burp Suite, OWASP ZAP, Caido, etc.):**
+- Create a **separate repository** for your integration
+- See our [Integration Guidelines](docs/INTEGRATION_GUIDELINES.md) for detailed guidance
+- We'll help promote your integration!
+
+**For code examples and library enhancements:**
+- Contribute to this repository
+- Add examples to `examples/` directory
+- Submit documentation to `docs/`
+
+**Common questions:**
+- **Q: Should I build an OWASP ZAP add-on in another repo?**  
+  **A: Yes!** ZAP add-ons should be separate repos. [See why →](docs/INTEGRATION_GUIDELINES.md#owasp-zap-add-on-specific-guidance)
+
+- **Q: What about Burp Suite extensions?**  
+  **A: Also separate repos.** [Learn more →](docs/INTEGRATION_GUIDELINES.md)
+
+📚 **Read the full [Integration Guidelines](docs/INTEGRATION_GUIDELINES.md)** for complete details.
+
 ## 🤝 Contributing
 
 Contributions are welcome! This library is designed for the security community. Whether you're adding new transformation functions, improving documentation, or reporting issues, your input helps make security testing more effective.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines and [docs/INTEGRATION_GUIDELINES.md](docs/INTEGRATION_GUIDELINES.md) for integration guidance.
 
 ## 📖 Learn More
 
 - **Documentation**: [docs.rs/redstr](https://docs.rs/redstr)
 - **Repository**: [GitHub](https://github.com/arvid-berndtsson/redstr)
 - **Examples**: See the `examples/` directory for comprehensive integration patterns
+- **Integration Guidelines**: [docs/INTEGRATION_GUIDELINES.md](docs/INTEGRATION_GUIDELINES.md)
 - **Blog Posts**: Check for community blog posts and integration guides (coming soon)
 
 ## ⚠️ Responsible Use
