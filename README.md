@@ -581,6 +581,16 @@ cargo test
 
 ## 🔌 Building Integrations
 
+### Official Integrations
+
+redstr has several official integrations available as separate repositories:
+
+- **[redstr-server](https://github.com/arvid-berndtsson/redstr-server)** - HTTP API server for redstr transformations
+- **[redstr-burp](https://github.com/arvid-berndtsson/redstr-burp)** - Burp Suite extension
+- **[redstr-caido](https://github.com/arvid-berndtsson/redstr-caido)** - Caido plugin
+- **[redstr-eviljinx](https://github.com/arvid-berndtsson/redstr-eviljinx)** - EvilJinx integration scripts
+- **[redstr-owasp-zap](https://github.com/arvid-berndtsson/redstr-owasp-zap)** - OWASP ZAP add-on
+
 ### Want to integrate redstr with your security tool?
 
 **For tool-specific add-ons/extensions (Burp Suite, OWASP ZAP, Caido, etc.):**
