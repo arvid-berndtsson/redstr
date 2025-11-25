@@ -162,10 +162,10 @@ ffuf -u http://target.com/FUZZ -w traversal-payloads.txt
 ### Color Output
 
 The wrapper uses color output for better readability:
-- 🔵 Blue - Banners and headers
-- 🟢 Green - Success messages and section headers
-- 🟡 Yellow - Subsection headers
-- 🔴 Red - Error messages
+- Blue - Banners and headers
+- Green - Success messages and section headers
+- Yellow - Subsection headers
+- Red - Error messages
 
 Disable colors:
 ```bash

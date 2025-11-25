@@ -149,7 +149,7 @@ workflow_encode_all() {
 # Batch transform file
 workflow_batch_transform() {
     local file="$1"
-    local output="$2"
+    local output="${2:-}"
     local mode="${3:-random}"
     
     if [[ ! -f "$file" ]]; then
@@ -166,17 +166,25 @@ workflow_batch_transform() {
     fi
     
     local count=0
+    set +e  # Disable exit on error for the loop
     while IFS= read -r line; do
         if [[ -n "$line" ]]; then
-            result=$($REDSTR_BIN "$mode" "$line")
-            if [[ -n "$output" ]]; then
-                echo "$result" >> "$output"
+            result=$($REDSTR_BIN "$mode" "$line" 2>&1)
+            local status=$?
+            if [[ $status -eq 0 ]]; then
+                if [[ -n "$output" ]]; then
+                    echo "$result" >> "$output"
+                else
+                    echo "$result"
+                fi
+                ((count++))
             else
-                echo "$result"
+                echo -e "${RED}[!] Error processing line: $line${NC}" >&2
+                echo -e "${RED}[!] Error: $result${NC}" >&2
             fi
-            ((count++))
         fi
     done < "$file"
+    set -e  # Re-enable exit on error
     
     echo -e "${GREEN}[+] Processed $count lines${NC}"
 }
@@ -242,6 +250,7 @@ main() {
                 exit 1
             fi
             
+            input_file="$2"
             output=""
             mode="random"
             shift 2
@@ -263,7 +272,7 @@ main() {
                 esac
             done
             
-            workflow_batch_transform "$2" "$output" "$mode"
+            workflow_batch_transform "$input_file" "$output" "$mode"
             ;;
         *)
             echo -e "${RED}[!] Unknown workflow: $1${NC}"
