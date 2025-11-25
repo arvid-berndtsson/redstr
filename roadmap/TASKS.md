@@ -243,8 +243,8 @@ Prepare and submit redstr package to Kali Linux repository.
 **Priority:** Medium  
 **Complexity:** Simple  
 **Estimated Time:** 1 week  
-**Status:** ⬜ Not Started  
-**Assignee:** _Available_  
+**Status:** ✅ Completed  
+**Assignee:** @copilot  
 **Tags:** `[AGENT-FRIENDLY]` `cli` `parrotos` `kali` `phase:1`
 
 **Description:**
