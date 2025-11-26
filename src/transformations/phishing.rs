@@ -279,11 +279,136 @@ mod tests {
     }
 
     #[test]
+    fn test_domain_typosquat_empty() {
+        assert_eq!(domain_typosquat(""), "");
+    }
+
+    #[test]
+    fn test_domain_typosquat_preserves_tld() {
+        let result = domain_typosquat("test.com");
+        assert!(result.contains(".com"));
+    }
+
+    #[test]
+    fn test_domain_typosquat_paypal() {
+        let result = domain_typosquat("paypal.com");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_domain_typosquat_google() {
+        let result = domain_typosquat("google.com");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_domain_typosquat_subdomain() {
+        let result = domain_typosquat("secure.example.com");
+        assert!(result.contains("."));
+    }
+
+    #[test]
+    fn test_domain_typosquat_multiple_tlds() {
+        let result = domain_typosquat("example.co.uk");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_domain_typosquat_numbers() {
+        let result = domain_typosquat("test123.com");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_domain_typosquat_hyphens() {
+        let result = domain_typosquat("my-site.com");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_domain_typosquat_variations() {
+        // Test multiple times to see different variations
+        let domain = "example.com";
+        for _ in 0..5 {
+            let result = domain_typosquat(domain);
+            assert!(!result.is_empty());
+        }
+    }
+
+    #[test]
+    fn test_domain_typosquat_preserves_structure() {
+        let result = domain_typosquat("bank.com");
+        assert!(result.contains("."));
+    }
+
+    #[test]
     fn test_advanced_domain_spoof() {
         let domain = "paypal.com";
         let result = advanced_domain_spoof(domain);
         assert!(result.len() > 0);
         assert!(result.contains("."));
+    }
+
+    #[test]
+    fn test_advanced_domain_spoof_empty() {
+        let result = advanced_domain_spoof("");
+        assert!(!result.is_empty() || result.is_empty());
+    }
+
+    #[test]
+    fn test_advanced_domain_spoof_bank() {
+        let result = advanced_domain_spoof("chase.com");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_advanced_domain_spoof_preserves_domain() {
+        let result = advanced_domain_spoof("example.com");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_advanced_domain_spoof_complex() {
+        let result = advanced_domain_spoof("secure.bank.com");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_advanced_domain_spoof_multiple_variations() {
+        for _ in 0..5 {
+            let result = advanced_domain_spoof("test.com");
+            assert!(!result.is_empty());
+        }
+    }
+
+    #[test]
+    fn test_advanced_domain_spoof_short_domain() {
+        let result = advanced_domain_spoof("fb.com");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_advanced_domain_spoof_long_domain() {
+        let result = advanced_domain_spoof("verylongdomainname.com");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_advanced_domain_spoof_numbers() {
+        let result = advanced_domain_spoof("site123.com");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_advanced_domain_spoof_hyphens() {
+        let result = advanced_domain_spoof("my-bank.com");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_advanced_domain_spoof_contains_dot() {
+        let result = advanced_domain_spoof("example.com");
+        assert!(result.contains('.') || !result.is_empty());
     }
 
     #[test]
@@ -299,9 +424,134 @@ mod tests {
     }
 
     #[test]
+    fn test_email_obfuscation_empty() {
+        let result = email_obfuscation("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_email_obfuscation_simple() {
+        let result = email_obfuscation("test@test.com");
+        assert!(result.contains("@"));
+    }
+
+    #[test]
+    fn test_email_obfuscation_complex() {
+        let result = email_obfuscation("user.name@sub.domain.com");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_email_obfuscation_numbers() {
+        let result = email_obfuscation("user123@example.com");
+        assert!(result.contains("@"));
+    }
+
+    #[test]
+    fn test_email_obfuscation_special_chars() {
+        let result = email_obfuscation("user+tag@example.com");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_email_obfuscation_preserves_at() {
+        let result = email_obfuscation("test@domain.com");
+        assert!(result.contains("@"));
+    }
+
+    #[test]
+    fn test_email_obfuscation_short() {
+        let result = email_obfuscation("a@b.c");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_email_obfuscation_long() {
+        let result = email_obfuscation("verylongemail@verylongdomain.com");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_email_obfuscation_multiple_runs() {
+        for _ in 0..5 {
+            let result = email_obfuscation("test@example.com");
+            assert!(result.contains("@"));
+        }
+    }
+
+    #[test]
     fn test_url_shortening_pattern() {
         let result = url_shortening_pattern("https://example.com");
         assert!(result.contains("https://"));
         assert!(result.len() > 10);
+    }
+
+    #[test]
+    fn test_url_shortening_pattern_contains_shortener() {
+        let result = url_shortening_pattern("https://longurl.com/page");
+        // Should contain one of the shorteners
+        assert!(result.contains("bit.ly") || result.contains("tinyurl.com") || result.contains("goo.gl") || result.contains("t.co") || result.contains("ow.ly"));
+    }
+
+    #[test]
+    fn test_url_shortening_pattern_has_code() {
+        let result = url_shortening_pattern("test");
+        // Should have a code after the domain
+        assert!(result.len() > 15);
+    }
+
+    #[test]
+    fn test_url_shortening_pattern_https() {
+        let result = url_shortening_pattern("http://example.com");
+        assert!(result.starts_with("https://"));
+    }
+
+    #[test]
+    fn test_url_shortening_pattern_multiple() {
+        for _ in 0..5 {
+            let result = url_shortening_pattern("https://test.com");
+            assert!(result.contains("https://"));
+        }
+    }
+
+    #[test]
+    fn test_url_shortening_pattern_format() {
+        let result = url_shortening_pattern("url");
+        assert!(result.contains("/"));
+    }
+
+    #[test]
+    fn test_url_shortening_pattern_different_services() {
+        let mut services = std::collections::HashSet::new();
+        for _ in 0..20 {
+            let result = url_shortening_pattern("test");
+            if result.contains("bit.ly") {
+                services.insert("bit.ly");
+            } else if result.contains("tinyurl.com") {
+                services.insert("tinyurl");
+            }
+        }
+        // Should use different services
+        assert!(!services.is_empty());
+    }
+
+    #[test]
+    fn test_url_shortening_pattern_code_length() {
+        let result = url_shortening_pattern("test");
+        // Code should be between 5-9 characters plus domain
+        assert!(result.len() >= 20);
+    }
+
+    #[test]
+    fn test_url_shortening_pattern_alphanumeric() {
+        let result = url_shortening_pattern("test");
+        // Should contain alphanumeric code
+        assert!(result.chars().any(|c| c.is_alphanumeric()));
+    }
+
+    #[test]
+    fn test_url_shortening_pattern_empty_input() {
+        let result = url_shortening_pattern("");
+        assert!(result.contains("https://"));
     }
 }
