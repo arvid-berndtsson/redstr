@@ -20,6 +20,15 @@
 - 🎯 **OWASP ZAP** - Security testing tools
 - 🎯 **Metasploit** - Penetration testing framework
 
+### Distribution & Accessibility
+- ✅ **Cargo/crates.io** - Rust native
+- 🎯 **Homebrew** - macOS/Linux package manager
+- 🎯 **npm** - JavaScript/TypeScript ecosystem
+- 🎯 **PyPI** - Python ecosystem
+- 🎯 **Go Module** - Go ecosystem
+- 🎯 **Raycast** - Quick launcher integration
+- ✅ **API Server** - Language-agnostic HTTP API (redstr-server)
+
 ---
 
 ## 📊 Current State (November 2025)
@@ -33,12 +42,15 @@
 - ✅ CLI tool available
 
 ### Gaps
-- ❌ Limited Cloudflare-specific evasion
+- ❌ No Homebrew installation option
+- ❌ No npm/JavaScript bindings
+- ❌ No Python (PyPI) bindings
+- ❌ No Go module bindings
+- ❌ No Raycast integration
+- ❌ Limited API server documentation
 - ❌ No ParrotOS/Kali packages
-- ❌ Missing advanced evasion techniques
-- ❌ No platform integrations
+- ❌ Limited platform integrations beyond CLI
 - ❌ Limited community presence
-- ❌ No performance benchmarks
 
 ---
 
@@ -72,7 +84,20 @@
 ## 📋 Development Phases
 
 ### Phase 1: Foundation (Months 1-3) - Q1 2026
-**Focus:** Core features and platform preparation
+**Focus:** Core features, platform preparation, and distribution
+
+**Key Deliverables:**
+- Cloudflare evasion module
+- ParrotOS & Kali Linux packages
+- Performance optimization
+- Advanced evasion techniques
+- **Distribution & Language Bindings:**
+  - Raycast integration
+  - Homebrew formula
+  - npm package (TypeScript/JavaScript)
+  - Python bindings (PyPI)
+  - Go bindings
+  - API server documentation
 
 ### Phase 2: Integration (Months 4-6) - Q2 2026
 **Focus:** Platform integrations

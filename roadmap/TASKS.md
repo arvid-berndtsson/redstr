@@ -452,6 +452,407 @@ Implement SSTI patterns for various template engines.
 
 ---
 
+### 1.5 Distribution & Language Bindings
+
+#### Task 1.5.1: Raycast Integration
+**ID:** `DIST-001`  
+**Priority:** High  
+**Complexity:** Medium  
+**Estimated Time:** 2 weeks  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `[AGENT-FRIENDLY]` `integration` `raycast` `distribution` `phase:1`
+
+**Description:**
+Create a Raycast extension for redstr to enable quick string transformations directly from Raycast.
+
+**Requirements:**
+- Research Raycast extension API and architecture
+- Design UX for string transformation workflows in Raycast
+- Create Raycast extension with TypeScript
+- Implement interface to redstr transformations (via API server or CLI)
+- Add search/filter functionality for transformation modes
+- Support clipboard input/output
+- Add keyboard shortcuts for common transformations
+- Create extension documentation and screenshots
+- Publish to Raycast Store
+
+**Deliverables:**
+```
+raycast-extension/
+├── package.json
+├── src/
+│   ├── index.tsx
+│   ├── transformations.tsx
+│   └── api.ts
+├── assets/
+│   └── icon.png
+└── README.md
+docs/raycast_integration.md
+```
+
+**Acceptance Criteria:**
+- [ ] Extension works in Raycast
+- [ ] All major transformations accessible
+- [ ] Clipboard integration works
+- [ ] Documentation includes installation steps
+- [ ] Screenshots demonstrate usage
+- [ ] Extension follows Raycast guidelines
+
+**Dependencies:** None (but consider Task DIST-006 for API approach)
+
+**Notes:**
+- Raycast extensions are TypeScript-based
+- Can interface with CLI binary or API server
+- Should follow Raycast extension guidelines
+- Consider creating separate repository for the extension
+
+---
+
+#### Task 1.5.2: Homebrew Formula
+**ID:** `DIST-002`  
+**Priority:** High  
+**Complexity:** Simple  
+**Estimated Time:** 1 week  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `[AGENT-FRIENDLY]` `packaging` `homebrew` `macos` `distribution` `phase:1`
+
+**Description:**
+Create Homebrew formula for easy installation on macOS and Linux.
+
+**Requirements:**
+- Create Homebrew formula for redstr
+- Test formula on macOS (Intel and Apple Silicon)
+- Test formula on Linux
+- Set up automated formula updates on releases
+- Submit to homebrew-core or maintain tap
+- Document installation process
+- Add CI/CD testing for Homebrew installation
+
+**Deliverables:**
+```
+Formula/redstr.rb (for homebrew tap)
+.github/workflows/homebrew-test.yml
+docs/homebrew_installation.md
+```
+
+**Acceptance Criteria:**
+- [ ] Formula installs successfully on macOS
+- [ ] Formula installs successfully on Linux
+- [ ] CLI tool works after installation
+- [ ] Shell completions installed correctly
+- [ ] Man pages installed correctly
+- [ ] Formula follows Homebrew guidelines
+- [ ] Automated updates configured
+
+**Dependencies:** Task CLI-001 (shell completions and man pages are already completed)
+
+**Installation Commands:**
+```bash
+# Via tap (recommended initially)
+brew tap arvid-berndtsson/redstr
+brew install redstr
+
+# Future: via homebrew-core
+brew install redstr
+```
+
+**Notes:**
+- Start with a tap, then submit to homebrew-core
+- Formula should install the CLI with --features cli
+- Consider using GitHub releases as source
+
+---
+
+#### Task 1.5.3: npm Package (TypeScript/JavaScript Bindings)
+**ID:** `DIST-003`  
+**Priority:** High  
+**Complexity:** Complex  
+**Estimated Time:** 3 weeks  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `bindings` `npm` `typescript` `javascript` `distribution` `phase:1`
+
+**Description:**
+Create npm package with TypeScript bindings for redstr using napi-rs or WASM.
+
+**Requirements:**
+- Choose approach: napi-rs (native bindings) or WASM
+- Set up build infrastructure for cross-platform binaries
+- Generate TypeScript type definitions
+- Create JavaScript/TypeScript API wrapper
+- Write comprehensive documentation
+- Add usage examples for Node.js and browsers
+- Publish to npm registry
+- Set up automated publishing on releases
+
+**Deliverables:**
+```
+npm-package/
+├── package.json
+├── tsconfig.json
+├── src/
+│   ├── index.ts
+│   ├── types.ts
+│   └── bindings.ts
+├── native/ (if using napi-rs)
+│   └── Cargo.toml
+├── dist/ (generated)
+│   ├── index.js
+│   ├── index.d.ts
+│   └── redstr.node (or .wasm)
+├── examples/
+│   ├── node-example.js
+│   └── browser-example.html
+└── README.md
+docs/npm_usage.md
+.github/workflows/npm-publish.yml
+```
+
+**Acceptance Criteria:**
+- [ ] Package installs via npm/yarn/pnpm
+- [ ] TypeScript types are accurate and complete
+- [ ] Works in Node.js environment
+- [ ] Works in browser (if WASM approach)
+- [ ] All transformations accessible
+- [ ] Documentation includes examples
+- [ ] Published to npm registry
+- [ ] Automated publishing configured
+
+**Dependencies:** None
+
+**Technical Decisions:**
+- **napi-rs**: Better performance, native Node.js bindings, but requires platform-specific binaries
+- **WASM**: Universal compatibility, works in browsers, but slightly slower
+
+**Recommended Approach:** Use napi-rs for better performance with prebuilt binaries for common platforms
+
+**Package Name:** `@redstr/core` or `redstr-js`
+
+---
+
+#### Task 1.5.4: Python Bindings (PyPI Package)
+**ID:** `DIST-004`  
+**Priority:** High  
+**Complexity:** Complex  
+**Estimated Time:** 3 weeks  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `bindings` `python` `pypi` `distribution` `phase:1`
+
+**Description:**
+Create Python package with bindings for redstr using PyO3 or similar.
+
+**Requirements:**
+- Set up PyO3 bindings for Rust
+- Create Python-friendly API wrapper
+- Generate Python type stubs (.pyi files)
+- Set up maturin for building and publishing
+- Write comprehensive documentation
+- Add usage examples and tutorials
+- Publish to PyPI
+- Set up automated publishing on releases
+- Support Python 3.8+
+
+**Deliverables:**
+```
+python-bindings/
+├── pyproject.toml
+├── Cargo.toml
+├── src/
+│   └── lib.rs (PyO3 bindings)
+├── python/
+│   └── redstr/
+│       ├── __init__.py
+│       ├── __init__.pyi (type stubs)
+│       └── py.typed
+├── examples/
+│   ├── basic_usage.py
+│   └── security_testing.py
+├── tests/
+│   └── test_transformations.py
+└── README.md
+docs/python_usage.md
+.github/workflows/pypi-publish.yml
+```
+
+**Acceptance Criteria:**
+- [ ] Package installs via pip
+- [ ] Type hints work with mypy and IDEs
+- [ ] All transformations accessible
+- [ ] Pythonic API design
+- [ ] Documentation includes examples
+- [ ] Tests pass on Python 3.8+
+- [ ] Published to PyPI
+- [ ] Automated publishing configured
+- [ ] Wheels for major platforms (manylinux, macOS, Windows)
+
+**Dependencies:** None
+
+**Package Name:** `redstr` or `redstr-py`
+
+**Example Usage:**
+```python
+from redstr import leetspeak, base64_encode, TransformBuilder
+
+# Simple transformations
+result = leetspeak("password")
+
+# Builder pattern
+result = (TransformBuilder("admin@example.com")
+          .homoglyphs()
+          .url_encode()
+          .build())
+```
+
+---
+
+#### Task 1.5.5: Go Bindings (Go Module)
+**ID:** `DIST-005`  
+**Priority:** Medium  
+**Complexity:** Complex  
+**Estimated Time:** 3 weeks  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `bindings` `golang` `distribution` `phase:1`
+
+**Description:**
+Create Go module with bindings for redstr using cgo or similar approach.
+
+**Requirements:**
+- Choose approach: cgo with dynamic library or static linking
+- Create Go-friendly API wrapper
+- Generate Go documentation
+- Write comprehensive examples
+- Add Go tests
+- Publish as Go module
+- Set up automated releases
+- Support Go 1.19+
+
+**Deliverables:**
+```
+go-bindings/
+├── go.mod
+├── go.sum
+├── redstr.go
+├── redstr_test.go
+├── lib/
+│   ├── build.sh
+│   └── libredstr.h (C header)
+├── examples/
+│   ├── basic/
+│   │   └── main.go
+│   └── security/
+│       └── main.go
+└── README.md
+docs/go_usage.md
+.github/workflows/go-test.yml
+```
+
+**Acceptance Criteria:**
+- [ ] Module installs via go get
+- [ ] All transformations accessible
+- [ ] Go-idiomatic API design
+- [ ] Documentation follows Go conventions
+- [ ] Tests pass with go test
+- [ ] Examples work correctly
+- [ ] Cross-platform compatibility
+- [ ] Published as Go module
+
+**Dependencies:** None
+
+**Module Path:** `github.com/arvid-berndtsson/redstr-go`
+
+**Example Usage:**
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/arvid-berndtsson/redstr-go"
+)
+
+func main() {
+    result := redstr.Leetspeak("password")
+    fmt.Println(result)
+    
+    // Builder pattern
+    builder := redstr.NewTransformBuilder("admin@example.com")
+    result = builder.Homoglyphs().URLEncode().Build()
+    fmt.Println(result)
+}
+```
+
+---
+
+#### Task 1.5.6: API Server Documentation & Enhancement
+**ID:** `DIST-006`  
+**Priority:** High  
+**Complexity:** Simple  
+**Estimated Time:** 1 week  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `[AGENT-FRIENDLY]` `documentation` `api-server` `distribution` `phase:1`
+
+**Description:**
+Document and enhance the existing redstr-server repository as the recommended approach for language-agnostic usage.
+
+**Requirements:**
+- Review existing redstr-server implementation
+- Document API endpoints and usage
+- Create OpenAPI/Swagger specification
+- Add examples for common languages (JavaScript, Python, Go, Ruby, etc.)
+- Document deployment options (Docker, systemd, cloud platforms)
+- Create quick start guide
+- Add client library examples
+- Document authentication and security best practices
+- Compare with language-specific bindings
+
+**Deliverables:**
+```
+docs/api_server.md (in main repo) - ✅ Created with inline examples
+  - Client examples for JavaScript, Python, Go, Ruby, cURL
+  - Deployment guides for Docker, systemd, cloud platforms
+  - Security best practices
+  - Performance and scaling guidance
+README.md updates (in main repo) - ✅ Updated with API server section
+docs/openapi.yaml (coordinate with redstr-server repo) - 🔜 Future work
+```
+
+**Note:** Client examples are documented inline in `api_server.md` rather than as separate files for easier maintenance and discoverability.
+
+**Acceptance Criteria:**
+- [ ] API server documented comprehensively
+- [ ] OpenAPI spec available
+- [ ] Examples for 5+ languages
+- [ ] Deployment guide complete
+- [ ] README updated with server usage
+- [ ] Security best practices documented
+- [ ] Performance characteristics documented
+
+**Dependencies:** None (redstr-server already exists)
+
+**Notes:**
+- The API server approach is similar to how OpenAI works
+- Recommended for most use cases vs language-specific bindings
+- Easier to maintain centrally
+- Language-agnostic
+- Can be deployed as a microservice
+
+**API Server Usage Example:**
+```bash
+# Start server
+redstr-server --port 8080
+
+# Use from any language
+curl -X POST http://localhost:8080/transform \
+  -H "Content-Type: application/json" \
+  -d '{"input": "password", "mode": "leetspeak"}'
+```
+
+---
+
 ## 🔌 Phase 2: Platform Integration (Q2 2026)
 
 ### 2.1 EvilJinx Integration
@@ -727,5 +1128,5 @@ Update task status in this file when:
 
 ---
 
-**Last Updated:** November 22, 2025  
+**Last Updated:** November 26, 2025  
 **Next Review:** Weekly
