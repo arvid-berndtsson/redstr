@@ -195,6 +195,67 @@ mod tests {
     }
 
     #[test]
+    fn test_base64_encode_empty_string() {
+        assert_eq!(base64_encode(""), "");
+    }
+
+    #[test]
+    fn test_base64_encode_single_char() {
+        let result = base64_encode("A");
+        assert_eq!(result, "QQ==");
+    }
+
+    #[test]
+    fn test_base64_encode_numbers() {
+        assert_eq!(base64_encode("123"), "MTIz");
+    }
+
+    #[test]
+    fn test_base64_encode_special_chars() {
+        let result = base64_encode("!@#");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_base64_encode_long_string() {
+        let input = "The quick brown fox jumps over the lazy dog";
+        let result = base64_encode(input);
+        assert!(!result.is_empty());
+        assert!(result.len() > input.len());
+    }
+
+    #[test]
+    fn test_base64_encode_unicode() {
+        let result = base64_encode("hello 世界");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_base64_encode_binary_data() {
+        let result = base64_encode("\x00\x01\x02\x03");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_base64_encode_padding() {
+        assert!(base64_encode("a").ends_with("=="));
+        assert!(base64_encode("ab").ends_with("="));
+        assert!(!base64_encode("abc").ends_with("="));
+    }
+
+    #[test]
+    fn test_base64_encode_whitespace() {
+        let result = base64_encode("hello world");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_base64_encode_sql_injection() {
+        let result = base64_encode("SELECT * FROM users");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
     fn test_url_encode() {
         let result = url_encode("hello world");
         assert!(result.contains("%20"));
@@ -204,9 +265,122 @@ mod tests {
     }
 
     #[test]
+    fn test_url_encode_empty_string() {
+        assert_eq!(url_encode(""), "");
+    }
+
+    #[test]
+    fn test_url_encode_alphanumeric() {
+        assert_eq!(url_encode("abc123"), "abc123");
+    }
+
+    #[test]
+    fn test_url_encode_special_chars() {
+        let result = url_encode("!@#$%^&*()");
+        assert!(result.contains("%"));
+    }
+
+    #[test]
+    fn test_url_encode_path() {
+        let result = url_encode("/path/to/file");
+        assert!(result.contains("%2F"));
+    }
+
+    #[test]
+    fn test_url_encode_query_string() {
+        let result = url_encode("key=value&foo=bar");
+        assert!(result.contains("%3D"));
+        assert!(result.contains("%26"));
+    }
+
+    #[test]
+    fn test_url_encode_unicode() {
+        let result = url_encode("hello 世界");
+        assert!(result.contains("%"));
+    }
+
+    #[test]
+    fn test_url_encode_plus_sign() {
+        let result = url_encode("a+b");
+        assert!(result.contains("%2B"));
+    }
+
+    #[test]
+    fn test_url_encode_slash() {
+        let result = url_encode("a/b");
+        assert!(result.contains("%2F"));
+    }
+
+    #[test]
+    fn test_url_encode_question_mark() {
+        let result = url_encode("what?");
+        assert!(result.contains("%3F"));
+    }
+
+    #[test]
+    fn test_url_encode_hash() {
+        let result = url_encode("#anchor");
+        assert!(result.contains("%23"));
+    }
+
+    #[test]
     fn test_hex_encode() {
         assert_eq!(hex_encode("test"), "74657374");
         assert_eq!(hex_encode("ab"), "6162");
+    }
+
+    #[test]
+    fn test_hex_encode_empty_string() {
+        assert_eq!(hex_encode(""), "");
+    }
+
+    #[test]
+    fn test_hex_encode_single_char() {
+        assert_eq!(hex_encode("A"), "41");
+    }
+
+    #[test]
+    fn test_hex_encode_numbers() {
+        assert_eq!(hex_encode("123"), "313233");
+    }
+
+    #[test]
+    fn test_hex_encode_special_chars() {
+        let result = hex_encode("!@#");
+        assert!(!result.is_empty());
+        assert_eq!(result.len(), 6); // 3 chars * 2 hex digits
+    }
+
+    #[test]
+    fn test_hex_encode_whitespace() {
+        let result = hex_encode(" ");
+        assert_eq!(result, "20");
+    }
+
+    #[test]
+    fn test_hex_encode_lowercase() {
+        let result = hex_encode("abc");
+        assert_eq!(result, "616263");
+        assert!(!result.contains("A")); // Should be lowercase hex
+    }
+
+    #[test]
+    fn test_hex_encode_uppercase() {
+        let result = hex_encode("ABC");
+        assert_eq!(result, "414243");
+    }
+
+    #[test]
+    fn test_hex_encode_mixed_case_input() {
+        let result = hex_encode("Hello!");
+        assert!(!result.is_empty());
+        assert_eq!(result.len(), 12); // 6 chars * 2 hex digits
+    }
+
+    #[test]
+    fn test_hex_encode_newline() {
+        let result = hex_encode("\n");
+        assert_eq!(result, "0a");
     }
 
     #[test]
@@ -217,8 +391,124 @@ mod tests {
     }
 
     #[test]
+    fn test_hex_encode_mixed_empty_string() {
+        let result = hex_encode_mixed("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_hex_encode_mixed_single_char() {
+        let result = hex_encode_mixed("A");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_hex_encode_mixed_formats() {
+        let result = hex_encode_mixed("test");
+        // Should contain mix of formats: \x, %, 0x, &#x
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_hex_encode_mixed_special_chars() {
+        let result = hex_encode_mixed("!@#");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_hex_encode_mixed_numbers() {
+        let result = hex_encode_mixed("123");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_hex_encode_mixed_whitespace() {
+        let result = hex_encode_mixed("a b");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_hex_encode_mixed_long_string() {
+        let result = hex_encode_mixed("hello world");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_hex_encode_mixed_xss_payload() {
+        let result = hex_encode_mixed("<script>");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_hex_encode_mixed_preserves_content() {
+        let result = hex_encode_mixed("abc");
+        // Result should be longer due to encoding
+        assert!(result.len() >= 3);
+    }
+
+    #[test]
     fn test_html_entity_encode() {
         let result = html_entity_encode("test");
         assert!(result.len() >= 4);
+    }
+
+    #[test]
+    fn test_html_entity_encode_empty_string() {
+        let result = html_entity_encode("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_html_entity_encode_angle_brackets() {
+        let result = html_entity_encode("<>");
+        assert!(result.contains("lt") || result.contains("gt") || result.contains("&#"));
+    }
+
+    #[test]
+    fn test_html_entity_encode_ampersand() {
+        let result = html_entity_encode("&");
+        assert!(result.contains("amp") || result.contains("&#"));
+    }
+
+    #[test]
+    fn test_html_entity_encode_quotes() {
+        let result = html_entity_encode("\"'");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_html_entity_encode_space() {
+        let result = html_entity_encode(" ");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_html_entity_encode_xss_payload() {
+        let result = html_entity_encode("<script>alert(1)</script>");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_html_entity_encode_mixed_content() {
+        let result = html_entity_encode("Hello <world> & \"test\"");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_html_entity_encode_numbers() {
+        let result = html_entity_encode("123");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_html_entity_encode_special_chars() {
+        let result = html_entity_encode("!@#$%");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_html_entity_encode_unicode() {
+        let result = html_entity_encode("♥");
+        assert!(!result.is_empty());
     }
 }

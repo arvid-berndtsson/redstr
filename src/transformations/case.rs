@@ -210,9 +210,118 @@ mod tests {
     }
 
     #[test]
+    fn test_alternate_case_empty_string() {
+        let result = alternate_case("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_alternate_case_single_char() {
+        let result = alternate_case("a");
+        assert_eq!(result, "A");
+    }
+
+    #[test]
+    fn test_alternate_case_with_numbers() {
+        let result = alternate_case("hello123world");
+        assert_eq!(result, "HeLlO123wOrLd");
+    }
+
+    #[test]
+    fn test_alternate_case_with_spaces() {
+        let result = alternate_case("hello world");
+        assert_eq!(result, "HeLlO wOrLd");
+    }
+
+    #[test]
+    fn test_alternate_case_special_chars() {
+        let result = alternate_case("a!b@c#d");
+        assert_eq!(result, "A!b@C#d");
+    }
+
+    #[test]
+    fn test_alternate_case_all_uppercase() {
+        let result = alternate_case("HELLO");
+        assert_eq!(result, "HeLlO");
+    }
+
+    #[test]
+    fn test_alternate_case_mixed_case() {
+        let result = alternate_case("HeLLo");
+        assert_eq!(result, "HeLlO");
+    }
+
+    #[test]
+    fn test_alternate_case_long_string() {
+        let result = alternate_case("abcdefghijklmnop");
+        assert_eq!(result, "AbCdEfGhIjKlMnOp");
+    }
+
+    #[test]
+    fn test_alternate_case_unicode() {
+        let result = alternate_case("héllo");
+        assert!(!result.is_empty());
+        assert!(result.starts_with("H") || result.starts_with("h"));
+    }
+
+    #[test]
     fn test_inverse_case() {
         let result = inverse_case("Hello World");
         assert_eq!(result, "hELLO wORLD");
+    }
+
+    #[test]
+    fn test_inverse_case_empty_string() {
+        let result = inverse_case("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_inverse_case_single_char_lower() {
+        let result = inverse_case("a");
+        assert_eq!(result, "A");
+    }
+
+    #[test]
+    fn test_inverse_case_single_char_upper() {
+        let result = inverse_case("A");
+        assert_eq!(result, "a");
+    }
+
+    #[test]
+    fn test_inverse_case_numbers() {
+        let result = inverse_case("Test123");
+        assert_eq!(result, "tEST123");
+    }
+
+    #[test]
+    fn test_inverse_case_special_chars() {
+        let result = inverse_case("Hello!@#World");
+        assert_eq!(result, "hELLO!@#wORLD");
+    }
+
+    #[test]
+    fn test_inverse_case_all_lowercase() {
+        let result = inverse_case("hello");
+        assert_eq!(result, "HELLO");
+    }
+
+    #[test]
+    fn test_inverse_case_all_uppercase() {
+        let result = inverse_case("HELLO");
+        assert_eq!(result, "hello");
+    }
+
+    #[test]
+    fn test_inverse_case_mixed() {
+        let result = inverse_case("HeLLo WoRLd");
+        assert_eq!(result, "hEllO wOrlD");
+    }
+
+    #[test]
+    fn test_inverse_case_preserves_non_alpha() {
+        let result = inverse_case("ABC_123_xyz");
+        assert_eq!(result, "abc_123_XYZ");
     }
 
     #[test]
@@ -251,9 +360,277 @@ mod tests {
     }
 
     #[test]
+    fn test_randomize_capitalization_empty_string() {
+        let result = randomize_capitalization("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_randomize_capitalization_single_char() {
+        let result = randomize_capitalization("a");
+        assert_eq!(result.len(), 1);
+        assert!(result == "a" || result == "A");
+    }
+
+    #[test]
+    fn test_randomize_capitalization_numbers_only() {
+        let result = randomize_capitalization("12345");
+        assert_eq!(result, "12345");
+    }
+
+    #[test]
+    fn test_randomize_capitalization_special_chars() {
+        let result = randomize_capitalization("!@#$%");
+        assert_eq!(result, "!@#$%");
+    }
+
+    #[test]
+    fn test_randomize_capitalization_mixed_content() {
+        let input = "Hello123World!";
+        let result = randomize_capitalization(input);
+        assert_eq!(result.len(), input.len());
+        assert!(result.contains("123"));
+        assert!(result.contains("!"));
+    }
+
+    #[test]
+    fn test_randomize_capitalization_unicode() {
+        let input = "héllo wörld";
+        let result = randomize_capitalization(input);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_randomize_capitalization_all_uppercase() {
+        let input = "HELLO";
+        let result = randomize_capitalization(input);
+        assert_eq!(result.len(), input.len());
+    }
+
+    #[test]
+    fn test_randomize_capitalization_all_lowercase() {
+        let input = "hello";
+        let result = randomize_capitalization(input);
+        assert_eq!(result.len(), input.len());
+    }
+
+    #[test]
+    fn test_randomize_capitalization_whitespace() {
+        let input = "hello   world";
+        let result = randomize_capitalization(input);
+        assert_eq!(result.len(), input.len());
+        assert!(result.contains("   "));
+    }
+
+    #[test]
     fn test_case_swap() {
         let result = case_swap("HELLO");
         // Should be different from original due to case swapping
         assert_ne!(result, "HELLO");
+    }
+
+    #[test]
+    fn test_case_swap_empty_string() {
+        let result = case_swap("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_case_swap_single_char() {
+        let result = case_swap("A");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_case_swap_preserves_numbers() {
+        let input = "ABC123XYZ";
+        let result = case_swap(input);
+        assert!(result.contains("123"));
+    }
+
+    #[test]
+    fn test_case_swap_preserves_special_chars() {
+        let input = "TEST!@#CODE";
+        let result = case_swap(input);
+        assert!(result.contains("!@#"));
+    }
+
+    #[test]
+    fn test_case_swap_lowercase() {
+        let result = case_swap("hello");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_case_swap_mixed_case() {
+        let result = case_swap("HeLLo");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_case_swap_sql_injection() {
+        let result = case_swap("SELECT * FROM users");
+        assert!(result.to_lowercase().contains("select"));
+        assert!(result.to_lowercase().contains("from"));
+    }
+
+    #[test]
+    fn test_case_swap_preserves_length() {
+        let input = "TestString";
+        let result = case_swap(input);
+        assert_eq!(result.len(), input.len());
+    }
+
+    #[test]
+    fn test_case_swap_with_whitespace() {
+        let input = "Hello World Test";
+        let result = case_swap(input);
+        assert!(result.contains(" "));
+    }
+
+    #[test]
+    fn test_to_camel_case_empty_string() {
+        let result = to_camel_case("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_to_camel_case_single_word() {
+        let result = to_camel_case("hello");
+        assert_eq!(result, "hello");
+    }
+
+    #[test]
+    fn test_to_camel_case_multiple_spaces() {
+        let result = to_camel_case("hello   world");
+        assert_eq!(result, "helloWorld");
+    }
+
+    #[test]
+    fn test_to_camel_case_mixed_separators() {
+        let result = to_camel_case("hello_world-test");
+        assert_eq!(result, "helloWorldTest");
+    }
+
+    #[test]
+    fn test_to_camel_case_uppercase_input() {
+        let result = to_camel_case("HELLO WORLD");
+        assert_eq!(result, "helloWorld");
+    }
+
+    #[test]
+    fn test_to_camel_case_numbers() {
+        let result = to_camel_case("hello123world");
+        assert!(result.contains("123"));
+    }
+
+    #[test]
+    fn test_to_camel_case_special_chars() {
+        let result = to_camel_case("hello@world");
+        assert!(result.contains("@"));
+    }
+
+    #[test]
+    fn test_to_camel_case_already_camel() {
+        let result = to_camel_case("helloWorld");
+        assert_eq!(result, "helloworld");
+    }
+
+    #[test]
+    fn test_to_camel_case_three_words() {
+        let result = to_camel_case("hello world test");
+        assert_eq!(result, "helloWorldTest");
+    }
+
+    #[test]
+    fn test_to_snake_case_empty_string() {
+        let result = to_snake_case("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_to_snake_case_single_word() {
+        let result = to_snake_case("hello");
+        assert_eq!(result, "hello");
+    }
+
+    #[test]
+    fn test_to_snake_case_camel_case() {
+        let result = to_snake_case("helloWorld");
+        assert_eq!(result, "hello_world");
+    }
+
+    #[test]
+    fn test_to_snake_case_multiple_uppercase() {
+        let result = to_snake_case("HelloWorldTest");
+        assert_eq!(result, "hello_world_test");
+    }
+
+    #[test]
+    fn test_to_snake_case_consecutive_uppercase() {
+        let result = to_snake_case("HTTPSConnection");
+        // Should convert consecutive uppercase - exact behavior may vary
+        assert!(!result.is_empty());
+        assert!(result.to_lowercase() == result); // Should be all lowercase
+    }
+
+    #[test]
+    fn test_to_snake_case_with_numbers() {
+        let result = to_snake_case("test123Value");
+        assert!(result.contains("123"));
+    }
+
+    #[test]
+    fn test_to_snake_case_already_snake() {
+        let result = to_snake_case("hello_world");
+        assert_eq!(result, "hello_world");
+    }
+
+    #[test]
+    fn test_to_snake_case_kebab_input() {
+        let result = to_snake_case("hello-world-test");
+        assert_eq!(result, "hello_world_test");
+    }
+
+    #[test]
+    fn test_to_kebab_case_empty_string() {
+        let result = to_kebab_case("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_to_kebab_case_single_word() {
+        let result = to_kebab_case("hello");
+        assert_eq!(result, "hello");
+    }
+
+    #[test]
+    fn test_to_kebab_case_camel_case() {
+        let result = to_kebab_case("helloWorld");
+        assert_eq!(result, "hello-world");
+    }
+
+    #[test]
+    fn test_to_kebab_case_snake_case() {
+        let result = to_kebab_case("hello_world");
+        assert_eq!(result, "hello-world");
+    }
+
+    #[test]
+    fn test_to_kebab_case_multiple_words() {
+        let result = to_kebab_case("HelloWorldTest");
+        assert_eq!(result, "hello-world-test");
+    }
+
+    #[test]
+    fn test_to_kebab_case_with_numbers() {
+        let result = to_kebab_case("test123Value");
+        assert!(result.contains("123"));
+    }
+
+    #[test]
+    fn test_to_kebab_case_already_kebab() {
+        let result = to_kebab_case("hello-world");
+        assert_eq!(result, "hello-world");
     }
 }
