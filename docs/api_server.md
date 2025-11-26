@@ -249,6 +249,7 @@ import (
     "encoding/json"
     "fmt"
     "io"
+    "log"
     "net/http"
 )
 
@@ -266,10 +267,13 @@ type TransformResponse struct {
 }
 
 func Transform(input, mode string) (string, error) {
-    reqBody, _ := json.Marshal(TransformRequest{
+    reqBody, err := json.Marshal(TransformRequest{
         Input: input,
         Mode:  mode,
     })
+    if err != nil {
+        return "", fmt.Errorf("failed to marshal request: %w", err)
+    }
     
     resp, err := http.Post(
         RedstrAPI+"/transform",
@@ -277,19 +281,28 @@ func Transform(input, mode string) (string, error) {
         bytes.NewBuffer(reqBody),
     )
     if err != nil {
-        return "", err
+        return "", fmt.Errorf("failed to make request: %w", err)
     }
     defer resp.Body.Close()
     
-    body, _ := io.ReadAll(resp.Body)
+    body, err := io.ReadAll(resp.Body)
+    if err != nil {
+        return "", fmt.Errorf("failed to read response: %w", err)
+    }
+    
     var result TransformResponse
-    json.Unmarshal(body, &result)
+    if err := json.Unmarshal(body, &result); err != nil {
+        return "", fmt.Errorf("failed to unmarshal response: %w", err)
+    }
     
     return result.Output, nil
 }
 
 func main() {
-    output, _ := Transform("password", "leetspeak")
+    output, err := Transform("password", "leetspeak")
+    if err != nil {
+        log.Fatalf("Transform failed: %v", err)
+    }
     fmt.Println(output) // p@55w0rd
 }
 ```

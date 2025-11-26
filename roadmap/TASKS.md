@@ -811,16 +811,16 @@ Document and enhance the existing redstr-server repository as the recommended ap
 
 **Deliverables:**
 ```
-docs/api_server.md (in main repo)
-docs/api_examples/ (in main repo)
-├── javascript-client.js
-├── python-client.py
-├── go-client.go
-├── ruby-client.rb
-└── curl-examples.sh
-README.md updates (in main repo)
-docs/openapi.yaml (coordinate with redstr-server repo)
+docs/api_server.md (in main repo) - ✅ Created with inline examples
+  - Client examples for JavaScript, Python, Go, Ruby, cURL
+  - Deployment guides for Docker, systemd, cloud platforms
+  - Security best practices
+  - Performance and scaling guidance
+README.md updates (in main repo) - ✅ Updated with API server section
+docs/openapi.yaml (coordinate with redstr-server repo) - 🔜 Future work
 ```
+
+**Note:** Client examples are documented inline in `api_server.md` rather than as separate files for easier maintenance and discoverability.
 
 **Acceptance Criteria:**
 - [ ] API server documented comprehensively
