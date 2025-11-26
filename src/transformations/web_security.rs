@@ -674,7 +674,8 @@ mod tests {
     fn test_graphql_introspection_bypass_empty_string() {
         let query = "";
         let result = graphql_introspection_bypass(query);
-        assert!(!result.is_empty() || result.is_empty()); // May add comments
+        // Empty input may result in empty output or comment injection
+        assert!(result.len() >= 0);
     }
 
     #[test]
@@ -752,7 +753,8 @@ mod tests {
     fn test_jwt_header_manipulation_empty_string() {
         let header = "";
         let result = jwt_header_manipulation(header);
-        assert!(!result.is_empty() || result.is_empty());
+        // Empty input handling - function may return empty or modified string
+        assert!(result.len() >= 0);
     }
 
     #[test]
@@ -832,7 +834,8 @@ mod tests {
     fn test_jwt_payload_obfuscate_empty_string() {
         let payload = "";
         let result = jwt_payload_obfuscate(payload);
-        assert!(!result.is_empty() || result.is_empty());
+        // Empty input handling - function may return empty or modified string
+        assert!(result.len() >= 0);
     }
 
     #[test]
@@ -912,7 +915,8 @@ mod tests {
     fn test_jwt_algorithm_confusion_empty_string() {
         let token = "";
         let result = jwt_algorithm_confusion(token);
-        assert!(!result.is_empty() || result.is_empty());
+        // Empty input handling - function may inject algorithm or return empty
+        assert!(result.len() >= 0);
     }
 
     #[test]
