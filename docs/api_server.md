@@ -826,16 +826,17 @@ REDSTR_WORKERS=2 redstr-server
 
 ## Future Enhancements
 
-Planned features for the API server:
+Planned features for the API server (from [redstr-server roadmap](https://github.com/arvid-berndtsson/redstr-server)):
 
 - [ ] GraphQL API support
 - [ ] WebSocket support for streaming
-- [ ] Batch transformation endpoint
 - [ ] OpenAPI/Swagger documentation
-- [ ] Built-in authentication
+- [ ] Built-in authentication (JWT)
 - [ ] Rate limiting middleware
 - [ ] Caching layer
-- [ ] Metrics and monitoring endpoints
+- [ ] Metrics endpoint (Prometheus format)
+- [ ] TLS support
+- [ ] Configuration file support
 
 ## Resources
 
