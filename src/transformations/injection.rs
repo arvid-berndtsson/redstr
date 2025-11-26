@@ -929,8 +929,8 @@ mod nosql_ssti_tests {
     fn test_ssti_injection_empty_string() {
         let template = "";
         let result = ssti_injection(template);
-        // Empty input may result in empty output or generic pattern injection
-        assert!(result.len() >= 0);
+        // Empty input results in generic pattern injection ({{7*7}}, ${7*7}, etc.)
+        assert!(!result.is_empty() && (result.contains("{{") || result.contains("${") || result.contains("#{")));
     }
 
     #[test]
@@ -1011,8 +1011,8 @@ mod nosql_ssti_tests {
     fn test_ssti_framework_variation_empty_string() {
         let template = "";
         let result = ssti_framework_variation(template, "jinja2");
-        // Empty input may result in empty output or framework-specific injection
-        assert!(result.len() >= 0);
+        // Empty input results in framework-specific injection ({{ config.items() }}, etc.)
+        assert!(!result.is_empty() && result.contains("{{"));
     }
 
     #[test]
