@@ -82,11 +82,7 @@ fn main() {
     println!("7. Common NoSQL Injection Payloads");
     println!("   Purpose: Generate common injection patterns\n");
 
-    let payloads = vec![
-        r#"{"$ne": null}"#,
-        r#"{"$gt": ""}"#,
-        r#"{"$regex": ".*"}"#,
-    ];
+    let payloads = vec![r#"{"$ne": null}"#, r#"{"$gt": ""}"#, r#"{"$regex": ".*"}"#];
 
     for payload in payloads {
         println!("   MongoDB variant: {}", mongodb_injection(payload));

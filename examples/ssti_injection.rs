@@ -98,13 +98,7 @@ fn main() {
     println!("   Purpose: Detect SSTI vulnerabilities");
     println!("   Use Case: Initial reconnaissance\n");
 
-    let detection_payloads = vec![
-        "{{7*7}}",
-        "${7*7}",
-        "<%= 7*7 %>",
-        "${{7*7}}",
-        "#{7*7}",
-    ];
+    let detection_payloads = vec!["{{7*7}}", "${7*7}", "<%= 7*7 %>", "${{7*7}}", "#{7*7}"];
 
     for payload in detection_payloads {
         println!("   Detection: {}", payload);
@@ -148,11 +142,7 @@ fn main() {
     println!("    Purpose: Test SSTI detection mechanisms");
     println!("    Use Case: Validating input sanitization\n");
 
-    let test_inputs = vec![
-        "{{user.name}}",
-        "${product.price}",
-        "#{session.user}",
-    ];
+    let test_inputs = vec!["{{user.name}}", "${product.price}", "#{session.user}"];
 
     for input in test_inputs {
         println!("    Testing input: {}", input);
