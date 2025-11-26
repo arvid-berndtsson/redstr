@@ -39,28 +39,33 @@ The **redstr-server** provides a language-agnostic HTTP API for accessing redstr
 The redstr-server is available as a separate repository:
 
 ```bash
-# Clone the server repository
+# Clone and build from source
 git clone https://github.com/arvid-berndtsson/redstr-server
+cd redstr-server
+cargo build --release
 
-# Or install via cargo
-cargo install redstr-server
-
-# Or use Docker
-docker pull arvid-berndtsson/redstr-server
+# The binary will be at target/release/redstr-server
 ```
 
 ### Running the Server
 
 ```bash
-# Run locally
-redstr-server --port 8080
+# Run from source
+cargo run --release
 
-# With Docker
-docker run -p 8080:8080 arvid-berndtsson/redstr-server
+# Or run the compiled binary
+./target/release/redstr-server
 
-# With environment configuration
-REDSTR_PORT=8080 REDSTR_HOST=0.0.0.0 redstr-server
+# With custom port (via PORT environment variable)
+PORT=3000 cargo run --release
+
+# With custom log level
+RUST_LOG=debug cargo run --release
 ```
+
+The server will listen on `http://0.0.0.0:8080` by default (or the port specified by the `PORT` environment variable).
+
+**Note:** The server binds to `0.0.0.0` (all interfaces) for Railway and cloud deployment compatibility. For local development only, consider using a reverse proxy or firewall rules for added security.
 
 ## API Reference
 
@@ -72,16 +77,30 @@ http://localhost:8080
 
 ### Endpoints
 
+#### GET /
+
+Get server information and available endpoints.
+
+**Response:**
+
+```json
+{
+  "service": "redstr-server",
+  "version": "0.2.0",
+  "endpoints": ["/transform", "/batch", "/functions", "/health", "/version"]
+}
+```
+
 #### POST /transform
 
-Transform a string using a specific transformation mode.
+Transform a string using a specific transformation function.
 
 **Request:**
 
 ```json
 {
-  "input": "string to transform",
-  "mode": "leetspeak"
+  "function": "leetspeak",
+  "input": "Hello World"
 }
 ```
 
@@ -89,22 +108,30 @@ Transform a string using a specific transformation mode.
 
 ```json
 {
-  "output": "tr@n5f0rm3d 5tr1ng",
-  "mode": "leetspeak",
-  "success": true
+  "output": "H3ll0 W0rld"
 }
 ```
 
-#### POST /transform/chain
+**Error Response:**
 
-Apply multiple transformations in sequence (builder pattern).
+```json
+{
+  "error": "Unknown function: invalid_function"
+}
+```
+
+#### POST /batch
+
+Apply multiple transformations (each with its own function and input).
 
 **Request:**
 
 ```json
 {
-  "input": "admin@example.com",
-  "transformations": ["homoglyphs", "url_encode"]
+  "transforms": [
+    {"function": "leetspeak", "input": "Hello"},
+    {"function": "base64_encode", "input": "World"}
+  ]
 }
 ```
 
@@ -112,29 +139,33 @@ Apply multiple transformations in sequence (builder pattern).
 
 ```json
 {
-  "output": "%D0%B0dm%D1%96n%40%D0%B5x%D0%B0mple.com",
-  "transformations_applied": ["homoglyphs", "url_encode"],
-  "success": true
+  "results": [
+    {"output": "H3ll0"},
+    {"output": "V29ybGQ="}
+  ]
 }
 ```
 
-#### GET /modes
+**Note:** For chained transformations (applying multiple functions to the same input), call `/transform` multiple times with the output of each call, or use the batch endpoint with intermediate results.
 
-List all available transformation modes.
+#### GET /functions
+
+List all available transformation functions.
 
 **Response:**
 
 ```json
 {
-  "modes": [
+  "functions": [
     "leetspeak",
-    "base64",
+    "base64_encode",
     "url_encode",
-    "homoglyphs",
+    "homoglyph_substitution",
     "case_swap",
     "rot13",
     ...
-  ]
+  ],
+  "count": 62
 }
 ```
 
@@ -146,8 +177,21 @@ Health check endpoint for load balancers and monitoring.
 
 ```json
 {
-  "status": "healthy",
-  "version": "0.2.3"
+  "status": "healthy"
+}
+```
+
+#### GET /version
+
+Get detailed version information.
+
+**Response:**
+
+```json
+{
+  "service": "redstr-server",
+  "version": "0.2.0",
+  "redstr_version": "0.2.0"
 }
 ```
 
@@ -160,32 +204,53 @@ const axios = require('axios');
 
 const REDSTR_API = 'http://localhost:8080';
 
-async function transform(input, mode) {
-  const response = await axios.post(`${REDSTR_API}/transform`, {
-    input,
-    mode
-  });
-  return response.data.output;
+async function transform(func, input) {
+  try {
+    const response = await axios.post(`${REDSTR_API}/transform`, {
+      function: func,
+      input: input
+    });
+    return response.data.output;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error);
+    }
+    throw error;
+  }
 }
 
-async function chainTransforms(input, transformations) {
-  const response = await axios.post(`${REDSTR_API}/transform/chain`, {
-    input,
-    transformations
-  });
-  return response.data.output;
+async function batchTransforms(transforms) {
+  try {
+    const response = await axios.post(`${REDSTR_API}/batch`, {
+      transforms: transforms
+    });
+    return response.data.results;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error);
+    }
+    throw error;
+  }
 }
 
 // Usage
 (async () => {
-  const leetspeak = await transform('password', 'leetspeak');
+  // Single transformation
+  const leetspeak = await transform('leetspeak', 'password');
   console.log(leetspeak); // p@55w0rd
   
-  const chained = await chainTransforms('admin@example.com', [
-    'homoglyphs',
-    'url_encode'
+  // Batch transformations
+  const results = await batchTransforms([
+    {function: 'leetspeak', input: 'Hello'},
+    {function: 'base64_encode', input: 'World'}
   ]);
-  console.log(chained);
+  console.log(results); // [{output: 'H3ll0'}, {output: 'V29ybGQ='}]
+  
+  // Chained transformations (manual)
+  let text = 'admin@example.com';
+  text = await transform('homoglyph_substitution', text);
+  text = await transform('url_encode', text);
+  console.log(text);
 })();
 ```
 
@@ -194,20 +259,34 @@ async function chainTransforms(input, transformations) {
 ```javascript
 const REDSTR_API = 'http://localhost:8080';
 
-async function transform(input, mode) {
+async function transform(func, input) {
   const response = await fetch(`${REDSTR_API}/transform`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ input, mode })
+    body: JSON.stringify({ 
+      function: func,
+      input: input
+    })
   });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Transform failed');
+  }
+  
   const data = await response.json();
   return data.output;
 }
 
 // Usage
-transform('password', 'leetspeak').then(console.log);
+transform('leetspeak', 'password').then(console.log);
+
+// With error handling
+transform('leetspeak', 'password')
+  .then(result => console.log(result))
+  .catch(error => console.error('Error:', error.message));
 ```
 
 ### Python
@@ -217,26 +296,47 @@ import requests
 
 REDSTR_API = 'http://localhost:8080'
 
-def transform(input_str, mode):
+def transform(function, input_str):
+    """Transform a string using a redstr function."""
     response = requests.post(f'{REDSTR_API}/transform', json={
-        'input': input_str,
-        'mode': mode
+        'function': function,
+        'input': input_str
     })
-    return response.json()['output']
+    response.raise_for_status()  # Raises HTTPError for bad status codes
+    data = response.json()
+    return data.get('output', '')
 
-def chain_transforms(input_str, transformations):
-    response = requests.post(f'{REDSTR_API}/transform/chain', json={
-        'input': input_str,
-        'transformations': transformations
+def batch_transforms(transforms):
+    """Apply multiple transformations in a batch."""
+    response = requests.post(f'{REDSTR_API}/batch', json={
+        'transforms': transforms
     })
-    return response.json()['output']
+    response.raise_for_status()
+    data = response.json()
+    return data.get('results', [])
 
 # Usage
-leetspeak = transform('password', 'leetspeak')
-print(leetspeak)  # p@55w0rd
-
-chained = chain_transforms('admin@example.com', ['homoglyphs', 'url_encode'])
-print(chained)
+try:
+    # Single transformation
+    leetspeak = transform('leetspeak', 'password')
+    print(leetspeak)  # p@55w0rd
+    
+    # Batch transformations
+    results = batch_transforms([
+        {'function': 'leetspeak', 'input': 'Hello'},
+        {'function': 'base64_encode', 'input': 'World'}
+    ])
+    for result in results:
+        print(result['output'])
+    
+    # Chained transformations (manual)
+    text = 'admin@example.com'
+    text = transform('homoglyph_substitution', text)
+    text = transform('url_encode', text)
+    print(text)
+    
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
 ```
 
 ### Go
@@ -256,20 +356,30 @@ import (
 const RedstrAPI = "http://localhost:8080"
 
 type TransformRequest struct {
-    Input string `json:"input"`
-    Mode  string `json:"mode"`
+    Function string `json:"function"`
+    Input    string `json:"input"`
 }
 
 type TransformResponse struct {
-    Output  string `json:"output"`
-    Mode    string `json:"mode"`
-    Success bool   `json:"success"`
+    Output string `json:"output"`
 }
 
-func Transform(input, mode string) (string, error) {
+type ErrorResponse struct {
+    Error string `json:"error"`
+}
+
+type BatchRequest struct {
+    Transforms []TransformRequest `json:"transforms"`
+}
+
+type BatchResponse struct {
+    Results []TransformResponse `json:"results"`
+}
+
+func Transform(function, input string) (string, error) {
     reqBody, err := json.Marshal(TransformRequest{
-        Input: input,
-        Mode:  mode,
+        Function: function,
+        Input:    input,
     })
     if err != nil {
         return "", fmt.Errorf("failed to marshal request: %w", err)
@@ -290,6 +400,14 @@ func Transform(input, mode string) (string, error) {
         return "", fmt.Errorf("failed to read response: %w", err)
     }
     
+    if resp.StatusCode != http.StatusOK {
+        var errResp ErrorResponse
+        if err := json.Unmarshal(body, &errResp); err == nil {
+            return "", fmt.Errorf("transform failed: %s", errResp.Error)
+        }
+        return "", fmt.Errorf("request failed with status: %d", resp.StatusCode)
+    }
+    
     var result TransformResponse
     if err := json.Unmarshal(body, &result); err != nil {
         return "", fmt.Errorf("failed to unmarshal response: %w", err)
@@ -298,12 +416,67 @@ func Transform(input, mode string) (string, error) {
     return result.Output, nil
 }
 
+func BatchTransform(transforms []TransformRequest) ([]string, error) {
+    reqBody, err := json.Marshal(BatchRequest{Transforms: transforms})
+    if err != nil {
+        return nil, fmt.Errorf("failed to marshal request: %w", err)
+    }
+    
+    resp, err := http.Post(
+        RedstrAPI+"/batch",
+        "application/json",
+        bytes.NewBuffer(reqBody),
+    )
+    if err != nil {
+        return nil, fmt.Errorf("failed to make request: %w", err)
+    }
+    defer resp.Body.Close()
+    
+    body, err := io.ReadAll(resp.Body)
+    if err != nil {
+        return nil, fmt.Errorf("failed to read response: %w", err)
+    }
+    
+    if resp.StatusCode != http.StatusOK {
+        var errResp ErrorResponse
+        if err := json.Unmarshal(body, &errResp); err == nil {
+            return nil, fmt.Errorf("batch transform failed: %s", errResp.Error)
+        }
+        return nil, fmt.Errorf("request failed with status: %d", resp.StatusCode)
+    }
+    
+    var result BatchResponse
+    if err := json.Unmarshal(body, &result); err != nil {
+        return nil, fmt.Errorf("failed to unmarshal response: %w", err)
+    }
+    
+    outputs := make([]string, len(result.Results))
+    for i, r := range result.Results {
+        outputs[i] = r.Output
+    }
+    
+    return outputs, nil
+}
+
 func main() {
-    output, err := Transform("password", "leetspeak")
+    // Single transformation
+    output, err := Transform("leetspeak", "password")
     if err != nil {
         log.Fatalf("Transform failed: %v", err)
     }
     fmt.Println(output) // p@55w0rd
+    
+    // Batch transformations
+    results, err := BatchTransform([]TransformRequest{
+        {Function: "leetspeak", Input: "Hello"},
+        {Function: "base64_encode", Input: "World"},
+    })
+    if err != nil {
+        log.Fatalf("Batch transform failed: %v", err)
+    }
+    for _, result := range results {
+        fmt.Println(result)
+    }
 }
 ```
 
@@ -316,43 +489,98 @@ require 'uri'
 
 REDSTR_API = 'http://localhost:8080'
 
-def transform(input, mode)
+def transform(function, input)
   uri = URI("#{REDSTR_API}/transform")
   request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
-  request.body = { input: input, mode: mode }.to_json
+  request.body = { function: function, input: input }.to_json
   
   response = Net::HTTP.start(uri.hostname, uri.port) do |http|
     http.request(request)
   end
   
+  if response.code.to_i != 200
+    error_data = JSON.parse(response.body)
+    raise "Transform failed: #{error_data['error']}"
+  end
+  
   JSON.parse(response.body)['output']
 end
 
+def batch_transform(transforms)
+  uri = URI("#{REDSTR_API}/batch")
+  request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
+  request.body = { transforms: transforms }.to_json
+  
+  response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+    http.request(request)
+  end
+  
+  if response.code.to_i != 200
+    error_data = JSON.parse(response.body)
+    raise "Batch transform failed: #{error_data['error']}"
+  end
+  
+  JSON.parse(response.body)['results']
+end
+
 # Usage
-puts transform('password', 'leetspeak')
+begin
+  puts transform('leetspeak', 'password')
+  
+  results = batch_transform([
+    { function: 'leetspeak', input: 'Hello' },
+    { function: 'base64_encode', input: 'World' }
+  ])
+  results.each { |r| puts r['output'] }
+rescue StandardError => e
+  puts "Error: #{e.message}"
+end
 ```
 
 ### cURL
 
 ```bash
-# Simple transformation
-curl -X POST http://localhost:8080/transform \
-  -H "Content-Type: application/json" \
-  -d '{"input": "password", "mode": "leetspeak"}'
+# Get server info
+curl http://localhost:8080/
 
-# Chained transformations
-curl -X POST http://localhost:8080/transform/chain \
-  -H "Content-Type: application/json" \
-  -d '{
-    "input": "admin@example.com",
-    "transformations": ["homoglyphs", "url_encode"]
-  }'
-
-# List all modes
-curl http://localhost:8080/modes
+# List all available functions
+curl http://localhost:8080/functions
 
 # Health check
 curl http://localhost:8080/health
+
+# Version information
+curl http://localhost:8080/version
+
+# Simple transformation
+curl -X POST http://localhost:8080/transform \
+  -H "Content-Type: application/json" \
+  -d '{"function": "leetspeak", "input": "password"}'
+
+# Batch transformations
+curl -X POST http://localhost:8080/batch \
+  -H "Content-Type: application/json" \
+  -d '{
+    "transforms": [
+      {"function": "leetspeak", "input": "Hello"},
+      {"function": "base64_encode", "input": "World"}
+    ]
+  }'
+
+# URL encoding
+curl -X POST http://localhost:8080/transform \
+  -H "Content-Type: application/json" \
+  -d '{"function": "url_encode", "input": "hello world"}'
+
+# SQL injection testing
+curl -X POST http://localhost:8080/transform \
+  -H "Content-Type: application/json" \
+  -d '{"function": "sql_comment_injection", "input": "SELECT * FROM users"}'
+
+# Domain typosquatting
+curl -X POST http://localhost:8080/transform \
+  -H "Content-Type: application/json" \
+  -d '{"function": "domain_typosquat", "input": "example.com"}'
 ```
 
 ## Deployment
