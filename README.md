@@ -39,6 +39,7 @@ A comprehensive Rust library providing 30+ string obfuscation and transformation
 
 **Production-ready library for security professionals and tool developers:**
 
+- **Multi-language support** - Use from Rust, JavaScript/TypeScript, Python, Go, or any language via HTTP API
 - **Minimal dependencies** - Core library uses only Rust's standard library (optional serde for serialization)
 - **30+ transformation functions** - Encoding, obfuscation, injection testing, and web-focused transformations
 - **Builder pattern API** - Chain multiple transformations fluently with `TransformBuilder`
@@ -47,6 +48,7 @@ A comprehensive Rust library providing 30+ string obfuscation and transformation
 - **Security-focused** - Designed for red/blue/purple team workflows and bot detection testing
 - **Well-documented** - Complete API documentation with real-world integration examples
 - **CLI tool included** - Optional command-line interface for quick testing
+- **HTTP API server** - Language-agnostic server for easy integration (similar to OpenAI's API)
 
 See [Performance Documentation](docs/performance.md) for detailed benchmarks and methodology.
 
@@ -82,21 +84,42 @@ See [Performance Documentation](docs/performance.md) for detailed benchmarks and
 
 ## 📦 Installation
 
-### Basic Installation
+### Rust (Native)
 
 Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-redstr = "0.1.0"
+redstr = "0.2.3"
 ```
 
 ### With Serde Support (for web tools)
 
 ```toml
 [dependencies]
-redstr = { version = "0.1.0", features = ["serde"] }
+redstr = { version = "0.2.3", features = ["serde"] }
 ```
+
+### Other Languages & Platforms
+
+**API Server (Recommended for all languages)**:
+```bash
+# Install the HTTP API server
+cargo install redstr-server
+
+# Or use Docker
+docker pull arvid-berndtsson/redstr-server
+```
+See [API Server Documentation](docs/api_server.md) for usage examples in JavaScript, Python, Go, Ruby, and more.
+
+**Coming Soon**:
+- 🔜 **Homebrew**: `brew install redstr` (macOS/Linux)
+- 🔜 **npm**: `npm install @redstr/core` (JavaScript/TypeScript)
+- 🔜 **PyPI**: `pip install redstr` (Python)
+- 🔜 **Go Module**: `go get github.com/arvid-berndtsson/redstr-go`
+- 🔜 **Raycast Extension**: Quick launcher integration
+
+Track progress in our [roadmap](roadmap/TASKS.md#15-distribution--language-bindings).
 
 ## Quick Start
 
