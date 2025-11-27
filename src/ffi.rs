@@ -41,9 +41,6 @@ fn rust_str_to_c(s: String) -> *mut c_char {
 /// # Safety
 /// The caller must ensure that `ptr` was allocated by a redstr function
 /// and has not been freed before
-/// # Safety
-/// The caller must ensure `input` is a valid null-terminated C string.
-/// The returned pointer must be freed using `redstr_free_string`.
 #[no_mangle]
 pub unsafe extern "C" fn redstr_free_string(ptr: *mut c_char) {
     if !ptr.is_null() {
