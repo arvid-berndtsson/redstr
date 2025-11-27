@@ -2,14 +2,34 @@ use crate::rng::SimpleRng;
 
 /// Replaces characters with random Unicode variations.
 ///
-/// Useful for testing Unicode normalization and handling.
+/// Substitutes common letters with accented or modified Unicode variants.
+/// For example, 'a' might become 'à', 'á', 'â', 'ã', or 'ä'. This creates
+/// visually similar text that can bypass simple string matching while testing
+/// Unicode normalization and internationalization handling.
+///
+/// # Use Cases
+///
+/// - **Red Team**: Bypass keyword filters with Unicode lookalikes
+/// - **Blue Team**: Test Unicode normalization in security controls
+/// - **i18n Testing**: Verify internationalized text handling
+/// - **Content Filters**: Test accent-insensitive matching
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::unicode_variations;
+/// 
 /// let result = unicode_variations("admin");
+/// // Example output: "ädmïn" or "àdmîn" or "ádmįn" (varies each run)
 /// assert_eq!(result.chars().count(), 5);
+/// 
+/// // Bypass keyword filters
+/// let word = unicode_variations("password");
+/// // Example: "pässwörd" or "pàsswôrd"
+/// 
+/// // Test Unicode normalization
+/// let email = unicode_variations("user@example.com");
+/// // Example: "ûsér@ëxämplè.çöm"
 /// ```
 pub fn unicode_variations(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -36,14 +56,34 @@ pub fn unicode_variations(input: &str) -> String {
 
 /// Adds zalgo combining characters to create corrupted-looking text.
 ///
-/// Useful for testing display issues and Unicode handling.
+/// Attaches 1-3 random Unicode combining diacritical marks to each alphabetic
+/// character, creating "zalgo text" that appears corrupted or glitchy. These
+/// combining characters stack above and below letters, useful for testing
+/// display rendering and Unicode edge cases.
+///
+/// # Use Cases
+///
+/// - **Display Testing**: Verify how systems render combining characters
+/// - **Blue Team**: Test input sanitization and character filtering
+/// - **DoS Testing**: Check if excessive combining marks cause issues
+/// - **Unicode Handling**: Validate proper Unicode normalization
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::zalgo_text;
+/// 
 /// let result = zalgo_text("test");
+/// // Example output: "t̃̂e̊̋s̈̃t̂̃" (with combining marks)
 /// assert!(result.len() > 4);
+/// 
+/// // Create glitchy-looking text
+/// let username = zalgo_text("admin");
+/// // Output looks like: "a̅̆d̃m̂ĭn̈" (rendered with marks above/below)
+/// 
+/// // Test display systems
+/// let message = zalgo_text("hello");
+/// // Creates visually corrupted text for testing
 /// ```
 pub fn zalgo_text(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -72,15 +112,38 @@ pub fn zalgo_text(input: &str) -> String {
 
 /// Substitutes characters with similar-looking homoglyphs.
 ///
-/// Useful for testing homograph attacks and IDN spoofing vulnerabilities.
-/// Uses Cyrillic and other lookalike characters.
+/// Randomly replaces Latin letters with visually identical or similar Cyrillic
+/// characters (e.g., Latin 'a' → Cyrillic 'а', Latin 'e' → Cyrillic 'е').
+/// About 33% of eligible characters are substituted. This is the core technique
+/// for homograph/IDN spoofing attacks where `example.com` becomes `еxample.com`.
+///
+/// # Use Cases
+///
+/// - **Phishing Testing**: Create lookalike domains for security training
+/// - **IDN Spoofing**: Test internationalized domain name vulnerabilities
+/// - **Red Team**: Bypass domain/URL whitelists and filters
+/// - **Blue Team**: Validate homograph detection systems
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::homoglyph_substitution;
+/// 
 /// let result = homoglyph_substitution("example");
-/// // Result may contain Cyrillic characters that look like Latin
+/// // Example output: "ехаmple" (Cyrillic е and а, Latin m,p,l)
+/// // Looks identical but uses different Unicode codepoints
+/// 
+/// // Phishing domain generation
+/// let domain = homoglyph_substitution("paypal.com");
+/// // Example: "pаypаl.com" (Cyrillic а instead of Latin a)
+/// 
+/// // Email spoofing test
+/// let email = homoglyph_substitution("admin@company.com");
+/// // Example: "аdmin@compаny.com" (Cyrillic characters)
+/// 
+/// // Number lookalikes
+/// let pin = homoglyph_substitution("2021");
+/// // Example: "2О2l" (Letter O and l instead of 0 and 1)
 /// ```
 pub fn homoglyph_substitution(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -111,14 +174,35 @@ pub fn homoglyph_substitution(input: &str) -> String {
 
 /// Replaces regular spaces with various Unicode space characters.
 ///
-/// Useful for testing whitespace handling and normalization.
+/// Substitutes ASCII space characters (U+0020) with random Unicode space
+/// variants including non-breaking space (U+00A0) and various em/en spaces.
+/// These look identical but have different codepoints, useful for testing
+/// whitespace normalization and parser robustness.
+///
+/// # Use Cases
+///
+/// - **WAF Bypass**: Evade filters that only check for ASCII spaces
+/// - **Blue Team**: Test whitespace normalization in parsers
+/// - **Input Validation**: Verify proper handling of Unicode spaces
+/// - **SQL Injection**: Use non-breaking spaces to bypass filters
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::space_variants;
+/// 
 /// let result = space_variants("hello world");
+/// // Looks identical: "hello world"
+/// // But may contain U+00A0, U+2000, U+2001, etc. instead of U+0020
 /// assert_eq!(result.chars().filter(|c| c.is_whitespace()).count(), 1);
+/// 
+/// // SQL injection with Unicode spaces
+/// let sql = space_variants("SELECT * FROM users");
+/// // Uses non-breaking spaces to bypass filters
+/// 
+/// // Test whitespace normalization
+/// let text = space_variants("word1 word2 word3");
+/// // Visually identical but with mixed Unicode spaces
 /// ```
 pub fn space_variants(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -140,13 +224,25 @@ pub fn space_variants(input: &str) -> String {
 
 /// Generates unicode normalization variations (NFD, NFC, NFKC, NFKD concepts).
 ///
-/// Useful for testing unicode normalization vulnerabilities and bypasses.
+/// Creates variations that represent similar Unicode normalization concepts
+/// by randomly replacing characters with composed or decomposed forms, or
+/// adding combining characters. Tests how systems handle different Unicode
+/// normalization forms (NFC, NFD, NFKC, NFKD).
+///
+/// # Use Cases
+///
+/// - **Security Testing**: Test if systems normalize Unicode properly
+/// - **Bypass Filters**: Exploit inconsistent Unicode handling
+/// - **Blue Team**: Validate Unicode normalization in security controls
+/// - **Data Quality**: Test string comparison and matching
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::unicode_normalize_variants;
+/// 
 /// let result = unicode_normalize_variants("café");
+/// // May produce composed (café) or decomposed (cafe\u{0301}) forms
 /// assert!(result.len() >= 4);
 /// ```
 pub fn unicode_normalize_variants(input: &str) -> String {
