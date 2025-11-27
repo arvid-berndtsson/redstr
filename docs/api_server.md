@@ -86,7 +86,7 @@ Get server information and available endpoints.
 ```json
 {
   "service": "redstr-server",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "endpoints": ["/transform", "/batch", "/functions", "/health", "/version"]
 }
 ```
@@ -190,8 +190,8 @@ Get detailed version information.
 ```json
 {
   "service": "redstr-server",
-  "version": "0.2.0",
-  "redstr_version": "0.2.0"
+  "version": "0.2.3",
+  "redstr_version": "0.2.3"
 }
 ```
 
