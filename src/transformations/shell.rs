@@ -407,7 +407,12 @@ mod tests {
         assert!(result.len() > 0);
         // Path should be obfuscated but still contain some original elements (case-insensitive)
         let lower = result.to_lowercase();
-        assert!(lower.contains("etc") || lower.contains("passwd") || result.contains("/") || result.contains("\\"));
+        assert!(
+            lower.contains("etc")
+                || lower.contains("passwd")
+                || result.contains("/")
+                || result.contains("\\")
+        );
     }
 
     #[test]
