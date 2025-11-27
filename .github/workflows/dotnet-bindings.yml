@@ -1,0 +1,145 @@
+name: .NET Bindings Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'bindings/dotnet/**'
+      - 'Cargo.toml'
+      - '.github/workflows/dotnet-bindings.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'bindings/dotnet/**'
+      - 'Cargo.toml'
+      - '.github/workflows/dotnet-bindings.yml'
+  release:
+    types: [created]
+
+jobs:
+  build-native:
+    name: Build Native Library - ${{ matrix.config.os }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          - os: ubuntu-latest
+            rid: linux-x64
+            ext: so
+            prefix: lib
+          - os: windows-latest
+            rid: win-x64
+            ext: dll
+            prefix: ""
+          - os: macos-13
+            rid: osx-x64
+            ext: dylib
+            prefix: lib
+          - os: macos-14
+            rid: osx-arm64
+            ext: dylib
+            prefix: lib
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Build native library
+        run: cargo build --release --features ffi
+
+      - name: Copy native library
+        shell: bash
+        run: |
+          mkdir -p bindings/dotnet/Redstr/runtimes/${{ matrix.config.rid }}/native
+          cp target/release/${{ matrix.config.prefix }}redstr.${{ matrix.config.ext }} \
+             bindings/dotnet/Redstr/runtimes/${{ matrix.config.rid }}/native/redstr.${{ matrix.config.ext }}
+
+      - name: Upload native library artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-${{ matrix.config.rid }}
+          path: bindings/dotnet/Redstr/runtimes/${{ matrix.config.rid }}/native/*
+
+  build-nuget:
+    name: Build NuGet Package
+    needs: build-native
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Download all native libraries
+        uses: actions/download-artifact@v4
+        with:
+          path: bindings/dotnet/Redstr/runtimes/
+
+      - name: Reorganize native libraries
+        run: |
+          cd bindings/dotnet/Redstr/runtimes
+          for dir in native-*; do
+            rid="${dir#native-}"
+            mkdir -p "$rid/native"
+            mv "$dir"/* "$rid/native/"
+            rmdir "$dir"
+          done
+
+      - name: Build .NET library
+        run: |
+          cd bindings/dotnet/Redstr
+          dotnet build -c Release
+
+      - name: Run .NET tests (if any)
+        run: |
+          cd bindings/dotnet/Redstr
+          dotnet test -c Release --no-build || echo "No tests found"
+
+      - name: Create NuGet package
+        run: |
+          cd bindings/dotnet/Redstr
+          dotnet pack -c Release --no-build -o ./artifacts
+
+      - name: Upload NuGet package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: bindings/dotnet/Redstr/artifacts/*.nupkg
+
+  publish-nuget:
+    name: Publish to NuGet
+    needs: build-nuget
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    
+    steps:
+      - name: Download NuGet package
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-package
+          path: ./packages
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish to NuGet
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          dotnet nuget push ./packages/*.nupkg \
+            --api-key $NUGET_API_KEY \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
