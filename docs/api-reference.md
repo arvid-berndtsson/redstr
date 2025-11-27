@@ -477,13 +477,13 @@ let result = ssti_injection(template);
 ### ssti_framework_variation
 Framework-specific SSTI variations (Jinja2, Twig, etc.).
 
-**Signature:** `fn ssti_framework_variation(input: &str) -> String`
+**Signature:** `fn ssti_framework_variation(template: &str, framework: &str) -> String`
 
 **Example:**
 ```rust
 use redstr::ssti_framework_variation;
 let payload = "{{7*7}}";
-let result = ssti_framework_variation(payload);
+let result = ssti_framework_variation(payload, "jinja2");
 ```
 
 ### ssti_syntax_obfuscate
