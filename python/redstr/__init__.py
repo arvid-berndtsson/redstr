@@ -111,6 +111,8 @@ from ._redstr import (
     PyTransformBuilder as TransformBuilder,
 )
 
+# NOTE: Version must be manually kept in sync with Cargo.toml and pyproject.toml
+# TODO: Automate version synchronization in build process
 __version__ = "0.2.3"
 
 __all__ = [

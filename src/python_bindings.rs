@@ -537,7 +537,7 @@ fn py_path_traversal(text: &str) -> String {
 /// Example:
 ///     >>> import redstr
 ///     >>> redstr.sql_comment_injection("SELECT * FROM users")
-///     'SELECT/**/\*/**/FROM/**/users'
+///     'SELECT/**/\\*/**/FROM/**/users'
 #[pyfunction]
 fn py_sql_comment_injection(text: &str) -> String {
     sql_comment_injection(text)
