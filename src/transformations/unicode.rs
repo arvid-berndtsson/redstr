@@ -18,15 +18,15 @@ use crate::rng::SimpleRng;
 ///
 /// ```
 /// use redstr::unicode_variations;
-/// 
+///
 /// let result = unicode_variations("admin");
 /// // Example output: "ädmïn" or "àdmîn" or "ádmįn" (varies each run)
 /// assert_eq!(result.chars().count(), 5);
-/// 
+///
 /// // Bypass keyword filters
 /// let word = unicode_variations("password");
 /// // Example: "pässwörd" or "pàsswôrd"
-/// 
+///
 /// // Test Unicode normalization
 /// let email = unicode_variations("user@example.com");
 /// // Example: "ûsér@ëxämplè.çöm"
@@ -72,15 +72,15 @@ pub fn unicode_variations(input: &str) -> String {
 ///
 /// ```
 /// use redstr::zalgo_text;
-/// 
+///
 /// let result = zalgo_text("test");
 /// // Example output: "t̃̂e̊̋s̈̃t̂̃" (with combining marks)
 /// assert!(result.len() > 4);
-/// 
+///
 /// // Create glitchy-looking text
 /// let username = zalgo_text("admin");
 /// // Output looks like: "a̅̆d̃m̂ĭn̈" (rendered with marks above/below)
-/// 
+///
 /// // Test display systems
 /// let message = zalgo_text("hello");
 /// // Creates visually corrupted text for testing
@@ -128,19 +128,19 @@ pub fn zalgo_text(input: &str) -> String {
 ///
 /// ```
 /// use redstr::homoglyph_substitution;
-/// 
+///
 /// let result = homoglyph_substitution("example");
 /// // Example output: "ехаmple" (Cyrillic е and а, Latin m,p,l)
 /// // Looks identical but uses different Unicode codepoints
-/// 
+///
 /// // Phishing domain generation
 /// let domain = homoglyph_substitution("paypal.com");
 /// // Example: "pаypаl.com" (Cyrillic а instead of Latin a)
-/// 
+///
 /// // Email spoofing test
 /// let email = homoglyph_substitution("admin@company.com");
 /// // Example: "аdmin@compаny.com" (Cyrillic characters)
-/// 
+///
 /// // Number lookalikes
 /// let pin = homoglyph_substitution("2021");
 /// // Example: "2О2l" (Letter O and l instead of 0 and 1)
@@ -190,16 +190,16 @@ pub fn homoglyph_substitution(input: &str) -> String {
 ///
 /// ```
 /// use redstr::space_variants;
-/// 
+///
 /// let result = space_variants("hello world");
 /// // Looks identical: "hello world"
 /// // But may contain U+00A0, U+2000, U+2001, etc. instead of U+0020
 /// assert_eq!(result.chars().filter(|c| c.is_whitespace()).count(), 1);
-/// 
+///
 /// // SQL injection with Unicode spaces
 /// let sql = space_variants("SELECT * FROM users");
 /// // Uses non-breaking spaces to bypass filters
-/// 
+///
 /// // Test whitespace normalization
 /// let text = space_variants("word1 word2 word3");
 /// // Visually identical but with mixed Unicode spaces
@@ -240,7 +240,7 @@ pub fn space_variants(input: &str) -> String {
 ///
 /// ```
 /// use redstr::unicode_normalize_variants;
-/// 
+///
 /// let result = unicode_normalize_variants("café");
 /// // May produce composed (café) or decomposed (cafe\u{0301}) forms
 /// assert!(result.len() >= 4);

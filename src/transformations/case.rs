@@ -16,11 +16,11 @@ use crate::rng::SimpleRng;
 ///
 /// ```
 /// use redstr::randomize_capitalization;
-/// 
+///
 /// let result = randomize_capitalization("hello world");
 /// // Example output: "HeLlO wOrLd" or "hElLo WoRLd" (varies each run)
 /// assert_eq!(result.len(), "hello world".len());
-/// 
+///
 /// // Numbers and symbols are preserved
 /// let result2 = randomize_capitalization("test123");
 /// assert!(result2.contains("123"));
@@ -63,10 +63,10 @@ pub fn randomize_capitalization(input: &str) -> String {
 ///
 /// ```
 /// use redstr::alternate_case;
-/// 
+///
 /// assert_eq!(alternate_case("hello"), "HeLlO");
 /// assert_eq!(alternate_case("hello world"), "HeLlO wOrLd");
-/// 
+///
 /// // Non-alphabetic characters are preserved but don't affect the pattern
 /// assert_eq!(alternate_case("a1b2c3"), "A1b2C3");
 /// ```
@@ -109,10 +109,10 @@ pub fn alternate_case(input: &str) -> String {
 ///
 /// ```
 /// use redstr::inverse_case;
-/// 
+///
 /// assert_eq!(inverse_case("Hello World"), "hELLO wORLD");
 /// assert_eq!(inverse_case("ABC123xyz"), "abc123XYZ");
-/// 
+///
 /// // All uppercase becomes all lowercase
 /// assert_eq!(inverse_case("SHOUTING"), "shouting");
 /// ```
@@ -152,12 +152,12 @@ pub fn inverse_case(input: &str) -> String {
 ///
 /// ```
 /// use redstr::case_swap;
-/// 
+///
 /// // SQL injection with case variations
 /// let result = case_swap("SELECT * FROM users");
 /// // Example output: "SeLeCt * FrOm users" or "sElEcT * fRoM users"
 /// assert_ne!(result, "SELECT * FROM users");
-/// 
+///
 /// // XSS payload obfuscation
 /// let xss = case_swap("<script>alert(1)</script>");
 /// // Example output: "<ScRiPt>alert(1)</ScRiPt>"
@@ -200,7 +200,7 @@ pub fn case_swap(input: &str) -> String {
 ///
 /// ```
 /// use redstr::to_camel_case;
-/// 
+///
 /// assert_eq!(to_camel_case("hello world"), "helloWorld");
 /// assert_eq!(to_camel_case("user_first_name"), "userFirstName");
 /// assert_eq!(to_camel_case("get-user-id"), "getUserId");
@@ -247,7 +247,7 @@ pub fn to_camel_case(input: &str) -> String {
 ///
 /// ```
 /// use redstr::to_snake_case;
-/// 
+///
 /// assert_eq!(to_snake_case("HelloWorld"), "hello_world");
 /// assert_eq!(to_snake_case("getUserId"), "get_user_id");
 /// assert_eq!(to_snake_case("API Response"), "api_response");
@@ -291,11 +291,11 @@ pub fn to_snake_case(input: &str) -> String {
 ///
 /// ```
 /// use redstr::to_kebab_case;
-/// 
+///
 /// assert_eq!(to_kebab_case("HelloWorld"), "hello-world");
 /// assert_eq!(to_kebab_case("user_profile_page"), "user-profile-page");
 /// assert_eq!(to_kebab_case("API Endpoint"), "api-endpoint");
-/// 
+///
 /// // Useful for URL slugs
 /// assert_eq!(to_kebab_case("My Blog Post Title"), "my-blog-post-title");
 /// ```

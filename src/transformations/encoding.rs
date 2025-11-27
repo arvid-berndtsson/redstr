@@ -17,11 +17,11 @@ use crate::rng::SimpleRng;
 ///
 /// ```
 /// use redstr::mixed_encoding;
-/// 
+///
 /// let result = mixed_encoding("test");
 /// // Example output: "t&#x65;&#115;\u{0074}" (varies each run)
 /// assert!(result.contains("&#") || result.contains("\\u"));
-/// 
+///
 /// // XSS payload with mixed encoding
 /// let xss = mixed_encoding("<script>");
 /// // Example: "&#x3c;s&#99;r\u{0069}pt&#x3e;"
@@ -58,14 +58,14 @@ pub fn mixed_encoding(input: &str) -> String {
 ///
 /// ```
 /// use redstr::base64_encode;
-/// 
+///
 /// assert_eq!(base64_encode("hello"), "aGVsbG8=");
 /// assert_eq!(base64_encode("test"), "dGVzdA==");
-/// 
+///
 /// // Obfuscate shell commands
 /// let cmd = base64_encode("rm -rf /tmp/*");
 /// assert_eq!(cmd, "cm0gLXJmIC90bXAvKg==");
-/// 
+///
 /// // Encode credentials
 /// let auth = base64_encode("username:password");
 /// // Use in Authorization: Basic header
@@ -73,7 +73,7 @@ pub fn mixed_encoding(input: &str) -> String {
 pub fn base64_encode(input: &str) -> String {
     const BASE64_CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     let bytes = input.as_bytes();
-    let capacity = ((bytes.len() + 2) / 3) * 4; // Base64 expands by ~33%
+    let capacity = bytes.len().div_ceil(3) * 4; // Base64 expands by ~33%
     let mut result = String::with_capacity(capacity);
 
     for chunk in bytes.chunks(3) {
@@ -121,14 +121,14 @@ pub fn base64_encode(input: &str) -> String {
 ///
 /// ```
 /// use redstr::url_encode;
-/// 
+///
 /// assert_eq!(url_encode("hello world"), "hello%20world");
 /// assert_eq!(url_encode("user@example.com"), "user%40example.com");
-/// 
+///
 /// // XSS payload encoding
 /// let xss = url_encode("<script>alert(1)</script>");
 /// // Output: "%3Cscript%3Ealert%281%29%3C%2Fscript%3E"
-/// 
+///
 /// // SQL injection encoding
 /// let sql = url_encode("' OR '1'='1");
 /// // Output: "%27%20OR%20%271%27%3D%271"
@@ -167,11 +167,11 @@ pub fn url_encode(input: &str) -> String {
 ///
 /// ```
 /// use redstr::hex_encode;
-/// 
+///
 /// assert_eq!(hex_encode("test"), "74657374");
 /// assert_eq!(hex_encode("AB"), "4142");
 /// assert_eq!(hex_encode("hello"), "68656c6c6f");
-/// 
+///
 /// // Encode shellcode
 /// let shellcode = vec![0x90, 0x90, 0xc3]; // NOP NOP RET
 /// // Would encode to: "9090c3"
@@ -201,11 +201,11 @@ pub fn hex_encode(input: &str) -> String {
 ///
 /// ```
 /// use redstr::hex_encode_mixed;
-/// 
+///
 /// let result = hex_encode_mixed("AB");
 /// // Example output: "\x41%42" or "0x41&#x42;" (varies each run)
 /// assert!(result.len() >= 2);
-/// 
+///
 /// // Mixed format payload obfuscation
 /// let payload = hex_encode_mixed("<script>");
 /// // Example: "\x3c%73&#x63;0x72\x69%70&#x74;\x3e"
@@ -241,14 +241,14 @@ pub fn hex_encode_mixed(input: &str) -> String {
 ///
 /// ```
 /// use redstr::html_entity_encode;
-/// 
+///
 /// let result = html_entity_encode("<script>");
 /// // Example: "&lt;&#115;&#x63;r&#105;pt&gt;" (varies each run)
-/// 
+///
 /// // XSS payload with entity encoding
 /// let xss = html_entity_encode("<img src=x onerror=alert(1)>");
 /// // Bypasses filters looking for literal "<" and ">"
-/// 
+///
 /// // Special character encoding
 /// let special = html_entity_encode("A&B<C>D");
 /// // Example: "A&amp;B&lt;C&gt;D"

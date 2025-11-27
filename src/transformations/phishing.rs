@@ -490,7 +490,13 @@ mod tests {
     fn test_url_shortening_pattern_contains_shortener() {
         let result = url_shortening_pattern("https://longurl.com/page");
         // Should contain one of the shorteners
-        assert!(result.contains("bit.ly") || result.contains("tinyurl.com") || result.contains("goo.gl") || result.contains("t.co") || result.contains("ow.ly"));
+        assert!(
+            result.contains("bit.ly")
+                || result.contains("tinyurl.com")
+                || result.contains("goo.gl")
+                || result.contains("t.co")
+                || result.contains("ow.ly")
+        );
     }
 
     #[test]

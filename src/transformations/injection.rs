@@ -95,16 +95,16 @@ pub fn xss_tag_variations(input: &str) -> String {
 ///
 /// ```
 /// use redstr::null_byte_injection;
-/// 
+///
 /// let result = null_byte_injection("test.txt");
 /// // Example: "test%00.txt" or "te\x00st.txt" (varies each run)
 /// assert!(result.len() >= "test.txt".len());
-/// 
+///
 /// // File extension bypass
 /// let file = null_byte_injection("shell.php.jpg");
 /// // Example: "shell.php%00.jpg"
 /// // May be interpreted as "shell.php" if system truncates at null
-/// 
+///
 /// // Path traversal with null byte
 /// let path = null_byte_injection("../../etc/passwd.txt");
 /// // Example: "../..%00/etc/passwd.txt"
@@ -146,15 +146,15 @@ pub fn null_byte_injection(input: &str) -> String {
 ///
 /// ```
 /// use redstr::path_traversal;
-/// 
+///
 /// let result = path_traversal("/etc/passwd");
 /// // Example: "../etc/../passwd" or "..%2fetc/passwd" (varies each run)
 /// assert!(result.contains("etc") && result.contains("passwd"));
-/// 
+///
 /// // Web application file access
 /// let file = path_traversal("uploads/file.txt");
 /// // Example: "uploads/../file.txt" or "..\\uploads/file.txt"
-/// 
+///
 /// // Nested traversal
 /// let deep = path_traversal("/var/www/html/index.php");
 /// // Example: "../var/../www/....//html/index.php"
@@ -199,16 +199,16 @@ pub fn path_traversal(input: &str) -> String {
 ///
 /// ```
 /// use redstr::command_injection;
-/// 
+///
 /// let result = command_injection("ping example.com");
 /// // Example: "ping;example.com" or "ping|example.com" (varies each run)
 /// assert!(result.contains("ping") && result.len() >= "ping example.com".len());
-/// 
+///
 /// // Chaining commands
 /// let cmd = command_injection("ls -la");
 /// // Example: "ls;-la" or "ls|-la"
 /// // Could execute: ls; cat /etc/passwd
-/// 
+///
 /// // Web application command injection
 /// let input = command_injection("192.168.1.1");
 /// // Example: "192.168.1.1;cat /etc/passwd"
@@ -989,7 +989,10 @@ mod nosql_ssti_tests {
         let template = "";
         let result = ssti_injection(template);
         // Empty input results in generic pattern injection ({{7*7}}, ${7*7}, etc.)
-        assert!(!result.is_empty() && (result.contains("{{") || result.contains("${") || result.contains("#{")));
+        assert!(
+            !result.is_empty()
+                && (result.contains("{{") || result.contains("${") || result.contains("#{"))
+        );
     }
 
     #[test]

@@ -239,13 +239,23 @@ mod tests {
     #[test]
     fn test_random_user_agent_realistic() {
         let ua = random_user_agent();
-        assert!(ua.contains("Chrome") || ua.contains("Firefox") || ua.contains("Safari") || ua.contains("Edge"));
+        assert!(
+            ua.contains("Chrome")
+                || ua.contains("Firefox")
+                || ua.contains("Safari")
+                || ua.contains("Edge")
+        );
     }
 
     #[test]
     fn test_random_user_agent_platform() {
         let ua = random_user_agent();
-        assert!(ua.contains("Windows") || ua.contains("Macintosh") || ua.contains("Linux") || ua.contains("Android"));
+        assert!(
+            ua.contains("Windows")
+                || ua.contains("Macintosh")
+                || ua.contains("Linux")
+                || ua.contains("Android")
+        );
     }
 
     #[test]
@@ -448,7 +458,10 @@ mod tests {
     #[test]
     fn test_cloudflare_challenge_variation_preserves_value() {
         let result = cloudflare_challenge_variation("cf_clearance=test123");
-        assert!(result.to_lowercase().contains("test123") || result.to_lowercase().contains("clearance"));
+        assert!(
+            result.to_lowercase().contains("test123")
+                || result.to_lowercase().contains("clearance")
+        );
     }
 
     #[test]
@@ -465,7 +478,8 @@ mod tests {
 
     #[test]
     fn test_cloudflare_challenge_variation_long_token() {
-        let result = cloudflare_challenge_variation("cf_clearance=verylongtokenvalue1234567890abcdef");
+        let result =
+            cloudflare_challenge_variation("cf_clearance=verylongtokenvalue1234567890abcdef");
         assert!(!result.is_empty());
     }
 

@@ -18,15 +18,15 @@ use crate::rng::SimpleRng;
 ///
 /// ```
 /// use redstr::leetspeak;
-/// 
+///
 /// let result = leetspeak("password");
 /// // Example output: "p@55w0rd" or "p4$$w0rd" (varies slightly)
 /// assert!(result.contains('0') || result.contains('5'));
-/// 
+///
 /// // Bypass simple content filters
 /// let blocked = leetspeak("blocked word");
 /// // Output: "81ock3d w0rd"
-/// 
+///
 /// // Obfuscate commands
 /// let cmd = leetspeak("select");
 /// // Output: "53l3c7" or "$e1ec7"
@@ -89,18 +89,18 @@ pub fn leetspeak(input: &str) -> String {
 ///
 /// ```
 /// use redstr::rot13;
-/// 
+///
 /// assert_eq!(rot13("Hello"), "Uryyb");
 /// assert_eq!(rot13("Uryyb"), "Hello"); // ROT13 is reversible
-/// 
+///
 /// // Obfuscate email addresses
 /// let email = rot13("user@example.com");
 /// assert_eq!(email, "hfre@rknzcyr.pbz");
-/// 
+///
 /// // Hide spoilers
 /// let spoiler = rot13("The butler did it!");
 /// assert_eq!(spoiler, "Gur ohgyre qvq vg!");
-/// 
+///
 /// // Applies to alphabetic characters only
 /// assert_eq!(rot13("test123!"), "grfg123!");
 /// ```
@@ -141,15 +141,15 @@ pub fn rot13(input: &str) -> String {
 ///
 /// ```
 /// use redstr::vowel_swap;
-/// 
+///
 /// let result = vowel_swap("hello");
 /// // Example output: "hillo" or "hallo" or "hollo" (varies each run)
 /// assert_eq!(result.len(), 5);
-/// 
+///
 /// // Bypass keyword filters
 /// let word = vowel_swap("password");
 /// // Example: "passwurd" or "passwird" or "pessword"
-/// 
+///
 /// // Case is preserved
 /// let upper = vowel_swap("TEST");
 /// // Example: "TOST" or "TIST" (still uppercase)
@@ -193,15 +193,15 @@ pub fn vowel_swap(input: &str) -> String {
 ///
 /// ```
 /// use redstr::double_characters;
-/// 
+///
 /// let result = double_characters("test");
 /// // Example output: "teesst" or "ttest" or "tesst" (varies each run)
 /// assert!(result.len() >= 4);
-/// 
+///
 /// // Test input validation
 /// let username = double_characters("admin");
 /// // Example: "aadmiin" or "addmin" or "admmin"
-/// 
+///
 /// // Numbers are preserved
 /// let mixed = double_characters("test123");
 /// // Example: "ttesst123" (numbers unchanged)
@@ -238,14 +238,14 @@ pub fn double_characters(input: &str) -> String {
 ///
 /// ```
 /// use redstr::reverse_string;
-/// 
+///
 /// assert_eq!(reverse_string("hello"), "olleh");
 /// assert_eq!(reverse_string("test123"), "321tset");
-/// 
+///
 /// // Reversing twice returns the original
 /// let text = "example";
 /// assert_eq!(reverse_string(&reverse_string(text)), text);
-/// 
+///
 /// // Works with Unicode
 /// assert_eq!(reverse_string("café"), "éfac");
 /// ```
@@ -270,15 +270,15 @@ pub fn reverse_string(input: &str) -> String {
 ///
 /// ```
 /// use redstr::whitespace_padding;
-/// 
+///
 /// let result = whitespace_padding("test");
 /// // Example output: "t e s  t" or "te s t" or "t  e st" (varies each run)
 /// assert!(result.len() >= 4);
-/// 
+///
 /// // SQL injection with whitespace
 /// let sql = whitespace_padding("SELECT * FROM users");
 /// // Example: "S E L E C T  *  F R O M   u s e r s"
-/// 
+///
 /// // XSS payload with whitespace
 /// let xss = whitespace_padding("<script>alert(1)</script>");
 /// // Example: "< s c r i p t > a l e r t ( 1 ) < / s c r i p t >"
@@ -318,16 +318,16 @@ pub fn whitespace_padding(input: &str) -> String {
 ///
 /// ```
 /// use redstr::js_string_concat;
-/// 
+///
 /// let result = js_string_concat("alert");
 /// // Example output: "'al'+'er'+'t'" or "'ale'+'rt'" (varies each run)
 /// assert!(result.contains("+") || result.len() >= 5);
-/// 
+///
 /// // Obfuscate XSS payload
 /// let xss = js_string_concat("alert(1)");
 /// // Example: "'ale'+'rt('+'1)'"
 /// // Usage: eval("'ale'+'rt('+'1)'") === "alert(1)"
-/// 
+///
 /// // Bypass static analysis
 /// let cmd = js_string_concat("document.cookie");
 /// // Example: "'doc'+'umen'+'t.co'+'okie'"
