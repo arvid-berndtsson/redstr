@@ -1,0 +1,75 @@
+{
+  "name": "@redstr/core",
+  "version": "0.2.3",
+  "description": "Red team string transformation library for offensive security operations - Node.js bindings",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "keywords": [
+    "red-team",
+    "security",
+    "obfuscation",
+    "waf-bypass",
+    "evasion",
+    "penetration-testing",
+    "napi-rs",
+    "rust"
+  ],
+  "license": "MIT",
+  "author": "Arvid Berndtsson <dev@arvid.tech>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arvid-berndtsson/redstr.git",
+    "directory": "npm"
+  },
+  "homepage": "https://github.com/arvid-berndtsson/redstr#readme",
+  "bugs": {
+    "url": "https://github.com/arvid-berndtsson/redstr/issues"
+  },
+  "napi": {
+    "name": "redstr",
+    "triples": {
+      "defaults": true,
+      "additional": [
+        "x86_64-unknown-linux-musl",
+        "aarch64-unknown-linux-gnu",
+        "armv7-unknown-linux-gnueabihf",
+        "aarch64-apple-darwin",
+        "aarch64-pc-windows-msvc"
+      ]
+    }
+  },
+  "engines": {
+    "node": ">= 10"
+  },
+  "scripts": {
+    "artifacts": "napi artifacts",
+    "build": "napi build --platform --release",
+    "build:debug": "napi build --platform",
+    "prepublishOnly": "napi prepublish -t npm",
+    "test": "ava",
+    "universal": "napi universal",
+    "version": "napi version"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^2.18.0",
+    "ava": "^6.0.0"
+  },
+  "optionalDependencies": {
+    "@redstr/core-darwin-x64": "0.2.3",
+    "@redstr/core-darwin-arm64": "0.2.3",
+    "@redstr/core-linux-x64-gnu": "0.2.3",
+    "@redstr/core-linux-x64-musl": "0.2.3",
+    "@redstr/core-linux-arm64-gnu": "0.2.3",
+    "@redstr/core-linux-arm-gnueabihf": "0.2.3",
+    "@redstr/core-win32-x64-msvc": "0.2.3",
+    "@redstr/core-win32-ia32-msvc": "0.2.3",
+    "@redstr/core-win32-arm64-msvc": "0.2.3"
+  },
+  "ava": {
+    "timeout": "3m"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
