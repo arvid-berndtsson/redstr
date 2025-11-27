@@ -2,14 +2,28 @@ use crate::rng::SimpleRng;
 
 /// Applies random capitalization to each letter in the input string.
 ///
-/// Non-alphabetic characters are preserved unchanged.
+/// Each alphabetic character has a 50% chance of being uppercase or lowercase,
+/// creating unpredictable case patterns. Non-alphabetic characters (numbers,
+/// spaces, punctuation) are preserved unchanged.
+///
+/// # Use Cases
+///
+/// - **Red Team**: Bypass case-sensitive filters and detection systems
+/// - **Blue Team**: Test case-insensitive input validation
+/// - **General**: Create visually distinctive text for testing purposes
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::randomize_capitalization;
-/// let result = randomize_capitalization("hello");
-/// assert_eq!(result.len(), 5);
+/// 
+/// let result = randomize_capitalization("hello world");
+/// // Example output: "HeLlO wOrLd" or "hElLo WoRLd" (varies each run)
+/// assert_eq!(result.len(), "hello world".len());
+/// 
+/// // Numbers and symbols are preserved
+/// let result2 = randomize_capitalization("test123");
+/// assert!(result2.contains("123"));
 /// ```
 pub fn randomize_capitalization(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -35,11 +49,26 @@ pub fn randomize_capitalization(input: &str) -> String {
 
 /// Alternates between uppercase and lowercase for each alphabetic character.
 ///
+/// Creates a predictable pattern starting with uppercase, then lowercase, and
+/// repeating for each letter. Non-alphabetic characters don't affect the pattern.
+/// This is also known as "spongebob case" or "mocking case".
+///
+/// # Use Cases
+///
+/// - **Testing**: Verify case-insensitive string comparisons
+/// - **Visual**: Create distinctive formatting for emphasis or mockery
+/// - **Red Team**: Test filter bypass with alternating patterns
+///
 /// # Examples
 ///
 /// ```
 /// use redstr::alternate_case;
+/// 
 /// assert_eq!(alternate_case("hello"), "HeLlO");
+/// assert_eq!(alternate_case("hello world"), "HeLlO wOrLd");
+/// 
+/// // Non-alphabetic characters are preserved but don't affect the pattern
+/// assert_eq!(alternate_case("a1b2c3"), "A1b2C3");
 /// ```
 pub fn alternate_case(input: &str) -> String {
     let mut upper = true;
@@ -66,11 +95,26 @@ pub fn alternate_case(input: &str) -> String {
 
 /// Inverts the case of all alphabetic characters.
 ///
+/// Converts uppercase letters to lowercase and lowercase letters to uppercase.
+/// Non-alphabetic characters remain unchanged. This is useful for testing
+/// case sensitivity and creating inverted text patterns.
+///
+/// # Use Cases
+///
+/// - **Testing**: Verify case transformation logic
+/// - **Red Team**: Test case-sensitive filter evasion
+/// - **Data Processing**: Normalize or transform text data
+///
 /// # Examples
 ///
 /// ```
 /// use redstr::inverse_case;
+/// 
 /// assert_eq!(inverse_case("Hello World"), "hELLO wORLD");
+/// assert_eq!(inverse_case("ABC123xyz"), "abc123XYZ");
+/// 
+/// // All uppercase becomes all lowercase
+/// assert_eq!(inverse_case("SHOUTING"), "shouting");
 /// ```
 pub fn inverse_case(input: &str) -> String {
     let mut result = String::with_capacity(input.len() * 2);
@@ -93,14 +137,30 @@ pub fn inverse_case(input: &str) -> String {
 
 /// Swaps case randomly for WAF and filter bypass testing.
 ///
-/// Useful for red team filter evasion and blue team case-sensitivity testing.
+/// Each alphabetic character has a 50% chance of having its case inverted.
+/// This creates unpredictable case patterns while maintaining readability,
+/// making it ideal for evading case-sensitive security filters.
+///
+/// # Use Cases
+///
+/// - **Red Team**: Bypass WAF rules that look for specific case patterns
+/// - **SQL Injection**: Evade detection with queries like `SeLeCt * FrOm users`
+/// - **XSS Testing**: Bypass filters with `<ScRiPt>alert(1)</ScRiPt>`
+/// - **Blue Team**: Test if security controls properly normalize case
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::case_swap;
-/// let result = case_swap("SELECT");
-/// assert_ne!(result, "SELECT");
+/// 
+/// // SQL injection with case variations
+/// let result = case_swap("SELECT * FROM users");
+/// // Example output: "SeLeCt * FrOm users" or "sElEcT * fRoM users"
+/// assert_ne!(result, "SELECT * FROM users");
+/// 
+/// // XSS payload obfuscation
+/// let xss = case_swap("<script>alert(1)</script>");
+/// // Example output: "<ScRiPt>alert(1)</ScRiPt>"
 /// ```
 pub fn case_swap(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -126,11 +186,25 @@ pub fn case_swap(input: &str) -> String {
 
 /// Converts a string to camelCase.
 ///
+/// Transforms input into camelCase format where the first word is lowercase
+/// and subsequent words have their first letter capitalized, with all spaces,
+/// hyphens, and underscores removed.
+///
+/// # Use Cases
+///
+/// - **API Development**: Convert field names to JavaScript/Java conventions
+/// - **Code Generation**: Transform human-readable names to variable names
+/// - **Data Transformation**: Normalize naming conventions across systems
+///
 /// # Examples
 ///
 /// ```
 /// use redstr::to_camel_case;
+/// 
 /// assert_eq!(to_camel_case("hello world"), "helloWorld");
+/// assert_eq!(to_camel_case("user_first_name"), "userFirstName");
+/// assert_eq!(to_camel_case("get-user-id"), "getUserId");
+/// assert_eq!(to_camel_case("API Response Code"), "apiResponseCode");
 /// ```
 pub fn to_camel_case(input: &str) -> String {
     let mut result = String::new();
@@ -159,11 +233,25 @@ pub fn to_camel_case(input: &str) -> String {
 
 /// Converts a string to snake_case.
 ///
+/// Transforms input into snake_case format where all letters are lowercase
+/// and words are separated by underscores. Converts from camelCase, PascalCase,
+/// kebab-case, or space-separated formats.
+///
+/// # Use Cases
+///
+/// - **Database Schema**: Convert field names to SQL column conventions
+/// - **Python/Ruby**: Transform names to language naming conventions
+/// - **Configuration Files**: Normalize setting names
+///
 /// # Examples
 ///
 /// ```
 /// use redstr::to_snake_case;
+/// 
 /// assert_eq!(to_snake_case("HelloWorld"), "hello_world");
+/// assert_eq!(to_snake_case("getUserId"), "get_user_id");
+/// assert_eq!(to_snake_case("API Response"), "api_response");
+/// assert_eq!(to_snake_case("user-first-name"), "user_first_name");
 /// ```
 pub fn to_snake_case(input: &str) -> String {
     let mut result = String::new();
@@ -189,11 +277,27 @@ pub fn to_snake_case(input: &str) -> String {
 
 /// Converts a string to kebab-case.
 ///
+/// Transforms input into kebab-case (also called dash-case or lisp-case)
+/// where all letters are lowercase and words are separated by hyphens.
+/// Commonly used in URLs, CSS class names, and HTML attributes.
+///
+/// # Use Cases
+///
+/// - **URLs**: Create SEO-friendly URL slugs
+/// - **CSS/HTML**: Convert to standard class name format
+/// - **Command-line**: Transform to CLI flag conventions
+///
 /// # Examples
 ///
 /// ```
 /// use redstr::to_kebab_case;
+/// 
 /// assert_eq!(to_kebab_case("HelloWorld"), "hello-world");
+/// assert_eq!(to_kebab_case("user_profile_page"), "user-profile-page");
+/// assert_eq!(to_kebab_case("API Endpoint"), "api-endpoint");
+/// 
+/// // Useful for URL slugs
+/// assert_eq!(to_kebab_case("My Blog Post Title"), "my-blog-post-title");
 /// ```
 pub fn to_kebab_case(input: &str) -> String {
     to_snake_case(input).replace('_', "-")

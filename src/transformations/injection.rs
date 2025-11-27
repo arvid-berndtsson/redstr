@@ -79,16 +79,35 @@ pub fn xss_tag_variations(input: &str) -> String {
 
 /// Inserts null byte representations for testing null byte vulnerabilities.
 ///
-/// Useful for red team exploitation and blue team null byte handling testing.
-/// Uses string representations of null bytes, not actual null bytes.
+/// Randomly inserts null byte string representations (`%00`, `\0`, `\x00`, `&#00;`)
+/// between characters with 25% probability. Uses string representations rather than
+/// actual null bytes to ensure the output remains a valid Rust string. This tests
+/// how systems handle null byte injection attacks.
+///
+/// # Use Cases
+///
+/// - **Red Team**: Exploit null byte vulnerabilities in file operations
+/// - **Path Truncation**: Test if systems truncate at null bytes (`file.txt%00.jpg`)
+/// - **Filter Bypass**: Bypass extension or content-type validation
+/// - **Blue Team**: Validate proper null byte handling and sanitization
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::null_byte_injection;
+/// 
 /// let result = null_byte_injection("test.txt");
-/// // Result should be at least as long and preserve first/last characters
+/// // Example: "test%00.txt" or "te\x00st.txt" (varies each run)
 /// assert!(result.len() >= "test.txt".len());
+/// 
+/// // File extension bypass
+/// let file = null_byte_injection("shell.php.jpg");
+/// // Example: "shell.php%00.jpg"
+/// // May be interpreted as "shell.php" if system truncates at null
+/// 
+/// // Path traversal with null byte
+/// let path = null_byte_injection("../../etc/passwd.txt");
+/// // Example: "../..%00/etc/passwd.txt"
 /// ```
 pub fn null_byte_injection(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -111,15 +130,34 @@ pub fn null_byte_injection(input: &str) -> String {
 
 /// Generates path traversal patterns for directory traversal testing.
 ///
-/// Useful for red team path traversal testing and blue team path validation.
+/// Randomly replaces forward slashes with path traversal sequences like `../`,
+/// `..\`, `....//`, or URL-encoded variants (`%2e%2e/`). This creates payloads
+/// to test directory traversal vulnerabilities where attackers try to access
+/// files outside the intended directory.
+///
+/// # Use Cases
+///
+/// - **Red Team**: Test for directory traversal vulnerabilities
+/// - **LFI/RFI Testing**: Local/Remote File Inclusion attack payloads
+/// - **Path Validation**: Test if systems properly sanitize paths
+/// - **Blue Team**: Validate path traversal prevention mechanisms
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::path_traversal;
+/// 
 /// let result = path_traversal("/etc/passwd");
-/// // Result may contain path traversal patterns
+/// // Example: "../etc/../passwd" or "..%2fetc/passwd" (varies each run)
 /// assert!(result.contains("etc") && result.contains("passwd"));
+/// 
+/// // Web application file access
+/// let file = path_traversal("uploads/file.txt");
+/// // Example: "uploads/../file.txt" or "..\\uploads/file.txt"
+/// 
+/// // Nested traversal
+/// let deep = path_traversal("/var/www/html/index.php");
+/// // Example: "../var/../www/....//html/index.php"
 /// ```
 pub fn path_traversal(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -145,15 +183,36 @@ pub fn path_traversal(input: &str) -> String {
 
 /// Generates command injection variations for OS command injection testing.
 ///
-/// Useful for red team command injection testing and blue team command validation.
+/// Randomly inserts OS command separators (`;`, `|`, `||`, `&&`, `&`, backticks, `$()`)
+/// between words with 33% probability. These separators can chain commands together,
+/// useful for testing command injection vulnerabilities where user input is passed
+/// to shell commands.
+///
+/// # Use Cases
+///
+/// - **Red Team**: Test OS command injection vulnerabilities
+/// - **Shell Injection**: Inject additional commands into system calls
+/// - **Input Validation**: Test if systems properly sanitize shell metacharacters
+/// - **Blue Team**: Validate command injection prevention
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::command_injection;
+/// 
 /// let result = command_injection("ping example.com");
-/// // Result may contain command separators between words
+/// // Example: "ping;example.com" or "ping|example.com" (varies each run)
 /// assert!(result.contains("ping") && result.len() >= "ping example.com".len());
+/// 
+/// // Chaining commands
+/// let cmd = command_injection("ls -la");
+/// // Example: "ls;-la" or "ls|-la"
+/// // Could execute: ls; cat /etc/passwd
+/// 
+/// // Web application command injection
+/// let input = command_injection("192.168.1.1");
+/// // Example: "192.168.1.1;cat /etc/passwd"
+/// // Tests: ping 192.168.1.1; cat /etc/passwd
 /// ```
 pub fn command_injection(input: &str) -> String {
     let mut rng = SimpleRng::new();

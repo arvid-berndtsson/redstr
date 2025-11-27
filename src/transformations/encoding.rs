@@ -2,14 +2,29 @@ use crate::rng::SimpleRng;
 
 /// Encodes characters using mixed encoding formats (HTML entities, Unicode escapes).
 ///
-/// Useful for testing encoding vulnerabilities and XSS.
+/// Randomly encodes each character using one of four formats: plain text,
+/// hexadecimal HTML entity (`&#x...;`), decimal HTML entity (`&#...;`),
+/// or Unicode escape (`\u{...}`). This mixed approach can bypass filters
+/// that only detect specific encoding formats.
+///
+/// # Use Cases
+///
+/// - **XSS Testing**: Bypass filters that don't handle all encoding formats
+/// - **Red Team**: Evade detection systems with mixed encoding
+/// - **Blue Team**: Test encoding normalization and parser robustness
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::mixed_encoding;
+/// 
 /// let result = mixed_encoding("test");
+/// // Example output: "t&#x65;&#115;\u{0074}" (varies each run)
 /// assert!(result.contains("&#") || result.contains("\\u"));
+/// 
+/// // XSS payload with mixed encoding
+/// let xss = mixed_encoding("<script>");
+/// // Example: "&#x3c;s&#99;r\u{0069}pt&#x3e;"
 /// ```
 pub fn mixed_encoding(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -28,14 +43,32 @@ pub fn mixed_encoding(input: &str) -> String {
 
 /// Encodes text to Base64.
 ///
-/// Useful for red team payload obfuscation and blue team testing of encoding detection.
+/// Converts input text to Base64 encoding using the standard RFC 4648 alphabet.
+/// This is a lossless encoding that increases the string length by approximately
+/// 33% and is commonly used for transmitting binary data or obfuscating payloads.
+///
+/// # Use Cases
+///
+/// - **Red Team**: Obfuscate command payloads to evade detection
+/// - **Data Transmission**: Safely encode binary data in text formats
+/// - **Blue Team**: Test if security systems properly decode Base64
+/// - **API Testing**: Encode credentials or tokens
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::base64_encode;
-/// let result = base64_encode("hello");
-/// assert_eq!(result, "aGVsbG8=");
+/// 
+/// assert_eq!(base64_encode("hello"), "aGVsbG8=");
+/// assert_eq!(base64_encode("test"), "dGVzdA==");
+/// 
+/// // Obfuscate shell commands
+/// let cmd = base64_encode("rm -rf /tmp/*");
+/// assert_eq!(cmd, "cm0gLXJmIC90bXAvKg==");
+/// 
+/// // Encode credentials
+/// let auth = base64_encode("username:password");
+/// // Use in Authorization: Basic header
 /// ```
 pub fn base64_encode(input: &str) -> String {
     const BASE64_CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -71,17 +104,34 @@ pub fn base64_encode(input: &str) -> String {
     result
 }
 
-/// Encodes text with URL/percent encoding.
+/// Encodes text with URL/percent encoding (RFC 3986).
 ///
-/// Useful for red team web security testing and blue team input validation testing.
-/// Properly encodes multi-byte UTF-8 characters.
+/// Converts characters to percent-encoded format (`%XX`) where unreserved
+/// characters (A-Z, a-z, 0-9, `-`, `_`, `.`, `~`) remain unchanged. Properly
+/// handles multi-byte UTF-8 characters by encoding each byte separately.
+///
+/// # Use Cases
+///
+/// - **URL Construction**: Safely encode query parameters and path segments
+/// - **Red Team**: Bypass input filters with encoded payloads
+/// - **API Testing**: Encode special characters in HTTP requests
+/// - **Blue Team**: Test URL parser and decoder implementations
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::url_encode;
-/// let result = url_encode("hello world");
-/// assert!(result.contains("%20"));
+/// 
+/// assert_eq!(url_encode("hello world"), "hello%20world");
+/// assert_eq!(url_encode("user@example.com"), "user%40example.com");
+/// 
+/// // XSS payload encoding
+/// let xss = url_encode("<script>alert(1)</script>");
+/// // Output: "%3Cscript%3Ealert%281%29%3C%2Fscript%3E"
+/// 
+/// // SQL injection encoding
+/// let sql = url_encode("' OR '1'='1");
+/// // Output: "%27%20OR%20%271%27%3D%271"
 /// ```
 pub fn url_encode(input: &str) -> String {
     let mut result = String::with_capacity(input.len() * 3); // URL encoding can triple size
@@ -102,15 +152,29 @@ pub fn url_encode(input: &str) -> String {
 
 /// Encodes text to hexadecimal representation (lowercase).
 ///
-/// Useful for red team payload encoding and blue team encoding detection.
-/// Uses lowercase hex digits which is the most common format.
+/// Converts each byte to a two-character lowercase hexadecimal string.
+/// The output contains only characters 0-9 and a-f. This is a common
+/// encoding format for binary data and raw byte representations.
+///
+/// # Use Cases
+///
+/// - **Binary Data**: Display binary content as readable hex
+/// - **Debugging**: View exact byte values in strings
+/// - **Red Team**: Encode shellcode or binary payloads
+/// - **Cryptography**: Display hash values and signatures
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::hex_encode;
-/// let result = hex_encode("test");
-/// assert_eq!(result, "74657374");
+/// 
+/// assert_eq!(hex_encode("test"), "74657374");
+/// assert_eq!(hex_encode("AB"), "4142");
+/// assert_eq!(hex_encode("hello"), "68656c6c6f");
+/// 
+/// // Encode shellcode
+/// let shellcode = vec![0x90, 0x90, 0xc3]; // NOP NOP RET
+/// // Would encode to: "9090c3"
 /// ```
 pub fn hex_encode(input: &str) -> String {
     input.bytes().fold(String::new(), |mut acc, b| {
@@ -120,16 +184,31 @@ pub fn hex_encode(input: &str) -> String {
     })
 }
 
-/// Encodes text with mixed hexadecimal formats (0x, \x, %, etc.).
+/// Encodes text with mixed hexadecimal formats (0x, \x, %, &#x).
 ///
-/// Useful for red team obfuscation and blue team detection testing.
+/// Randomly encodes each byte using one of four hex formats: C-style escape
+/// (`\x`), URL encoding (`%`), hex literal (`0x`), or HTML entity (`&#x;`).
+/// This format mixing can evade detection systems that pattern-match specific
+/// encoding styles.
+///
+/// # Use Cases
+///
+/// - **Red Team**: Bypass detection with varied encoding formats
+/// - **XSS/SQLi Testing**: Evade filters that only recognize one format
+/// - **Blue Team**: Test encoder/decoder robustness across formats
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::hex_encode_mixed;
-/// let result = hex_encode_mixed("ab");
-/// assert!(result.contains("\\x") || result.contains("%") || result.contains("0x"));
+/// 
+/// let result = hex_encode_mixed("AB");
+/// // Example output: "\x41%42" or "0x41&#x42;" (varies each run)
+/// assert!(result.len() >= 2);
+/// 
+/// // Mixed format payload obfuscation
+/// let payload = hex_encode_mixed("<script>");
+/// // Example: "\x3c%73&#x63;0x72\x69%70&#x74;\x3e"
 /// ```
 pub fn hex_encode_mixed(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -147,14 +226,32 @@ pub fn hex_encode_mixed(input: &str) -> String {
 
 /// Encodes text using various HTML entity formats.
 ///
-/// Useful for XSS testing and HTML parser bypass techniques.
+/// Randomly encodes characters using plain text, decimal entities (`&#...;`),
+/// hexadecimal entities (`&#x...;`), or named entities (`&lt;`, `&gt;`, etc.).
+/// This mixed approach tests HTML parser robustness and can bypass filters.
+///
+/// # Use Cases
+///
+/// - **XSS Testing**: Bypass HTML sanitizers with entity encoding
+/// - **Red Team**: Evade WAF rules that look for literal characters
+/// - **Blue Team**: Test HTML entity decoder implementations
+/// - **Web Scraping**: Handle various entity encoding formats
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::html_entity_encode;
-/// let result = html_entity_encode("test");
-/// assert!(result.contains("&#") || result.contains("&"));
+/// 
+/// let result = html_entity_encode("<script>");
+/// // Example: "&lt;&#115;&#x63;r&#105;pt&gt;" (varies each run)
+/// 
+/// // XSS payload with entity encoding
+/// let xss = html_entity_encode("<img src=x onerror=alert(1)>");
+/// // Bypasses filters looking for literal "<" and ">"
+/// 
+/// // Special character encoding
+/// let special = html_entity_encode("A&B<C>D");
+/// // Example: "A&amp;B&lt;C&gt;D"
 /// ```
 pub fn html_entity_encode(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -467,7 +564,8 @@ mod tests {
     #[test]
     fn test_html_entity_encode_ampersand() {
         let result = html_entity_encode("&");
-        assert!(result.contains("amp") || result.contains("&#"));
+        // Can be plain "&", "&amp;", "&#38;", or "&#x26;"
+        assert!(result.contains("amp") || result.contains("&#") || result == "&");
     }
 
     #[test]

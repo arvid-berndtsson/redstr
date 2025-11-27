@@ -2,14 +2,34 @@ use crate::rng::SimpleRng;
 
 /// Converts text to leetspeak by replacing letters with similar-looking numbers/symbols.
 ///
-/// Useful for testing password filters and content detection systems.
+/// Transforms letters into visually similar numbers and symbols using common
+/// leetspeak (1337speak) substitutions: a→4/@, e→3, i→1/!, o→0, s→5/$, t→7,
+/// l→1, g→9, b→8. Some characters have random variations to create more natural
+/// leetspeak patterns.
+///
+/// # Use Cases
+///
+/// - **Red Team**: Bypass keyword filters that only match literal strings
+/// - **Blue Team**: Test password strength checkers and profanity filters
+/// - **Social Engineering**: Create obfuscated usernames or messages
+/// - **Content Detection**: Test how systems handle character substitution
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::leetspeak;
+/// 
 /// let result = leetspeak("password");
+/// // Example output: "p@55w0rd" or "p4$$w0rd" (varies slightly)
 /// assert!(result.contains('0') || result.contains('5'));
+/// 
+/// // Bypass simple content filters
+/// let blocked = leetspeak("blocked word");
+/// // Output: "81ock3d w0rd"
+/// 
+/// // Obfuscate commands
+/// let cmd = leetspeak("select");
+/// // Output: "53l3c7" or "$e1ec7"
 /// ```
 pub fn leetspeak(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -54,14 +74,35 @@ pub fn leetspeak(input: &str) -> String {
 /// Applies ROT13 cipher to the input.
 ///
 /// ROT13 is a simple letter substitution cipher that replaces each letter
-/// with the letter 13 positions after it in the alphabet.
+/// with the letter 13 positions after it in the alphabet. Since there are
+/// 26 letters, applying ROT13 twice returns the original text (it's self-inverse).
+/// Numbers and special characters remain unchanged.
+///
+/// # Use Cases
+///
+/// - **Simple Obfuscation**: Hide spoilers or answers in plain sight
+/// - **Email Protection**: Obfuscate email addresses from spam bots
+/// - **Red Team**: Basic payload obfuscation (weak, easily detected)
+/// - **Puzzles/CTF**: Classic cipher for encoding challenges
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::rot13;
+/// 
 /// assert_eq!(rot13("Hello"), "Uryyb");
 /// assert_eq!(rot13("Uryyb"), "Hello"); // ROT13 is reversible
+/// 
+/// // Obfuscate email addresses
+/// let email = rot13("user@example.com");
+/// assert_eq!(email, "hfre@rknzcyr.pbz");
+/// 
+/// // Hide spoilers
+/// let spoiler = rot13("The butler did it!");
+/// assert_eq!(spoiler, "Gur ohgyre qvq vg!");
+/// 
+/// // Applies to alphabetic characters only
+/// assert_eq!(rot13("test123!"), "grfg123!");
 /// ```
 pub fn rot13(input: &str) -> String {
     let mut result = String::with_capacity(input.len());
@@ -85,14 +126,33 @@ pub fn rot13(input: &str) -> String {
 
 /// Randomly swaps vowels with other vowels.
 ///
-/// Useful for testing pattern matching and content filters.
+/// Replaces each vowel (a, e, i, o, u) with a random vowel while preserving
+/// case. This creates pronounceable but altered text that can bypass pattern
+/// matching systems. Consonants and non-alphabetic characters remain unchanged.
+///
+/// # Use Cases
+///
+/// - **Red Team**: Bypass keyword filters while maintaining readability
+/// - **Blue Team**: Test fuzzy matching and phonetic detection systems
+/// - **Content Filters**: Evade exact string matching
+/// - **Password Testing**: Create similar but different variations
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::vowel_swap;
+/// 
 /// let result = vowel_swap("hello");
+/// // Example output: "hillo" or "hallo" or "hollo" (varies each run)
 /// assert_eq!(result.len(), 5);
+/// 
+/// // Bypass keyword filters
+/// let word = vowel_swap("password");
+/// // Example: "passwurd" or "passwird" or "pessword"
+/// 
+/// // Case is preserved
+/// let upper = vowel_swap("TEST");
+/// // Example: "TOST" or "TIST" (still uppercase)
 /// ```
 pub fn vowel_swap(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -118,14 +178,33 @@ pub fn vowel_swap(input: &str) -> String {
 
 /// Randomly doubles some characters in the string.
 ///
-/// Useful for testing input validation and normalization.
+/// Each alphabetic character has approximately a 33% chance of being doubled.
+/// This creates visually distinct text that tests input normalization and
+/// character repetition handling. Non-alphabetic characters are not doubled.
+///
+/// # Use Cases
+///
+/// - **Input Validation**: Test if systems properly handle repeated characters
+/// - **Blue Team**: Verify normalization and deduplication logic
+/// - **Red Team**: Bypass simple length or pattern checks
+/// - **Data Quality**: Test string comparison and matching algorithms
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::double_characters;
+/// 
 /// let result = double_characters("test");
+/// // Example output: "teesst" or "ttest" or "tesst" (varies each run)
 /// assert!(result.len() >= 4);
+/// 
+/// // Test input validation
+/// let username = double_characters("admin");
+/// // Example: "aadmiin" or "addmin" or "admmin"
+/// 
+/// // Numbers are preserved
+/// let mixed = double_characters("test123");
+/// // Example: "ttesst123" (numbers unchanged)
 /// ```
 pub fn double_characters(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -144,11 +223,31 @@ pub fn double_characters(input: &str) -> String {
 
 /// Reverses the input string.
 ///
+/// Reverses the order of all characters in the string. This is a simple
+/// transformation that can be used for basic obfuscation or testing
+/// palindrome detection. Works correctly with Unicode characters.
+///
+/// # Use Cases
+///
+/// - **Basic Obfuscation**: Simple reversible transformation
+/// - **Testing**: Verify string reversal implementations
+/// - **Palindromes**: Test palindrome detection logic
+/// - **Data Encoding**: Combine with other transformations for layered encoding
+///
 /// # Examples
 ///
 /// ```
 /// use redstr::reverse_string;
+/// 
 /// assert_eq!(reverse_string("hello"), "olleh");
+/// assert_eq!(reverse_string("test123"), "321tset");
+/// 
+/// // Reversing twice returns the original
+/// let text = "example";
+/// assert_eq!(reverse_string(&reverse_string(text)), text);
+/// 
+/// // Works with Unicode
+/// assert_eq!(reverse_string("café"), "éfac");
 /// ```
 pub fn reverse_string(input: &str) -> String {
     input.chars().rev().collect()
@@ -156,14 +255,33 @@ pub fn reverse_string(input: &str) -> String {
 
 /// Adds random whitespace padding to bypass simple filters.
 ///
-/// Useful for testing content filters and WAF bypass techniques.
+/// Inserts 1-3 spaces after random alphanumeric characters with approximately
+/// 33% probability. This breaks up words and patterns while maintaining
+/// readability, useful for evading filters that match exact strings.
+///
+/// # Use Cases
+///
+/// - **WAF Bypass**: Evade filters that match continuous patterns
+/// - **SQL Injection**: Add spaces to bypass detection (`SELECT * FROM` → `S E L E C T  *  F R O M`)
+/// - **XSS Testing**: Break up script tags (`<script>` → `< s c r i p t >`)
+/// - **Blue Team**: Test whitespace normalization in parsers
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::whitespace_padding;
+/// 
 /// let result = whitespace_padding("test");
+/// // Example output: "t e s  t" or "te s t" or "t  e st" (varies each run)
 /// assert!(result.len() >= 4);
+/// 
+/// // SQL injection with whitespace
+/// let sql = whitespace_padding("SELECT * FROM users");
+/// // Example: "S E L E C T  *  F R O M   u s e r s"
+/// 
+/// // XSS payload with whitespace
+/// let xss = whitespace_padding("<script>alert(1)</script>");
+/// // Example: "< s c r i p t > a l e r t ( 1 ) < / s c r i p t >"
 /// ```
 pub fn whitespace_padding(input: &str) -> String {
     let mut rng = SimpleRng::new();
@@ -184,14 +302,35 @@ pub fn whitespace_padding(input: &str) -> String {
 
 /// Applies JavaScript string concatenation obfuscation.
 ///
-/// Useful for testing JavaScript-based security filters and bot detection.
+/// Splits the string into 2-4 character chunks and joins them with JavaScript
+/// string concatenation operators (`+`). This creates valid JavaScript code
+/// that evaluates to the original string, useful for bypassing static analysis
+/// and pattern-matching security filters.
+///
+/// # Use Cases
+///
+/// - **XSS Testing**: Obfuscate JavaScript payloads to evade WAF
+/// - **Red Team**: Bypass JavaScript-based content filters
+/// - **Blue Team**: Test if security tools detect concatenated strings
+/// - **Bot Detection**: Test JavaScript parser implementations
 ///
 /// # Examples
 ///
 /// ```
 /// use redstr::js_string_concat;
+/// 
 /// let result = js_string_concat("alert");
+/// // Example output: "'al'+'er'+'t'" or "'ale'+'rt'" (varies each run)
 /// assert!(result.contains("+") || result.len() >= 5);
+/// 
+/// // Obfuscate XSS payload
+/// let xss = js_string_concat("alert(1)");
+/// // Example: "'ale'+'rt('+'1)'"
+/// // Usage: eval("'ale'+'rt('+'1)'") === "alert(1)"
+/// 
+/// // Bypass static analysis
+/// let cmd = js_string_concat("document.cookie");
+/// // Example: "'doc'+'umen'+'t.co'+'okie'"
 /// ```
 pub fn js_string_concat(input: &str) -> String {
     let mut rng = SimpleRng::new();

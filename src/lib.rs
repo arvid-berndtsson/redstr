@@ -7,32 +7,70 @@
 
 //! # redstr
 //!
-//! A versatile string obfuscation and transformation library for security testing.
-//! Useful for red team, blue team, and purple team activities.
+//! A comprehensive string obfuscation and transformation library for security testing,
+//! penetration testing, and red/blue/purple team operations.
+//!
+//! ## Overview
+//!
+//! `redstr` provides 60+ transformation functions organized into categories:
+//! - **Case Transformations**: Modify capitalization patterns for filter bypass
+//! - **Encoding**: Base64, URL encoding, hex encoding with various formats
+//! - **Unicode**: Homoglyphs, zalgo text, Unicode variations for IDN spoofing
+//! - **Injection Testing**: SQL, XSS, command injection, path traversal patterns
+//! - **Obfuscation**: Leetspeak, ROT13, character doubling, JavaScript obfuscation
+//! - **Phishing**: Domain typosquatting, email obfuscation, URL patterns
+//! - **Bot Detection**: User-agent strings, TLS fingerprinting, header variations
+//! - **Web Security**: JWT manipulation, GraphQL obfuscation, API endpoint testing
+//! - **Shell**: PowerShell and Bash command obfuscation
 //!
 //! ## Features
 //!
-//! - Zero dependencies - uses only Rust standard library
-//! - Multiple transformation modes for various security testing scenarios
-//! - Simple API for integration into security tools
+//! - **Zero Dependencies**: Uses only Rust standard library (optional serde support)
+//! - **Security-Focused**: Designed specifically for offensive and defensive security
+//! - **Production-Ready**: Well-tested with comprehensive test coverage
+//! - **Builder Pattern**: Chain multiple transformations with `TransformBuilder`
 //!
-//! ## Usage
+//! ## Quick Start
 //!
 //! ```rust
 //! use redstr::{randomize_capitalization, leetspeak, homoglyph_substitution};
 //!
-//! // Random capitalization
+//! // Random capitalization for filter bypass
 //! let result = randomize_capitalization("Hello World");
-//! println!("{}", result);
+//! // Output: "HeLlO wOrLd" (varies each run)
 //!
-//! // Leetspeak transformation
+//! // Leetspeak for content filter evasion
 //! let obfuscated = leetspeak("password");
-//! println!("{}", obfuscated);
+//! // Output: "p@55w0rd" or "p4$$w0rd"
 //!
 //! // Homoglyph substitution for phishing tests
 //! let spoofed = homoglyph_substitution("admin@example.com");
-//! println!("{}", spoofed);
+//! // Output: "аdmіn@еxаmple.com" (Cyrillic characters)
 //! ```
+//!
+//! ## Use Cases by Team
+//!
+//! ### Red Team / Offensive Security
+//! - WAF bypass with case variations and encoding
+//! - XSS payload obfuscation
+//! - SQL injection with comment insertion
+//! - Phishing domain generation
+//! - Command injection testing
+//!
+//! ### Blue Team / Defensive Security
+//! - Test security control effectiveness
+//! - Validate input sanitization
+//! - Test filter and detection systems
+//! - Verify Unicode handling
+//!
+//! ### Purple Team / Security Testing
+//! - Collaborative red/blue exercises
+//! - Security tool validation
+//! - Baseline security testing
+//!
+//! ## Transformation Categories
+//!
+//! See individual function documentation for detailed use cases and examples.
 
 mod builder;
 mod rng;
