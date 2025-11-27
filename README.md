@@ -56,6 +56,27 @@ redstr = "0.2.3"
 redstr = { version = "0.2.3", features = ["serde"] }
 ```
 
+### Python
+
+Install from source (PyPI package coming soon):
+
+```bash
+# Clone the repository
+git clone https://github.com/arvid-berndtsson/redstr
+cd redstr
+
+# Install maturin
+pip install maturin
+
+# Build and install
+maturin develop --features python --release
+
+# Or build wheel for distribution
+maturin build --features python --release
+```
+
+See [Python Usage Guide](docs/python_usage.md) for detailed documentation and examples.
+
 ### Other Languages & Platforms
 
 **API Server (Recommended for all languages)**:
@@ -71,7 +92,6 @@ See [API Server Documentation](docs/api_server.md) for usage examples in JavaScr
 **Coming Soon**:
 - 🔜 **Homebrew**: `brew install redstr` (macOS/Linux)
 - 🔜 **npm**: `npm install @redstr/core` (JavaScript/TypeScript)
-- 🔜 **PyPI**: `pip install redstr` (Python)
 - 🔜 **Go Module**: `go get github.com/arvid-berndtsson/redstr-go`
 - 🔜 **Raycast Extension**: Quick launcher integration
 

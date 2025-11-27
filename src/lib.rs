@@ -76,6 +76,10 @@ mod builder;
 mod rng;
 mod transformations;
 
+// Python bindings - only included when the python feature is enabled
+#[cfg(feature = "python")]
+mod python_bindings;
+
 // Re-export all public functions and types
 pub use builder::TransformBuilder;
 

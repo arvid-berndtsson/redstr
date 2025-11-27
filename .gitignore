@@ -24,3 +24,15 @@ target
 # Added by cargo
 
 /target
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.whl
