@@ -56,6 +56,23 @@ redstr = "0.2.3"
 redstr = { version = "0.2.3", features = ["serde"] }
 ```
 
+### C# / .NET
+
+```bash
+# Install via NuGet
+dotnet add package Redstr
+```
+
+```csharp
+using Redstr;
+
+var result = RedstrTransform.RandomizeCapitalization("Hello World");
+var obfuscated = RedstrTransform.Leetspeak("password");
+var spoofed = RedstrTransform.HomoglyphSubstitution("admin@example.com");
+```
+
+See [.NET Bindings Documentation](bindings/dotnet/README.md) for more details.
+
 ### Other Languages & Platforms
 
 **API Server (Recommended for all languages)**:

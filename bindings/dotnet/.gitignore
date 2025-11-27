@@ -1,0 +1,32 @@
+# Build outputs
+bin/
+obj/
+*.dll
+*.pdb
+*.exe
+
+# NuGet packages
+*.nupkg
+*.snupkg
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio cache/options
+.vs/
+*.vsidx
+*.vssscc
+
+# Rider
+.idea/
+*.sln.iml
+
+# Native libraries (except in runtimes/)
+*.so
+*.dylib
+!runtimes/**/*.so
+!runtimes/**/*.dylib
+!runtimes/**/*.dll

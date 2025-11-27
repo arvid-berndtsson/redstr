@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    
+    <!-- NuGet Package Metadata -->
+    <PackageId>Redstr</PackageId>
+    <Version>0.2.3</Version>
+    <Authors>Arvid Berndtsson</Authors>
+    <Company>Arvid Berndtsson</Company>
+    <Description>Red team string transformation library for offensive security operations, penetration testing, and evasion techniques. Provides 60+ string obfuscation and transformation functions for WAF bypass, XSS, SQL injection, phishing, and bot detection evasion.</Description>
+    <Copyright>Copyright (c) 2024 Arvid Berndtsson</Copyright>
+    <PackageProjectUrl>https://github.com/arvid-berndtsson/redstr</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/arvid-berndtsson/redstr</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>security;pentesting;red-team;obfuscation;waf-bypass;xss;sql-injection;phishing</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    
+    <!-- Runtime identifiers for native libraries -->
+    <RuntimeIdentifiers>win-x64;linux-x64;osx-x64;osx-arm64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <!-- Native libraries for different platforms -->
+    <None Include="runtimes/**/*.*" Pack="true" PackagePath="runtimes" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="runtimes/**/*.*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
