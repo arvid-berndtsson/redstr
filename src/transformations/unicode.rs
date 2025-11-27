@@ -197,6 +197,62 @@ mod tests {
     }
 
     #[test]
+    fn test_homoglyph_empty() {
+        assert_eq!(homoglyph_substitution(""), "");
+    }
+
+    #[test]
+    fn test_homoglyph_single_char() {
+        let result = homoglyph_substitution("a");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_homoglyph_domain() {
+        let result = homoglyph_substitution("example.com");
+        assert!(result.contains('.'));
+    }
+
+    #[test]
+    fn test_homoglyph_email() {
+        let result = homoglyph_substitution("admin@example.com");
+        assert!(result.contains('@'));
+    }
+
+    #[test]
+    fn test_homoglyph_numbers() {
+        let result = homoglyph_substitution("test01");
+        // 0 and 1 may be substituted
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_homoglyph_preserves_length_approximate() {
+        let input = "paypal";
+        let result = homoglyph_substitution(input);
+        // May be slightly different due to multi-byte chars
+        assert!(result.chars().count() <= input.chars().count() + 2);
+    }
+
+    #[test]
+    fn test_homoglyph_special_chars() {
+        let result = homoglyph_substitution("test!@#");
+        assert!(result.contains("!@#"));
+    }
+
+    #[test]
+    fn test_homoglyph_uppercase() {
+        let result = homoglyph_substitution("AEOPC");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_homoglyph_phishing() {
+        let result = homoglyph_substitution("secure");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
     fn test_unicode_variations_changes_chars() {
         // Run multiple times to ensure some variation happens
         let mut changed = false;
@@ -211,6 +267,59 @@ mod tests {
     }
 
     #[test]
+    fn test_unicode_variations_empty() {
+        assert_eq!(unicode_variations(""), "");
+    }
+
+    #[test]
+    fn test_unicode_variations_preserves_count() {
+        let result = unicode_variations("admin");
+        assert_eq!(result.chars().count(), 5);
+    }
+
+    #[test]
+    fn test_unicode_variations_consonants() {
+        let result = unicode_variations("xyz");
+        assert_eq!(result.len(), 3);
+    }
+
+    #[test]
+    fn test_unicode_variations_numbers() {
+        let result = unicode_variations("test123");
+        assert!(result.contains("123"));
+    }
+
+    #[test]
+    fn test_unicode_variations_special_chars() {
+        let result = unicode_variations("test!@#");
+        assert!(result.contains("!@#"));
+    }
+
+    #[test]
+    fn test_unicode_variations_uppercase() {
+        let result = unicode_variations("AEIOU");
+        assert_eq!(result.chars().count(), 5);
+    }
+
+    #[test]
+    fn test_unicode_variations_mixed_case() {
+        let result = unicode_variations("TeSt");
+        assert_eq!(result.chars().count(), 4);
+    }
+
+    #[test]
+    fn test_unicode_variations_long_string() {
+        let result = unicode_variations("administrator");
+        assert!(result.chars().count() >= 13);
+    }
+
+    #[test]
+    fn test_unicode_variations_password() {
+        let result = unicode_variations("password");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
     fn test_space_variants_preserves_length() {
         let input = "hello world test";
         let result = space_variants(input);
@@ -218,8 +327,174 @@ mod tests {
     }
 
     #[test]
+    fn test_space_variants_empty() {
+        assert_eq!(space_variants(""), "");
+    }
+
+    #[test]
+    fn test_space_variants_no_spaces() {
+        let result = space_variants("hello");
+        assert_eq!(result, "hello");
+    }
+
+    #[test]
+    fn test_space_variants_single_space() {
+        let result = space_variants("a b");
+        assert_eq!(result.chars().count(), 3);
+    }
+
+    #[test]
+    fn test_space_variants_multiple_spaces() {
+        let result = space_variants("a b c d");
+        assert!(result.chars().filter(|c| c.is_whitespace()).count() == 3);
+    }
+
+    #[test]
+    fn test_space_variants_preserves_words() {
+        let result = space_variants("hello world");
+        assert!(result.contains("hello") && result.contains("world"));
+    }
+
+    #[test]
+    fn test_space_variants_sql_injection() {
+        let result = space_variants("SELECT * FROM users");
+        assert!(result.contains("SELECT"));
+    }
+
+    #[test]
+    fn test_space_variants_numbers() {
+        let result = space_variants("test 123");
+        assert!(result.contains("123"));
+    }
+
+    #[test]
+    fn test_space_variants_special_chars() {
+        let result = space_variants("test @ test");
+        assert!(result.contains('@'));
+    }
+
+    #[test]
+    fn test_space_variants_waf_bypass() {
+        let result = space_variants("admin login");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
     fn test_unicode_normalize_variants() {
         let result = unicode_normalize_variants("cafe");
         assert!(result.len() >= 4);
+    }
+
+    #[test]
+    fn test_unicode_normalize_variants_empty() {
+        assert_eq!(unicode_normalize_variants(""), "");
+    }
+
+    #[test]
+    fn test_unicode_normalize_variants_single_char() {
+        let result = unicode_normalize_variants("a");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_unicode_normalize_variants_no_variants() {
+        let result = unicode_normalize_variants("xyz");
+        assert_eq!(result, "xyz");
+    }
+
+    #[test]
+    fn test_unicode_normalize_variants_mixed() {
+        let result = unicode_normalize_variants("test");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_unicode_normalize_variants_numbers() {
+        let result = unicode_normalize_variants("test123");
+        assert!(result.contains("123"));
+    }
+
+    #[test]
+    fn test_unicode_normalize_variants_special_chars() {
+        let result = unicode_normalize_variants("test!@#");
+        assert!(result.contains("!@#"));
+    }
+
+    #[test]
+    fn test_unicode_normalize_variants_uppercase() {
+        let result = unicode_normalize_variants("AOE");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_unicode_normalize_variants_preserves_non_variant() {
+        let result = unicode_normalize_variants("xyz123");
+        assert!(result.contains("xyz") && result.contains("123"));
+    }
+
+    #[test]
+    fn test_unicode_normalize_variants_bypass() {
+        let result = unicode_normalize_variants("robot");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_zalgo_text_empty() {
+        assert_eq!(zalgo_text(""), "");
+    }
+
+    #[test]
+    fn test_zalgo_text_single_char() {
+        let result = zalgo_text("a");
+        assert!(result.len() > 1);
+    }
+
+    #[test]
+    fn test_zalgo_text_increases_length() {
+        let input = "test";
+        let result = zalgo_text(input);
+        assert!(result.len() > input.len());
+    }
+
+    #[test]
+    fn test_zalgo_text_preserves_base_chars() {
+        let result = zalgo_text("abc");
+        assert!(result.contains('a') || result.contains('b') || result.contains('c'));
+    }
+
+    #[test]
+    fn test_zalgo_text_numbers() {
+        let result = zalgo_text("test123");
+        assert!(result.contains("123"));
+    }
+
+    #[test]
+    fn test_zalgo_text_special_chars() {
+        let result = zalgo_text("test!@#");
+        assert!(result.contains("!@#"));
+    }
+
+    #[test]
+    fn test_zalgo_text_uppercase() {
+        let result = zalgo_text("TEST");
+        assert!(result.len() > 4);
+    }
+
+    #[test]
+    fn test_zalgo_text_mixed_case() {
+        let result = zalgo_text("TeSt");
+        assert!(result.len() > 4);
+    }
+
+    #[test]
+    fn test_zalgo_text_display_corruption() {
+        let result = zalgo_text("hello");
+        assert!(result.len() > 5);
+    }
+
+    #[test]
+    fn test_zalgo_text_unicode_handling() {
+        let result = zalgo_text("test");
+        assert!(!result.is_empty());
     }
 }

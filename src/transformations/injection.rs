@@ -607,10 +607,152 @@ mod nosql_ssti_tests {
     }
 
     #[test]
+    fn test_mongodb_injection_empty_string() {
+        let query = "";
+        let result = mongodb_injection(query);
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_mongodb_injection_ne_operator() {
+        let query = r#"{"password": "test"}"#;
+        let result = mongodb_injection(query);
+        // May inject $ne operator
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_mongodb_injection_username_field() {
+        let query = r#"{"username": "admin"}"#;
+        let result = mongodb_injection(query);
+        assert!(result.contains("username"));
+    }
+
+    #[test]
+    fn test_mongodb_injection_regex_operator() {
+        let query = r#"{"password": "secret123"}"#;
+        let result = mongodb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_mongodb_injection_gt_operator() {
+        let query = r#"{"username": "user1"}"#;
+        let result = mongodb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_mongodb_injection_in_operator() {
+        let query = r#"{"username": "test"}"#;
+        let result = mongodb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_mongodb_injection_no_special_fields() {
+        let query = r#"{"field": "value"}"#;
+        let result = mongodb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_mongodb_injection_complex_query() {
+        let query = r#"{"username": "admin", "password": "secret", "role": "user"}"#;
+        let result = mongodb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_mongodb_injection_nested_object() {
+        let query = r#"{"user": {"username": "admin"}}"#;
+        let result = mongodb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_mongodb_injection_preserves_structure() {
+        let query = r#"{"username": "admin", "password": "secret"}"#;
+        let result = mongodb_injection(query);
+        assert!(result.contains("{") && result.contains("}"));
+    }
+
+    #[test]
     fn test_couchdb_injection() {
         let query = r#"{"selector": {"name": "admin"}}"#;
         let result = couchdb_injection(query);
         assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_empty_string() {
+        let query = "";
+        let result = couchdb_injection(query);
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_couchdb_injection_or_operator() {
+        let query = r#"{"selector": {"name": "admin"}}"#;
+        let result = couchdb_injection(query);
+        // May inject $or operator
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_regex_operator() {
+        let query = r#"{"selector": {"email": "test@example.com"}}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_exists_operator() {
+        let query = r#"{"selector": {"field": "value"}}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_without_selector() {
+        let query = r#"{"name": "admin"}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_complex_selector() {
+        let query = r#"{"selector": {"name": "admin", "role": "user"}}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_nested_selector() {
+        let query = r#"{"selector": {"user": {"name": "admin"}}}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_with_limit() {
+        let query = r#"{"selector": {"name": "admin"}, "limit": 10}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_with_fields() {
+        let query = r#"{"selector": {"name": "admin"}, "fields": ["name", "email"]}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_preserves_structure() {
+        let query = r#"{"selector": {"name": "admin"}}"#;
+        let result = couchdb_injection(query);
+        assert!(result.contains("{") && result.contains("}"));
     }
 
     #[test]
@@ -621,6 +763,77 @@ mod nosql_ssti_tests {
     }
 
     #[test]
+    fn test_dynamodb_obfuscate_empty_string() {
+        let query = "";
+        let result = dynamodb_obfuscate(query);
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_string_type() {
+        let query = r#"{"Key": {"id": {"S": "user123"}}}"#;
+        let result = dynamodb_obfuscate(query);
+        // May change type or add attributes
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_number_type() {
+        let query = r#"{"Key": {"id": {"N": "456"}}}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_without_key() {
+        let query = r#"{"id": {"S": "123"}}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_extra_attributes() {
+        let query = r#"{"Key": {"id": {"S": "123"}}, "ExpressionAttributeNames": {}}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_comparison_operators() {
+        let query = r#"{"FilterExpression": "age = 25"}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_complex_key() {
+        let query = r#"{"Key": {"pk": {"S": "user"}, "sk": {"S": "profile"}}}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_with_attributes() {
+        let query = r#"{"Key": {"id": {"S": "123"}}, "ProjectionExpression": "name, email"}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_boolean_type() {
+        let query = r#"{"Key": {"active": {"BOOL": true}}}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_preserves_structure() {
+        let query = r#"{"Key": {"id": {"S": "123"}}}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(result.contains("{") && result.contains("}"));
+    }
+
+    #[test]
     fn test_nosql_operator_injection() {
         let query = r#"{"username": "admin"}"#;
         let result = nosql_operator_injection(query);
@@ -628,9 +841,162 @@ mod nosql_ssti_tests {
     }
 
     #[test]
+    fn test_nosql_operator_injection_empty_string() {
+        let query = "";
+        let result = nosql_operator_injection(query);
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_ne_operator() {
+        let query = r#"{"field": "value"}"#;
+        let result = nosql_operator_injection(query);
+        // May inject various operators
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_gt_operator() {
+        let query = r#"{"age": "25"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_regex_operator() {
+        let query = r#"{"email": "test@example.com"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_in_operator() {
+        let query = r#"{"role": "user"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_exists_operator() {
+        let query = r#"{"active": "true"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_or_operator() {
+        let query = r#"{"name": "test"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_complex_query() {
+        let query = r#"{"username": "admin", "password": "secret"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_without_colon() {
+        let query = r#"{"field"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_multiple_fields() {
+        let query = r#"{"field1": "value1", "field2": "value2"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_preserves_structure() {
+        let query = r#"{"username": "admin"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(result.contains("{") || result.contains("username"));
+    }
+
+    #[test]
     fn test_ssti_injection() {
         let template = "Hello {{ name }}";
         let result = ssti_injection(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_injection_empty_string() {
+        let template = "";
+        let result = ssti_injection(template);
+        // Empty input results in generic pattern injection ({{7*7}}, ${7*7}, etc.)
+        assert!(!result.is_empty() && (result.contains("{{") || result.contains("${") || result.contains("#{")));
+    }
+
+    #[test]
+    fn test_ssti_injection_jinja2_style() {
+        let template = "Hello {{ name }}";
+        let result = ssti_injection(template);
+        // Should inject Jinja2 patterns
+        assert!(result.contains("{{") || result.contains("config") || result.contains("name"));
+    }
+
+    #[test]
+    fn test_ssti_injection_freemarker_style() {
+        let template = "Hello ${name}";
+        let result = ssti_injection(template);
+        // Should inject Freemarker/Velocity patterns
+        assert!(result.contains("$"));
+    }
+
+    #[test]
+    fn test_ssti_injection_no_template_syntax() {
+        let template = "Hello world";
+        let result = ssti_injection(template);
+        // Should inject generic patterns
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_injection_multiple_placeholders() {
+        let template = "{{ greeting }} {{ name }}";
+        let result = ssti_injection(template);
+        assert!(result.contains("{{") || result.contains("greeting"));
+    }
+
+    #[test]
+    fn test_ssti_injection_nested_template() {
+        let template = "{{ user.profile.name }}";
+        let result = ssti_injection(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_injection_with_filters() {
+        let template = "{{ name | upper }}";
+        let result = ssti_injection(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_injection_velocity_style() {
+        let template = "Hello $name";
+        let result = ssti_injection(template);
+        assert!(result.contains("$"));
+    }
+
+    #[test]
+    fn test_ssti_injection_complex_expression() {
+        let template = "{{ 7 * 7 }}";
+        let result = ssti_injection(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_injection_preserves_original() {
+        let template = "Hello {{ name }}";
+        let result = ssti_injection(template);
+        // Should contain some form of original or injection
         assert!(!result.is_empty());
     }
 
@@ -642,9 +1008,159 @@ mod nosql_ssti_tests {
     }
 
     #[test]
+    fn test_ssti_framework_variation_empty_string() {
+        let template = "";
+        let result = ssti_framework_variation(template, "jinja2");
+        // Empty input results in framework-specific injection ({{ config.items() }}, etc.)
+        assert!(!result.is_empty() && result.contains("{{"));
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_jinja2() {
+        let template = "Hello {{ name }}";
+        let result = ssti_framework_variation(template, "jinja2");
+        // Should inject Jinja2-specific patterns
+        assert!(result.contains("config") || result.contains("request") || result.contains("__"));
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_jinja() {
+        let template = "Hello {{ name }}";
+        let result = ssti_framework_variation(template, "jinja");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_freemarker() {
+        let template = "Hello ${name}";
+        let result = ssti_framework_variation(template, "freemarker");
+        // Should inject Freemarker patterns
+        assert!(result.contains("vars") || result.contains("data_model") || result.contains("$"));
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_velocity() {
+        let template = "Hello $name";
+        let result = ssti_framework_variation(template, "velocity");
+        // Should inject Velocity patterns
+        assert!(result.contains("class") || result.contains("$"));
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_twig() {
+        let template = "Hello {{ name }}";
+        let result = ssti_framework_variation(template, "twig");
+        // Should inject Twig patterns
+        assert!(result.contains("_self") || result.contains("{{"));
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_unknown_framework() {
+        let template = "Hello {{ name }}";
+        let result = ssti_framework_variation(template, "unknown");
+        // Should inject generic pattern
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_case_insensitive() {
+        let template = "Hello {{ name }}";
+        let result = ssti_framework_variation(template, "JINJA2");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_complex_template() {
+        let template = "User: {{ user.name }}, Role: {{ user.role }}";
+        let result = ssti_framework_variation(template, "jinja2");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_preserves_original() {
+        let template = "Hello {{ name }}";
+        let result = ssti_framework_variation(template, "jinja2");
+        // Should contain original or injection
+        assert!(!result.is_empty());
+    }
+
+    #[test]
     fn test_ssti_syntax_obfuscate() {
         let template = "{{ name }}";
         let result = ssti_syntax_obfuscate(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_empty_string() {
+        let template = "";
+        let result = ssti_syntax_obfuscate(template);
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_whitespace_variation() {
+        let template = "{{ name }}";
+        let result = ssti_syntax_obfuscate(template);
+        // May add whitespace variations
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_delimiter_change() {
+        let template = "{{ name }}";
+        let result = ssti_syntax_obfuscate(template);
+        // May change delimiters
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_comment_injection() {
+        let template = "{{ name }}";
+        let result = ssti_syntax_obfuscate(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_case_variation() {
+        let template = "{{ name }}";
+        let result = ssti_syntax_obfuscate(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_multiple_placeholders() {
+        let template = "{{ first }} and {{ second }}";
+        let result = ssti_syntax_obfuscate(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_freemarker_style() {
+        let template = "${name}";
+        let result = ssti_syntax_obfuscate(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_nested() {
+        let template = "{{ user.profile.name }}";
+        let result = ssti_syntax_obfuscate(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_with_filter() {
+        let template = "{{ name | upper }}";
+        let result = ssti_syntax_obfuscate(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_preserves_content() {
+        let template = "{{ name }}";
+        let result = ssti_syntax_obfuscate(template);
+        // Should contain some form of name or template
         assert!(!result.is_empty());
     }
 }

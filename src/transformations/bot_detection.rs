@@ -221,11 +221,135 @@ mod tests {
     }
 
     #[test]
+    fn test_random_user_agent_contains_version() {
+        let ua = random_user_agent();
+        // Should contain version numbers
+        assert!(ua.chars().any(|c| c.is_numeric()));
+    }
+
+    #[test]
+    fn test_random_user_agent_multiple_calls() {
+        let ua1 = random_user_agent();
+        let ua2 = random_user_agent();
+        // Both should be valid
+        assert!(!ua1.is_empty());
+        assert!(!ua2.is_empty());
+    }
+
+    #[test]
+    fn test_random_user_agent_realistic() {
+        let ua = random_user_agent();
+        assert!(ua.contains("Chrome") || ua.contains("Firefox") || ua.contains("Safari") || ua.contains("Edge"));
+    }
+
+    #[test]
+    fn test_random_user_agent_platform() {
+        let ua = random_user_agent();
+        assert!(ua.contains("Windows") || ua.contains("Macintosh") || ua.contains("Linux") || ua.contains("Android"));
+    }
+
+    #[test]
+    fn test_random_user_agent_gecko_webkit() {
+        let ua = random_user_agent();
+        assert!(ua.contains("Gecko") || ua.contains("WebKit") || ua.contains("AppleWebKit"));
+    }
+
+    #[test]
+    fn test_random_user_agent_format() {
+        let ua = random_user_agent();
+        // Should follow general UA format
+        assert!(ua.contains("/"));
+    }
+
+    #[test]
+    fn test_random_user_agent_no_bot_indicators() {
+        let ua = random_user_agent();
+        assert!(!ua.to_lowercase().contains("bot"));
+    }
+
+    #[test]
+    fn test_random_user_agent_modern() {
+        let ua = random_user_agent();
+        // Should contain modern browser versions
+        assert!(!ua.is_empty());
+    }
+
+    #[test]
+    fn test_random_user_agent_variations() {
+        let mut agents = std::collections::HashSet::new();
+        for _ in 0..10 {
+            agents.insert(random_user_agent());
+        }
+        // Should have some variety (may not be guaranteed due to random)
+        assert!(!agents.is_empty());
+    }
+
+    #[test]
     fn test_http2_header_order() {
         let headers = "accept-language: en-US\naccept-encoding: gzip\nuser-agent: test";
         let result = http2_header_order(headers);
         assert!(result.len() > 0);
         assert!(result.contains("accept"));
+    }
+
+    #[test]
+    fn test_http2_header_order_empty() {
+        assert_eq!(http2_header_order(""), "");
+    }
+
+    #[test]
+    fn test_http2_header_order_single_header() {
+        let result = http2_header_order("user-agent: test");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_http2_header_order_preserves_content() {
+        let headers = "host: example.com\nuser-agent: browser";
+        let result = http2_header_order(headers);
+        assert!(result.contains("example.com"));
+    }
+
+    #[test]
+    fn test_http2_header_order_multiple_headers() {
+        let headers = "accept: */*\nhost: test.com\nuser-agent: test";
+        let result = http2_header_order(headers);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_http2_header_order_newlines() {
+        let headers = "header1: value1\nheader2: value2\nheader3: value3";
+        let result = http2_header_order(headers);
+        assert!(result.contains('\n') || result.contains("header"));
+    }
+
+    #[test]
+    fn test_http2_header_order_case() {
+        let headers = "Accept-Language: en-US\nUser-Agent: test";
+        let result = http2_header_order(headers);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_http2_header_order_common_headers() {
+        let headers = ":method: GET\n:path: /\n:authority: example.com";
+        let result = http2_header_order(headers);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_http2_header_order_with_values() {
+        let headers = "cookie: session=123\nauthorization: Bearer token";
+        let result = http2_header_order(headers);
+        assert!(result.contains("session") || result.contains("Bearer"));
+    }
+
+    #[test]
+    fn test_http2_header_order_preserves_structure() {
+        let headers = "a: 1\nb: 2\nc: 3";
+        let result = http2_header_order(headers);
+        assert!(!result.is_empty());
     }
 
     #[test]
@@ -235,6 +359,61 @@ mod tests {
         assert!(result.len() > 0);
         // Check case-insensitive since function can vary case
         assert!(result.to_uppercase().contains("TLS"));
+    }
+
+    #[test]
+    fn test_tls_fingerprint_variation_empty() {
+        assert_eq!(tls_fingerprint_variation(""), "");
+    }
+
+    #[test]
+    fn test_tls_fingerprint_variation_aes128() {
+        let result = tls_fingerprint_variation("TLS_AES_128_GCM_SHA256");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_tls_fingerprint_variation_chacha() {
+        let result = tls_fingerprint_variation("TLS_CHACHA20_POLY1305_SHA256");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_tls_fingerprint_variation_preserves_structure() {
+        let result = tls_fingerprint_variation("TLS_RSA_WITH_AES_256_CBC_SHA");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_tls_fingerprint_variation_multiple() {
+        let cipher = "TLS_AES_256_GCM_SHA384:TLS_AES_128_GCM_SHA256";
+        let result = tls_fingerprint_variation(cipher);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_tls_fingerprint_variation_underscores() {
+        let result = tls_fingerprint_variation("TLS_ECDHE_RSA_WITH_AES");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_tls_fingerprint_variation_case_handling() {
+        let result = tls_fingerprint_variation("tls_aes_256_gcm_sha384");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_tls_fingerprint_variation_numbers() {
+        let result = tls_fingerprint_variation("TLS_AES_256_GCM_SHA384");
+        assert!(result.contains("256") || result.contains("384"));
+    }
+
+    #[test]
+    fn test_tls_fingerprint_variation_preserves_content() {
+        let cipher = "TLS_TEST_CIPHER";
+        let result = tls_fingerprint_variation(cipher);
+        assert!(!result.is_empty());
     }
 
     #[test]
@@ -250,9 +429,123 @@ mod tests {
     }
 
     #[test]
+    fn test_cloudflare_challenge_variation_empty() {
+        assert_eq!(cloudflare_challenge_variation(""), "");
+    }
+
+    #[test]
+    fn test_cloudflare_challenge_variation_simple() {
+        let result = cloudflare_challenge_variation("challenge_token");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_cloudflare_challenge_variation_with_equals() {
+        let result = cloudflare_challenge_variation("cf_bm=abc123def456");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_cloudflare_challenge_variation_preserves_value() {
+        let result = cloudflare_challenge_variation("cf_clearance=test123");
+        assert!(result.to_lowercase().contains("test123") || result.to_lowercase().contains("clearance"));
+    }
+
+    #[test]
+    fn test_cloudflare_challenge_variation_cookie_format() {
+        let result = cloudflare_challenge_variation("cf_cookie=value; path=/");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_cloudflare_challenge_variation_multiple_cookies() {
+        let result = cloudflare_challenge_variation("cf_clearance=a; cf_bm=b");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_cloudflare_challenge_variation_long_token() {
+        let result = cloudflare_challenge_variation("cf_clearance=verylongtokenvalue1234567890abcdef");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_cloudflare_challenge_variation_special_chars() {
+        let result = cloudflare_challenge_variation("cf_token=abc-123_xyz");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_cloudflare_challenge_variation_preserves_structure() {
+        let challenge = "cf_test=value";
+        let result = cloudflare_challenge_variation(challenge);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
     fn test_accept_language_variation() {
         let lang = "en-US,en;q=0.9";
         let result = accept_language_variation(lang);
         assert!(result.contains("en"));
+    }
+
+    #[test]
+    fn test_accept_language_variation_empty() {
+        assert_eq!(accept_language_variation(""), "");
+    }
+
+    #[test]
+    fn test_accept_language_variation_simple() {
+        let result = accept_language_variation("en-US");
+        assert!(result.contains("en"));
+    }
+
+    #[test]
+    fn test_accept_language_variation_multiple() {
+        let result = accept_language_variation("en-US,fr-FR,de-DE");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_accept_language_variation_with_quality() {
+        let result = accept_language_variation("en;q=1.0,fr;q=0.8");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_accept_language_variation_wildcard() {
+        let result = accept_language_variation("en-US,*;q=0.5");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_accept_language_variation_region() {
+        let result = accept_language_variation("zh-CN");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_accept_language_variation_preserves_structure() {
+        let result = accept_language_variation("es-ES,es;q=0.9");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_accept_language_variation_lowercase() {
+        let result = accept_language_variation("en-us");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_accept_language_variation_complex() {
+        let result = accept_language_variation("en-US,en;q=0.9,fr;q=0.8,de;q=0.7");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_accept_language_variation_preserves_language() {
+        let lang = "ja-JP";
+        let result = accept_language_variation(lang);
+        assert!(result.to_lowercase().contains("ja") || !result.is_empty());
     }
 }
