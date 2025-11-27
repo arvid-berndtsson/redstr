@@ -21,7 +21,8 @@ namespace Redstr
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
 
-            IntPtr inputPtr = Marshal.StringToHGlobalAnsi(input);
+            // Use UTF-8 encoding to properly handle Unicode characters
+            IntPtr inputPtr = Marshal.StringToCoTaskMemUTF8(input);
             try
             {
                 IntPtr resultPtr = nativeFunc(inputPtr);
@@ -30,7 +31,7 @@ namespace Redstr
 
                 try
                 {
-                    return Marshal.PtrToStringAnsi(resultPtr) ?? string.Empty;
+                    return Marshal.PtrToStringUTF8(resultPtr) ?? string.Empty;
                 }
                 finally
                 {
@@ -39,7 +40,7 @@ namespace Redstr
             }
             finally
             {
-                Marshal.FreeHGlobal(inputPtr);
+                Marshal.FreeCoTaskMem(inputPtr);
             }
         }
 
@@ -338,7 +339,7 @@ namespace Redstr
 
             try
             {
-                return Marshal.PtrToStringAnsi(resultPtr) ?? string.Empty;
+                return Marshal.PtrToStringUTF8(resultPtr) ?? string.Empty;
             }
             finally
             {

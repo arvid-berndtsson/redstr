@@ -103,7 +103,7 @@ jobs:
 
       - name: Run .NET tests (if any)
         run: |
-          cd bindings/dotnet/Redstr
+          cd bindings/dotnet
           dotnet test -c Release --no-build || echo "No tests found"
 
       - name: Create NuGet package
