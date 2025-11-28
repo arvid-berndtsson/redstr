@@ -25,10 +25,6 @@ target
 
 /target
 
-# npm package
-bindings/npm/node_modules
-bindings/npm/*.node
-bindings/npm/target
 # Go bindings
 bindings/go/*.so
 bindings/go/*.dylib
