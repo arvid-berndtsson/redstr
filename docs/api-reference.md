@@ -1,6 +1,6 @@
 # API Reference
 
-Complete reference for all transformation functions in the redstr library.
+Complete reference for all 60+ transformation functions in the redstr library.
 
 ## Function Signature Pattern
 
@@ -406,6 +406,430 @@ Various Unicode space characters.
 use redstr::space_variants;
 let result = space_variants("hello world");
 // Uses various Unicode spaces
+```
+
+## NoSQL Injection Testing
+
+### mongodb_injection
+MongoDB injection patterns for NoSQL testing.
+
+**Signature:** `fn mongodb_injection(query: &str) -> String`
+
+**Example:**
+```rust
+use redstr::mongodb_injection;
+let query = r#"{"username": "admin"}"#;
+let result = mongodb_injection(query);
+// Adds MongoDB injection patterns
+```
+
+### couchdb_injection
+CouchDB injection patterns for NoSQL testing.
+
+**Signature:** `fn couchdb_injection(query: &str) -> String`
+
+**Example:**
+```rust
+use redstr::couchdb_injection;
+let query = r#"{"selector": {"name": "admin"}}"#;
+let result = couchdb_injection(query);
+```
+
+### dynamodb_obfuscate
+DynamoDB query obfuscation for NoSQL testing.
+
+**Signature:** `fn dynamodb_obfuscate(query: &str) -> String`
+
+**Example:**
+```rust
+use redstr::dynamodb_obfuscate;
+let query = r#"{"Key": {"id": {"S": "123"}}}"#;
+let result = dynamodb_obfuscate(query);
+```
+
+### nosql_operator_injection
+Generic NoSQL operator injection patterns.
+
+**Signature:** `fn nosql_operator_injection(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::nosql_operator_injection;
+let input = "username";
+let result = nosql_operator_injection(input);
+// Adds $ne, $gt, etc. operators
+```
+
+## Server-Side Template Injection (SSTI)
+
+### ssti_injection
+Server-side template injection patterns.
+
+**Signature:** `fn ssti_injection(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::ssti_injection;
+let template = "{{user.name}}";
+let result = ssti_injection(template);
+```
+
+### ssti_framework_variation
+Framework-specific SSTI variations (Jinja2, Twig, etc.).
+
+**Signature:** `fn ssti_framework_variation(template: &str, framework: &str) -> String`
+
+**Example:**
+```rust
+use redstr::ssti_framework_variation;
+let payload = "{{7*7}}";
+let result = ssti_framework_variation(payload, "jinja2");
+```
+
+### ssti_syntax_obfuscate
+Obfuscate SSTI syntax for filter bypass.
+
+**Signature:** `fn ssti_syntax_obfuscate(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::ssti_syntax_obfuscate;
+let payload = "{{config}}";
+let result = ssti_syntax_obfuscate(payload);
+```
+
+## Bot Detection & Cloudflare Evasion
+
+### accept_language_variation
+HTTP Accept-Language header variations.
+
+**Signature:** `fn accept_language_variation(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::accept_language_variation;
+let lang = "en-US,en;q=0.9";
+let result = accept_language_variation(lang);
+```
+
+### http2_header_order
+HTTP/2 header order variations for fingerprinting evasion.
+
+**Signature:** `fn http2_header_order(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::http2_header_order;
+let headers = "accept-language: en-US\naccept-encoding: gzip";
+let result = http2_header_order(headers);
+```
+
+### tls_fingerprint_variation
+TLS fingerprint variations for bot detection bypass.
+
+**Signature:** `fn tls_fingerprint_variation(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::tls_fingerprint_variation;
+let cipher = "TLS_AES_256_GCM_SHA384";
+let result = tls_fingerprint_variation(cipher);
+```
+
+### cloudflare_challenge_variation
+Cloudflare challenge response variations.
+
+**Signature:** `fn cloudflare_challenge_variation(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::cloudflare_challenge_variation;
+let challenge = "cf_clearance=abc123";
+let result = cloudflare_challenge_variation(challenge);
+```
+
+### cloudflare_turnstile_variation
+Cloudflare Turnstile CAPTCHA variations.
+
+**Signature:** `fn cloudflare_turnstile_variation(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::cloudflare_turnstile_variation;
+let challenge = "challenge-token";
+let result = cloudflare_turnstile_variation(challenge);
+```
+
+### cloudflare_challenge_response
+Generate Cloudflare challenge response patterns.
+
+**Signature:** `fn cloudflare_challenge_response(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::cloudflare_challenge_response;
+let input = "challenge-data";
+let result = cloudflare_challenge_response(input);
+```
+
+### canvas_fingerprint_variation
+Canvas fingerprinting evasion variations.
+
+**Signature:** `fn canvas_fingerprint_variation(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::canvas_fingerprint_variation;
+let data = "canvas-data";
+let result = canvas_fingerprint_variation(data);
+```
+
+### font_fingerprint_consistency
+Font fingerprinting consistency variations.
+
+**Signature:** `fn font_fingerprint_consistency(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::font_fingerprint_consistency;
+let fonts = "Arial,Helvetica,sans-serif";
+let result = font_fingerprint_consistency(fonts);
+```
+
+### tls_handshake_pattern
+TLS handshake pattern variations.
+
+**Signature:** `fn tls_handshake_pattern(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::tls_handshake_pattern;
+let pattern = "TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256";
+let result = tls_handshake_pattern(pattern);
+```
+
+### webgl_fingerprint_obfuscate
+WebGL fingerprinting obfuscation.
+
+**Signature:** `fn webgl_fingerprint_obfuscate(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::webgl_fingerprint_obfuscate;
+let data = "webgl-renderer-data";
+let result = webgl_fingerprint_obfuscate(data);
+```
+
+## Web Security & API Testing
+
+### http_header_variation
+HTTP header value variations.
+
+**Signature:** `fn http_header_variation(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::http_header_variation;
+let header = "application/json";
+let result = http_header_variation(header);
+```
+
+### api_endpoint_variation
+API endpoint path variations for fuzzing.
+
+**Signature:** `fn api_endpoint_variation(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::api_endpoint_variation;
+let endpoint = "/api/users";
+let result = api_endpoint_variation(endpoint);
+```
+
+### session_token_variation
+Session token format variations.
+
+**Signature:** `fn session_token_variation(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::session_token_variation;
+let token = "session123";
+let result = session_token_variation(token);
+```
+
+### graphql_obfuscate
+GraphQL query obfuscation.
+
+**Signature:** `fn graphql_obfuscate(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::graphql_obfuscate;
+let query = "query { user { name } }";
+let result = graphql_obfuscate(query);
+```
+
+### graphql_introspection_bypass
+GraphQL introspection bypass techniques.
+
+**Signature:** `fn graphql_introspection_bypass(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::graphql_introspection_bypass;
+let query = "__schema";
+let result = graphql_introspection_bypass(query);
+```
+
+### graphql_variable_injection
+GraphQL variable injection patterns.
+
+**Signature:** `fn graphql_variable_injection(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::graphql_variable_injection;
+let variable = "userId";
+let result = graphql_variable_injection(variable);
+```
+
+## JWT Security Testing
+
+### jwt_header_manipulation
+JWT header manipulation for algorithm confusion.
+
+**Signature:** `fn jwt_header_manipulation(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::jwt_header_manipulation;
+let header = r#"{"alg":"HS256","typ":"JWT"}"#;
+let result = jwt_header_manipulation(header);
+```
+
+### jwt_payload_obfuscate
+JWT payload obfuscation.
+
+**Signature:** `fn jwt_payload_obfuscate(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::jwt_payload_obfuscate;
+let payload = r#"{"sub":"1234567890"}"#;
+let result = jwt_payload_obfuscate(payload);
+```
+
+### jwt_algorithm_confusion
+JWT algorithm confusion attack patterns.
+
+**Signature:** `fn jwt_algorithm_confusion(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::jwt_algorithm_confusion;
+let token = "eyJhbGc...";
+let result = jwt_algorithm_confusion(token);
+```
+
+### jwt_signature_bypass
+JWT signature bypass techniques.
+
+**Signature:** `fn jwt_signature_bypass(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::jwt_signature_bypass;
+let token = "eyJhbGc...";
+let result = jwt_signature_bypass(token);
+```
+
+## Phishing & Social Engineering
+
+### email_obfuscation
+Email address obfuscation for phishing testing.
+
+**Signature:** `fn email_obfuscation(input: &str) -> String`
+
+**Example:**
+```rust
+use redstr::email_obfuscation;
+let email = "admin@example.com";
+let result = email_obfuscation(email);
+```
+
+### advanced_domain_spoof
+Advanced domain spoofing with multiple techniques.
+
+**Signature:** `fn advanced_domain_spoof(domain: &str) -> String`
+
+**Example:**
+```rust
+use redstr::advanced_domain_spoof;
+let domain = "paypal.com";
+let result = advanced_domain_spoof(domain);
+```
+
+### url_shortening_pattern
+URL shortening pattern generation.
+
+**Signature:** `fn url_shortening_pattern(url: &str) -> String`
+
+**Example:**
+```rust
+use redstr::url_shortening_pattern;
+let url = "https://example.com/long/path";
+let result = url_shortening_pattern(url);
+```
+
+## Shell & Command Obfuscation
+
+### powershell_obfuscate
+PowerShell command obfuscation.
+
+**Signature:** `fn powershell_obfuscate(cmd: &str) -> String`
+
+**Example:**
+```rust
+use redstr::powershell_obfuscate;
+let cmd = "Get-Process";
+let result = powershell_obfuscate(cmd);
+```
+
+### bash_obfuscate
+Bash command obfuscation.
+
+**Signature:** `fn bash_obfuscate(cmd: &str) -> String`
+
+**Example:**
+```rust
+use redstr::bash_obfuscate;
+let cmd = "cat /etc/passwd";
+let result = bash_obfuscate(cmd);
+```
+
+### env_var_obfuscate
+Environment variable obfuscation.
+
+**Signature:** `fn env_var_obfuscate(var: &str) -> String`
+
+**Example:**
+```rust
+use redstr::env_var_obfuscate;
+let var = "$PATH";
+let result = env_var_obfuscate(var);
+```
+
+### file_path_obfuscate
+File path obfuscation for command injection.
+
+**Signature:** `fn file_path_obfuscate(path: &str) -> String`
+
+**Example:**
+```rust
+use redstr::file_path_obfuscate;
+let path = "/etc/passwd";
+let result = file_path_obfuscate(path);
 ```
 
 ## Builder Pattern
