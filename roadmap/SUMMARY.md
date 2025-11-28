@@ -6,9 +6,9 @@
 ---
 
 ## 📊 Current Status
-- ✅ 30+ transformation functions
+- ✅ 60+ transformation functions
 - ✅ Zero dependencies
-- ✅ Published to crates.io (v0.1.1)
+- ✅ Published to crates.io (v0.2.3)
 - ✅ Comprehensive documentation
 - ✅ Builder pattern API
 - ✅ CLI tool available
@@ -135,7 +135,7 @@
 
 1. **Zero Dependencies** - Lightweight, auditable, secure
 2. **Security-Focused** - Built specifically for security professionals
-3. **Comprehensive** - 30+ functions covering all major use cases
+3. **Comprehensive** - 60+ functions covering all major use cases
 4. **Performance** - Optimized for high-throughput scenarios
 5. **Community-Driven** - Built with and for the security community
 

@@ -6,7 +6,7 @@
 
 **Red team string transformation library for offensive security operations, penetration testing, and evasion techniques.**
 
-A comprehensive Rust library providing 30+ string obfuscation and transformation functions for red team, blue team, and purple team security operations. Perfect for building security tools like Caido and Burp Suite extensions, phishing frameworks, WAF bypass testing, and bot detection evasion.
+A comprehensive Rust library providing 60+ string obfuscation and transformation functions for red team, blue team, and purple team security operations. Perfect for building security tools like Caido and Burp Suite extensions, phishing frameworks, WAF bypass testing, and bot detection evasion.
 
 ## 🎯 Use Cases
 
@@ -18,7 +18,7 @@ A comprehensive Rust library providing 30+ string obfuscation and transformation
 
 ## 🚀 Features
 
-- **30+ transformation functions** - Encoding, obfuscation, injection testing, web security
+- **60+ transformation functions** - Encoding, obfuscation, injection testing, web security
 - **Zero dependencies** - Core library uses only Rust's standard library
 - **Builder pattern API** - Chain transformations with `TransformBuilder`
 - **Multi-language support** - Rust, JavaScript, Python, Go via HTTP API
@@ -36,7 +36,7 @@ A comprehensive Rust library providing 30+ string obfuscation and transformation
 **Advantages:**
 - Native Rust performance with type-safe API
 - Zero required dependencies - easy to audit
-- 30+ functions covering modern security techniques
+- 60+ functions covering modern security techniques
 
 ## 📦 Installation
 
@@ -167,7 +167,7 @@ All functions accept `&str` and return `String`. Key functions include:
 **Web Security**: `random_user_agent`, `domain_typosquat`, `js_string_concat`  
 **Case Conversion**: `to_camel_case`, `to_snake_case`, `to_kebab_case`
 
-📖 **[Complete API Reference](docs/api-reference.md)** - All 30+ functions with examples
+📖 **[Complete API Reference](docs/api-reference.md)** - All 60+ functions with examples
 
 
 
