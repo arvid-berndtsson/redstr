@@ -76,6 +76,9 @@ mod builder;
 mod rng;
 mod transformations;
 
+#[cfg(feature = "ffi")]
+pub mod ffi;
+
 // Re-export all public functions and types
 pub use builder::TransformBuilder;
 

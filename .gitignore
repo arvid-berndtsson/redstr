@@ -24,3 +24,9 @@ target
 # Added by cargo
 
 /target
+
+# Go bindings
+bindings/go/*.so
+bindings/go/*.dylib
+bindings/go/*.dll
+bindings/go/*.a
