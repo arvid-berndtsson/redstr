@@ -7,7 +7,8 @@ import (
 )
 
 func main() {
-	fmt.Println("=== redstr Go Bindings - Basic Examples ===\n")
+	fmt.Println("=== redstr Go Bindings - Basic Examples ===")
+	fmt.Println()
 
 	// Case transformations
 	fmt.Println("Case Transformations:")

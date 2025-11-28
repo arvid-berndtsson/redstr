@@ -7,7 +7,8 @@ import (
 )
 
 func main() {
-	fmt.Println("=== redstr Go Bindings - Security Testing Examples ===\n")
+	fmt.Println("=== redstr Go Bindings - Security Testing Examples ===")
+	fmt.Println()
 
 	// WAF Bypass Techniques
 	fmt.Println("WAF Bypass:")
