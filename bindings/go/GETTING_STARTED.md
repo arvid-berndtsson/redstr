@@ -2,6 +2,8 @@
 
 This guide will help you get up and running with the redstr Go bindings quickly.
 
+**Note:** These Go bindings are located in the `bindings/go/` directory of the main [redstr repository](https://github.com/arvid-berndtsson/redstr). They are not published as a separate Go module yet.
+
 ## Prerequisites
 
 - **Go 1.19 or higher**

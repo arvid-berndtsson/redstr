@@ -14,7 +14,7 @@ func main() {
 	sqlQuery := "SELECT * FROM users WHERE id = 1"
 	fmt.Printf("  Original: %s\n", sqlQuery)
 	fmt.Printf("  SQL Comment Injection: %s\n", redstr.SQLCommentInjection(sqlQuery))
-	fmt.Printf("  Case Swap + URL Encode: %s\n", 
+	fmt.Printf("  Case Swap + URL Encode: %s\n",
 		redstr.NewTransformBuilder(sqlQuery).
 			CaseSwap().
 			URLEncode().

@@ -39,15 +39,19 @@ This will:
 
 ### Using in Your Go Project
 
-Add the module to your `go.mod`:
-```bash
-go get github.com/arvid-berndtsson/redstr-go
+The Go bindings are located in the `bindings/go/` directory of the main redstr repository. To use them in your project, use a local replace directive in your `go.mod`:
+
+```go
+module your-project
+
+go 1.19
+
+replace github.com/arvid-berndtsson/redstr-go => /path/to/redstr/bindings/go
+
+require github.com/arvid-berndtsson/redstr-go v0.0.0
 ```
 
-Or use a local path during development:
-```go
-replace github.com/arvid-berndtsson/redstr-go => /path/to/redstr/bindings/go
-```
+**Note:** These bindings are part of the main [redstr repository](https://github.com/arvid-berndtsson/redstr) and are not published as a separate Go module yet.
 
 ## Quick Start
 

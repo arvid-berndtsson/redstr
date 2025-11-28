@@ -28,7 +28,7 @@ func TestROT13(t *testing.T) {
 	if result != expected {
 		t.Errorf("ROT13 failed: expected %s, got %s", expected, result)
 	}
-	
+
 	// ROT13 is its own inverse
 	result2 := ROT13(result)
 	if result2 != "Hello" {
@@ -167,10 +167,10 @@ func TestEmptyStringHandling(t *testing.T) {
 		HexEncode,
 		ReverseString,
 	}
-	
+
 	for i, fn := range tests {
 		result := fn("")
-		if result != "" && result != "=" {  // Base64 of empty is "="
+		if result != "" && result != "=" { // Base64 of empty is "="
 			t.Errorf("Function %d failed to handle empty string: got %s", i, result)
 		}
 	}
@@ -181,14 +181,14 @@ func TestTransformBuilder(t *testing.T) {
 		Leetspeak().
 		Base64().
 		Build()
-	
+
 	if len(result) == 0 {
 		t.Error("TransformBuilder chain returned empty string")
 	}
-	
+
 	// Should be base64 encoded (contains only valid base64 chars)
 	for _, c := range result {
-		if !((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || 
+		if !((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
 			(c >= '0' && c <= '9') || c == '+' || c == '/' || c == '=') {
 			t.Errorf("TransformBuilder result not base64: %s", result)
 			break
@@ -200,7 +200,7 @@ func TestTransformBuilderCaseConversions(t *testing.T) {
 	result := NewTransformBuilder("hello world").
 		ToCamelCase().
 		Build()
-	
+
 	expected := "helloWorld"
 	if result != expected {
 		t.Errorf("Builder ToCamelCase failed: expected %s, got %s", expected, result)
@@ -213,7 +213,7 @@ func TestTransformBuilderMultipleTransforms(t *testing.T) {
 		ROT13().
 		Reverse().
 		Build()
-	
+
 	// ROT13("hello") = "uryyb", reversed = "byyru"
 	expected := "byyru"
 	if result != expected {
