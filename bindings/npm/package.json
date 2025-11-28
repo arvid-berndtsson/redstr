@@ -1,5 +1,5 @@
 {
-  "name": "@redstr/core",
+  "name": "@arvid-berndtsson/redstr",
   "version": "0.2.3",
   "description": "Red team string transformation library for offensive security operations - Node.js bindings",
   "main": "index.js",
@@ -55,15 +55,15 @@
     "ava": "^6.0.0"
   },
   "optionalDependencies": {
-    "@redstr/core-darwin-x64": "0.2.3",
-    "@redstr/core-darwin-arm64": "0.2.3",
-    "@redstr/core-linux-x64-gnu": "0.2.3",
-    "@redstr/core-linux-x64-musl": "0.2.3",
-    "@redstr/core-linux-arm64-gnu": "0.2.3",
-    "@redstr/core-linux-arm-gnueabihf": "0.2.3",
-    "@redstr/core-win32-x64-msvc": "0.2.3",
-    "@redstr/core-win32-ia32-msvc": "0.2.3",
-    "@redstr/core-win32-arm64-msvc": "0.2.3"
+    "@arvid-berndtsson/redstr-darwin-x64": "0.2.3",
+    "@arvid-berndtsson/redstr-darwin-arm64": "0.2.3",
+    "@arvid-berndtsson/redstr-linux-x64-gnu": "0.2.3",
+    "@arvid-berndtsson/redstr-linux-x64-musl": "0.2.3",
+    "@arvid-berndtsson/redstr-linux-arm64-gnu": "0.2.3",
+    "@arvid-berndtsson/redstr-linux-arm-gnueabihf": "0.2.3",
+    "@arvid-berndtsson/redstr-win32-x64-msvc": "0.2.3",
+    "@arvid-berndtsson/redstr-win32-ia32-msvc": "0.2.3",
+    "@arvid-berndtsson/redstr-win32-arm64-msvc": "0.2.3"
   },
   "ava": {
     "timeout": "3m"

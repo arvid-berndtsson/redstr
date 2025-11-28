@@ -1,6 +1,6 @@
 # NPM Bindings Tests
 
-This directory contains tests for the `@redstr/core` npm package bindings.
+This directory contains tests for the `@arvid-berndtsson/redstr` npm package bindings.
 
 ## Test Files
 

@@ -1,6 +1,6 @@
-# @redstr/core
+# @arvid-berndtsson/redstr
 
-[![npm version](https://badge.fury.io/js/%40redstr%2Fcore.svg)](https://www.npmjs.com/package/@redstr/core)
+[![npm version](https://badge.fury.io/js/%40redstr%2Fcore.svg)](https://www.npmjs.com/package/@arvid-berndtsson/redstr)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/arvid-berndtsson/redstr/blob/main/LICENSE)
 
 > **Note:** This package is located at `bindings/npm/` in the [redstr repository](https://github.com/arvid-berndtsson/redstr).
@@ -20,17 +20,17 @@ High-performance Node.js bindings for [redstr](https://github.com/arvid-berndtss
 ## 📦 Installation
 
 ```bash
-npm install @redstr/core
+npm install @arvid-berndtsson/redstr
 # or
-yarn add @redstr/core
+yarn add @arvid-berndtsson/redstr
 # or
-pnpm add @redstr/core
+pnpm add @arvid-berndtsson/redstr
 ```
 
 ## 🚀 Quick Start
 
 ```javascript
-const redstr = require('@redstr/core');
+const redstr = require('@arvid-berndtsson/redstr');
 
 // Random capitalization for filter bypass
 const result = redstr.randomizeCapitalization('Hello World');
@@ -59,7 +59,7 @@ import {
   base64Encode,
   sqlCommentInjection,
   xssTagVariations
-} from '@redstr/core';
+} from '@arvid-berndtsson/redstr';
 
 // Type-safe with full IntelliSense support
 const obfuscated: string = leetspeak('test');
@@ -226,7 +226,7 @@ MIT License - see [LICENSE](https://github.com/arvid-berndtsson/redstr/blob/main
 - [Main Repository](https://github.com/arvid-berndtsson/redstr)
 - [Documentation](https://docs.rs/redstr)
 - [Rust Crate](https://crates.io/crates/redstr)
-- [npm Package](https://www.npmjs.com/package/@redstr/core)
+- [npm Package](https://www.npmjs.com/package/@arvid-berndtsson/redstr)
 
 ## 🤝 Contributing
 
