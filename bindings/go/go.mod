@@ -1,3 +1,3 @@
 module github.com/arvid-berndtsson/redstr-go
 
-go 1.24.10
+go 1.19

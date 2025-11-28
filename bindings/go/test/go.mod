@@ -1,6 +1,6 @@
 module github.com/arvid-berndtsson/redstr-go/test
 
-go 1.24.10
+go 1.19
 
 replace github.com/arvid-berndtsson/redstr-go => ../
 
