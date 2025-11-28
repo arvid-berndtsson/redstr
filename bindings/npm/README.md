@@ -3,6 +3,8 @@
 [![npm version](https://badge.fury.io/js/%40redstr%2Fcore.svg)](https://www.npmjs.com/package/@redstr/core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/arvid-berndtsson/redstr/blob/main/LICENSE)
 
+> **Note:** This package is located at `bindings/npm/` in the [redstr repository](https://github.com/arvid-berndtsson/redstr).
+
 **Red team string transformation library for offensive security operations - Node.js bindings**
 
 High-performance Node.js bindings for [redstr](https://github.com/arvid-berndtsson/redstr), a comprehensive Rust library providing 60+ string obfuscation and transformation functions for security testing, penetration testing, and red/blue/purple team operations.

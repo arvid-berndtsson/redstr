@@ -19,7 +19,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/arvid-berndtsson/redstr.git",
-    "directory": "npm"
+    "directory": "bindings/npm"
   },
   "homepage": "https://github.com/arvid-berndtsson/redstr#readme",
   "bugs": {

@@ -26,9 +26,9 @@ target
 /target
 
 # npm package
-npm/node_modules
-npm/*.node
-npm/target
+bindings/npm/node_modules
+bindings/npm/*.node
+bindings/npm/target
 # Go bindings
 bindings/go/*.so
 bindings/go/*.dylib

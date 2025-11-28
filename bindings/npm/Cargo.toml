@@ -11,7 +11,7 @@ repository = "https://github.com/arvid-berndtsson/redstr"
 crate-type = ["cdylib"]
 
 [dependencies]
-redstr = { path = "..", version = "0.2.3" }
+redstr = { path = "../..", version = "0.2.3" }
 napi = { version = "2", default-features = false, features = ["napi3"] }
 napi-derive = "2"
 
