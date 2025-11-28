@@ -34,9 +34,9 @@
 ## 📊 Current State (November 2025)
 
 ### Strengths
-- ✅ 30+ transformation functions
+- ✅ 60+ transformation functions
 - ✅ No required dependencies (optional serde, dev-only cc-check)
-- ✅ Published to crates.io (v0.2.0)
+- ✅ Published to crates.io (v0.2.3)
 - ✅ Comprehensive documentation
 - ✅ Builder pattern API
 - ✅ CLI tool available
