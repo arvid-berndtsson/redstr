@@ -15,7 +15,7 @@ readme = "README.md"
 [lib]
 name = "redstr"
 path = "src/lib.rs"
-crate-type = ["rlib", "staticlib", "cdylib"]
+crate-type = ["rlib"]
 
 # Optional CLI binary - only built when specifically requested
 [[bin]]
@@ -27,7 +27,6 @@ required-features = ["cli"]
 default = []
 cli = []
 serde = ["dep:serde"]
-ffi = []
 
 [dependencies]
 serde = { version = "1.0", optional = true, features = ["derive"] }
