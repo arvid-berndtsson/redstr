@@ -878,7 +878,7 @@ The following items are **OUT OF SCOPE** for this repository and are documented 
 
 ### Language Bindings
 - **npm Package (TypeScript/JavaScript)** - Should be in a separate repository with WASM or napi-rs bindings
-- **PyPI Package (Python)** - Should be in a separate repository with PyO3 bindings (note: `redstr-go` already exists as a separate repo)
+- **PyPI Package (Python)** - Should be in a separate repository with PyO3 bindings (note: `redstr-go` already exists as a separate repository)
 - **Go Module** - Already exists as a separate `redstr-go` repository
 
 ### Package Distribution
@@ -1212,7 +1212,7 @@ Update task status in this file when:
 - Refocused tasks on string transformation functionality (core mission)
 - Moved third-party tool integrations to "Out of Scope" section
 - Moved language bindings to "Out of Scope" section (separate repositories)
-- Added 10 new string transformation tasks (STR-001 through STR-013):
+- Added 13 new string transformation tasks (STR-001 through STR-013):
   - JSON/YAML manipulation
   - XML/HTML advanced transformations
   - Regular expression evasion techniques
