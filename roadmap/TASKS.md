@@ -1,7 +1,7 @@
 # redstr Development Tasks
 ## Distributed Development Task List
 
-**Last Updated:** November 22, 2025  
+**Last Updated:** December 1, 2025  
 **Status:** Active - Ready for Assignment
 
 ---
@@ -452,539 +452,612 @@ Implement SSTI patterns for various template engines.
 
 ---
 
-### 1.5 Distribution & Language Bindings
+### 1.5 Advanced String Transformations
 
-#### Task 1.5.1: Raycast Integration
-**ID:** `DIST-001`  
+#### Task 1.5.1: JSON/YAML Manipulation Functions
+**ID:** `STR-001`  
 **Priority:** High  
 **Complexity:** Medium  
+**Estimated Time:** 1 week  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `[AGENT-FRIENDLY]` `feature` `transformation` `phase:1`
+
+**Description:**
+Implement JSON and YAML string manipulation functions for API testing and configuration file obfuscation.
+
+**Requirements:**
+- Implement JSON key obfuscation (preserve structure, obfuscate keys)
+- Add JSON value encoding variations
+- Create JSON minification with strategic spacing
+- Implement YAML comment injection
+- Add YAML anchor/alias obfuscation
+- Create JSON/YAML structure flattening/nesting
+- Add serialization format conversion helpers
+- Document API testing use cases
+
+**Deliverables:**
+- Functions in `src/transformations/data_formats.rs`
+- Functions: `json_key_obfuscate()`, `json_value_encode()`, `json_minify_strategic()`, `yaml_comment_inject()`, `yaml_anchor_obfuscate()`
+- Tests: Unit tests for all functions
+- Documentation: Doc comments with examples
+- Example: `examples/data_format_obfuscation.rs`
+
+**Acceptance Criteria:**
+- [ ] Functions compile and pass tests
+- [ ] JSON/YAML manipulation preserves validity where intended
+- [ ] Documentation includes API testing examples
+- [ ] Examples demonstrate real-world usage
+- [ ] Code follows project style guide
+- [ ] No new required dependencies added
+
+**Dependencies:** None
+
+---
+
+#### Task 1.5.2: XML/HTML Advanced Transformations
+**ID:** `STR-002`  
+**Priority:** High  
+**Complexity:** Medium  
+**Estimated Time:** 1 week  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `[AGENT-FRIENDLY]` `feature` `transformation` `phase:1`
+
+**Description:**
+Implement advanced XML and HTML transformation functions for XSS testing and document manipulation.
+
+**Requirements:**
+- Implement XML CDATA section obfuscation
+- Add XML namespace manipulation
+- Create XML entity encoding variations
+- Implement HTML comment obfuscation
+- Add HTML attribute value encoding
+- Create SVG-specific obfuscation techniques
+- Add XML DTD declaration variations
+- Document XSS and injection testing use cases
+
+**Deliverables:**
+- Functions in `src/transformations/markup.rs`
+- Functions: `xml_cdata_obfuscate()`, `xml_namespace_manipulate()`, `xml_entity_encode_variations()`, `html_comment_obfuscate()`, `html_attribute_encode()`, `svg_obfuscate()`
+- Tests: Unit tests for all functions
+- Documentation: Doc comments with examples
+- Example: `examples/markup_obfuscation.rs`
+
+**Acceptance Criteria:**
+- [ ] Functions compile and pass tests
+- [ ] XML/HTML manipulation maintains validity where intended
+- [ ] Documentation includes XSS testing examples
+- [ ] Examples demonstrate real-world usage
+- [ ] Code follows project style guide
+- [ ] No new required dependencies added
+
+**Dependencies:** None
+
+---
+
+#### Task 1.5.3: Regular Expression Evasion Techniques
+**ID:** `STR-003`  
+**Priority:** High  
+**Complexity:** Medium  
+**Estimated Time:** 1 week  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `[AGENT-FRIENDLY]` `feature` `transformation` `phase:1`
+
+**Description:**
+Implement regex evasion and pattern obfuscation techniques for bypassing input validation.
+
+**Requirements:**
+- Implement zero-width character insertion for regex bypass
+- Add backreference obfuscation techniques
+- Create regex quantifier evasion patterns
+- Implement lookahead/lookbehind confusion
+- Add character class expansion techniques
+- Create regex anchor bypass patterns
+- Implement word boundary evasion
+- Document filter bypass use cases
+
+**Deliverables:**
+- Functions in `src/transformations/regex_evasion.rs`
+- Functions: `regex_zero_width_insert()`, `regex_backreference_obfuscate()`, `regex_quantifier_evade()`, `regex_lookahead_confuse()`, `regex_charclass_expand()`, `regex_anchor_bypass()`
+- Tests: Unit tests for all functions
+- Documentation: Doc comments with examples
+- Example: `examples/regex_evasion.rs`
+
+**Acceptance Criteria:**
+- [ ] Functions compile and pass tests
+- [ ] Regex evasion techniques are effective against common patterns
+- [ ] Documentation includes filter bypass examples
+- [ ] Examples demonstrate real-world usage
+- [ ] Code follows project style guide
+- [ ] No new required dependencies added
+
+**Dependencies:** None
+
+---
+
+#### Task 1.5.4: Network Protocol String Obfuscation
+**ID:** `STR-004`  
+**Priority:** Medium  
+**Complexity:** Medium  
+**Estimated Time:** 1 week  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `[AGENT-FRIENDLY]` `feature` `transformation` `phase:1`
+
+**Description:**
+Implement network protocol-specific string obfuscation for HTTP, DNS, and other protocols.
+
+**Requirements:**
+- Implement HTTP method name variations
+- Add DNS label encoding techniques
+- Create HTTP chunked encoding obfuscation
+- Implement MIME type obfuscation
+- Add protocol version string variations
+- Create hostname encoding variations
+- Implement cookie value obfuscation
+- Document protocol testing use cases
+
+**Deliverables:**
+- Functions in `src/transformations/protocol.rs`
+- Functions: `http_method_variation()`, `dns_label_encode()`, `http_chunked_obfuscate()`, `mime_type_obfuscate()`, `protocol_version_vary()`, `hostname_encode()`, `cookie_value_obfuscate()`
+- Tests: Unit tests for all functions
+- Documentation: Doc comments with examples
+- Example: `examples/protocol_obfuscation.rs`
+
+**Acceptance Criteria:**
+- [ ] Functions compile and pass tests
+- [ ] Protocol obfuscation maintains compatibility where intended
+- [ ] Documentation includes network testing examples
+- [ ] Examples demonstrate real-world usage
+- [ ] Code follows project style guide
+- [ ] No new required dependencies added
+
+**Dependencies:** None
+
+---
+
+#### Task 1.5.5: Advanced Text Encoding Techniques
+**ID:** `STR-005`  
+**Priority:** Medium  
+**Complexity:** Medium  
+**Estimated Time:** 1 week  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `[AGENT-FRIENDLY]` `feature` `transformation` `phase:1`
+
+**Description:**
+Implement advanced encoding techniques beyond basic Base64 and URL encoding.
+
+**Requirements:**
+- Implement Base32 encoding with variations
+- Add Base85/Ascii85 encoding
+- Create UUencoding/XXencoding functions
+- Implement Quoted-Printable encoding
+- Add Punycode encoding for internationalized domains
+- Create custom alphabet encoding schemes
+- Implement RFC 2047 MIME encoded-word format
+- Document encoding bypass use cases
+
+**Deliverables:**
+- Functions in `src/transformations/advanced_encoding.rs`
+- Functions: `base32_encode()`, `base85_encode()`, `uuencode()`, `xxencode()`, `quoted_printable_encode()`, `punycode_encode()`, `custom_alphabet_encode()`, `mime_encoded_word()`
+- Tests: Unit tests for all functions
+- Documentation: Doc comments with examples
+- Example: `examples/advanced_encoding.rs`
+
+**Acceptance Criteria:**
+- [ ] Functions compile and pass tests
+- [ ] Encoding functions produce valid output
+- [ ] Documentation includes practical examples
+- [ ] Examples demonstrate real-world usage
+- [ ] Code follows project style guide
+- [ ] No new required dependencies added
+
+**Dependencies:** None
+
+---
+
+#### Task 1.5.6: Cryptographic String Transformations
+**ID:** `STR-006`  
+**Priority:** Medium  
+**Complexity:** Medium  
+**Estimated Time:** 1 week  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `[AGENT-FRIENDLY]` `feature` `transformation` `phase:1`
+
+**Description:**
+Implement cryptographic-related string transformations (obfuscation only, not actual crypto).
+
+**Requirements:**
+- Implement hash-like string generation (not actual hashing)
+- Add checksum manipulation patterns
+- Create cipher-like obfuscation (Caesar, Vigenère variations)
+- Implement key derivation obfuscation patterns
+- Add salt/nonce insertion techniques
+- Create IV (initialization vector) pattern generation
+- Implement MAC (message authentication code) format variations
+- Document security testing use cases
+
+**Deliverables:**
+- Functions in `src/transformations/crypto_patterns.rs`
+- Functions: `hash_pattern_generate()`, `checksum_manipulate()`, `vigenere_obfuscate()`, `key_derivation_pattern()`, `salt_insert()`, `iv_pattern_generate()`, `mac_format_vary()`
+- Tests: Unit tests for all functions
+- Documentation: Doc comments with examples
+- Example: `examples/crypto_patterns.rs`
+
+**Acceptance Criteria:**
+- [ ] Functions compile and pass tests
+- [ ] Pattern generation is deterministic or controlled
+- [ ] Documentation includes security testing examples
+- [ ] Examples demonstrate real-world usage
+- [ ] Code follows project style guide
+- [ ] No new required dependencies added
+- [ ] Clear documentation that these are patterns/obfuscation, not actual cryptography
+
+**Dependencies:** None
+
+---
+
+#### Task 1.5.7: Binary and Hexadecimal String Manipulation
+**ID:** `STR-007`  
+**Priority:** Medium  
+**Complexity:** Simple  
+**Estimated Time:** 3 days  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `[AGENT-FRIENDLY]` `feature` `transformation` `phase:1`
+
+**Description:**
+Implement binary and hexadecimal string manipulation functions for low-level testing.
+
+**Requirements:**
+- Implement binary string generation from text
+- Add binary string obfuscation with spacing
+- Create hexdump-like formatting variations
+- Implement octal encoding
+- Add mixed radix encoding (binary + hex + decimal)
+- Create bit-flipping patterns
+- Implement endianness conversion patterns
+- Document low-level testing use cases
+
+**Deliverables:**
+- Functions in `src/transformations/binary.rs`
+- Functions: `to_binary_string()`, `binary_obfuscate()`, `hexdump_format()`, `octal_encode()`, `mixed_radix_encode()`, `bit_flip_pattern()`, `endian_swap_pattern()`
+- Tests: Unit tests for all functions
+- Documentation: Doc comments with examples
+- Example: `examples/binary_manipulation.rs`
+
+**Acceptance Criteria:**
+- [ ] Functions compile and pass tests
+- [ ] Binary/hex transformations are accurate
+- [ ] Documentation includes practical examples
+- [ ] Examples demonstrate real-world usage
+- [ ] Code follows project style guide
+- [ ] No new required dependencies added
+
+**Dependencies:** None
+
+---
+
+#### Task 1.5.8: Templating and Placeholder Transformations
+**ID:** `STR-008`  
+**Priority:** Medium  
+**Complexity:** Medium  
+**Estimated Time:** 1 week  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `[AGENT-FRIENDLY]` `feature` `transformation` `phase:1`
+
+**Description:**
+Implement template string transformations for various template engines and placeholder formats.
+
+**Requirements:**
+- Implement Mustache-style placeholder variations
+- Add Jinja2-style placeholder obfuscation
+- Create ERB-style placeholder transformations
+- Implement handlebars placeholder variations
+- Add string interpolation format variations
+- Create format string obfuscation
+- Implement template comment injection
+- Document template injection testing use cases
+
+**Deliverables:**
+- Functions in `src/transformations/templates.rs`
+- Functions: `mustache_placeholder_vary()`, `jinja2_placeholder_obfuscate()`, `erb_placeholder_vary()`, `handlebars_vary()`, `interpolation_format_vary()`, `format_string_obfuscate()`, `template_comment_inject()`
+- Tests: Unit tests for all functions
+- Documentation: Doc comments with examples
+- Example: `examples/template_transformations.rs`
+
+**Acceptance Criteria:**
+- [ ] Functions compile and pass tests
+- [ ] Template transformations are effective
+- [ ] Documentation includes SSTI testing examples
+- [ ] Examples demonstrate real-world usage
+- [ ] Code follows project style guide
+- [ ] No new required dependencies added
+
+**Dependencies:** None
+
+---
+
+#### Task 1.5.9: Internationalization (i18n) String Transformations
+**ID:** `STR-009`  
+**Priority:** Low  
+**Complexity:** Medium  
+**Estimated Time:** 1 week  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `[AGENT-FRIENDLY]` `feature` `transformation` `phase:1`
+
+**Description:**
+Implement internationalization-related string transformations for multi-language testing.
+
+**Requirements:**
+- Implement RTL (right-to-left) text direction markers
+- Add bidirectional text override characters
+- Create locale-specific number formatting
+- Implement date format variations (ISO, US, EU, etc.)
+- Add currency symbol variations
+- Create translation key obfuscation
+- Implement pluralization format variations
+- Document i18n testing use cases
+
+**Deliverables:**
+- Functions in `src/transformations/i18n.rs`
+- Functions: `rtl_marker_insert()`, `bidi_override()`, `locale_number_format()`, `date_format_vary()`, `currency_symbol_vary()`, `translation_key_obfuscate()`, `plural_format_vary()`
+- Tests: Unit tests for all functions
+- Documentation: Doc comments with examples
+- Example: `examples/i18n_transformations.rs`
+
+**Acceptance Criteria:**
+- [ ] Functions compile and pass tests
+- [ ] i18n transformations handle Unicode properly
+- [ ] Documentation includes i18n testing examples
+- [ ] Examples demonstrate real-world usage
+- [ ] Code follows project style guide
+- [ ] No new required dependencies added
+
+**Dependencies:** None
+
+---
+
+#### Task 1.5.10: Code Language Transformations
+**ID:** `STR-010`  
+**Priority:** Medium  
+**Complexity:** Medium  
+**Estimated Time:** 1 week  
+**Status:** ⬜ Not Started  
+**Assignee:** _Available_  
+**Tags:** `[AGENT-FRIENDLY]` `feature` `transformation` `phase:1`
+
+**Description:**
+Implement programming language-specific string transformations beyond existing shell/JS functions.
+
+**Requirements:**
+- Implement Python string literal variations (', ", ''', r"", f"")
+- Add Ruby string literal transformations (%q, %Q, <<HEREDOC)
+- Create PHP string concatenation variations
+- Implement Java string builder patterns
+- Add C# verbatim string variations (@"")
+- Create Perl string quote variations (q, qq, qx)
+- Implement SQL string escape variations
+- Document code injection testing use cases
+
+**Deliverables:**
+- Functions in `src/transformations/code_lang.rs`
+- Functions: `python_string_vary()`, `ruby_string_vary()`, `php_concat_vary()`, `java_builder_pattern()`, `csharp_verbatim()`, `perl_quote_vary()`, `sql_string_escape_vary()`
+- Tests: Unit tests for all functions
+- Documentation: Doc comments with examples
+- Example: `examples/code_language_transformations.rs`
+
+**Acceptance Criteria:**
+- [ ] Functions compile and pass tests
+- [ ] Code transformations maintain language validity where intended
+- [ ] Documentation includes code injection examples
+- [ ] Examples demonstrate real-world usage
+- [ ] Code follows project style guide
+- [ ] No new required dependencies added
+
+**Dependencies:** None
+
+---
+
+## ⛔ Out of Scope
+
+The following items are **OUT OF SCOPE** for this repository and are documented here for reference only. These are suggestions for separate projects or integrations that should be maintained in their own repositories:
+
+### Third-Party Tool Integrations
+- **Raycast Integration** - Should be in a separate `redstr-raycast` repository
+- **EvilJinx Integration** - Should be in a separate `redstr-eviljinx` repository  
+- **Caido Extension** - Should be in a separate `redstr-caido` repository
+- **Burp Suite Extension** - Should be in a separate `redstr-burp` repository
+- **OWASP ZAP Extension** - Should be in a separate `redstr-zap` repository
+
+### Language Bindings
+- **npm Package (TypeScript/JavaScript)** - Should be in a separate repository with WASM or napi-rs bindings
+- **PyPI Package (Python)** - Should be in a separate repository with PyO3 bindings (note: `redstr-go` already exists as a separate repo)
+- **Go Module** - Already exists as a separate `redstr-go` repository
+
+### Package Distribution
+- **Homebrew Formula** - Can be maintained in a tap or submitted to homebrew-core
+- **ParrotOS Repository Submission** - Distribution-level integration
+- **Kali Linux Repository Submission** - Distribution-level integration
+
+### Recommended Approach
+For language-agnostic usage, we recommend using the **redstr-server** HTTP API (maintained in a separate repository). This provides:
+- Language-agnostic access
+- Centralized maintenance
+- Microservice deployment capability
+- Easier updates and versioning
+
+**This repository focuses solely on the core Rust library and its string transformation functionality.**
+
+---
+
+## 🔌 Phase 2: String Transformation Enhancements (Q2 2026)
+
+### 2.1 Advanced Obfuscation Techniques
+
+#### Task 2.1.1: Steganographic String Encoding
+**ID:** `STR-011`  
+**Priority:** Medium  
+**Complexity:** Complex  
 **Estimated Time:** 2 weeks  
 **Status:** ⬜ Not Started  
 **Assignee:** _Available_  
-**Tags:** `[AGENT-FRIENDLY]` `integration` `raycast` `distribution` `phase:1`
+**Tags:** `[AGENT-FRIENDLY]` `feature` `transformation` `phase:2`
 
 **Description:**
-Create a Raycast extension for redstr to enable quick string transformations directly from Raycast.
+Implement steganographic techniques for hiding data within strings.
 
 **Requirements:**
-- Research Raycast extension API and architecture
-- Design UX for string transformation workflows in Raycast
-- Create Raycast extension with TypeScript
-- Implement interface to redstr transformations (via API server or CLI)
-- Add search/filter functionality for transformation modes
-- Support clipboard input/output
-- Add keyboard shortcuts for common transformations
-- Create extension documentation and screenshots
-- Publish to Raycast Store
+- Implement zero-width character steganography
+- Add homoglyph-based data hiding
+- Create whitespace steganography
+- Implement case-based encoding (upper/lower as bits)
+- Add punctuation-based encoding
+- Create emoji steganography patterns
+- Implement font variation steganography
+- Document covert communication use cases
 
 **Deliverables:**
-```
-raycast-extension/
-├── package.json
-├── src/
-│   ├── index.tsx
-│   ├── transformations.tsx
-│   └── api.ts
-├── assets/
-│   └── icon.png
-└── README.md
-docs/raycast_integration.md
-```
+- Functions in `src/transformations/steganography.rs`
+- Functions: `zero_width_encode()`, `homoglyph_hide_data()`, `whitespace_stego()`, `case_bit_encode()`, `punctuation_encode()`, `emoji_stego()`, `font_variation_stego()`
+- Tests: Unit tests for all functions
+- Documentation: Doc comments with examples
+- Example: `examples/steganography.rs`
 
 **Acceptance Criteria:**
-- [ ] Extension works in Raycast
-- [ ] All major transformations accessible
-- [ ] Clipboard integration works
-- [ ] Documentation includes installation steps
-- [ ] Screenshots demonstrate usage
-- [ ] Extension follows Raycast guidelines
-
-**Dependencies:** None (but consider Task DIST-006 for API approach)
-
-**Notes:**
-- Raycast extensions are TypeScript-based
-- Can interface with CLI binary or API server
-- Should follow Raycast extension guidelines
-- Consider creating separate repository for the extension
-
----
-
-#### Task 1.5.2: Homebrew Formula
-**ID:** `DIST-002`  
-**Priority:** High  
-**Complexity:** Simple  
-**Estimated Time:** 1 week  
-**Status:** ⬜ Not Started  
-**Assignee:** _Available_  
-**Tags:** `[AGENT-FRIENDLY]` `packaging` `homebrew` `macos` `distribution` `phase:1`
-
-**Description:**
-Create Homebrew formula for easy installation on macOS and Linux.
-
-**Requirements:**
-- Create Homebrew formula for redstr
-- Test formula on macOS (Intel and Apple Silicon)
-- Test formula on Linux
-- Set up automated formula updates on releases
-- Submit to homebrew-core or maintain tap
-- Document installation process
-- Add CI/CD testing for Homebrew installation
-
-**Deliverables:**
-```
-Formula/redstr.rb (for homebrew tap)
-.github/workflows/homebrew-test.yml
-docs/homebrew_installation.md
-```
-
-**Acceptance Criteria:**
-- [ ] Formula installs successfully on macOS
-- [ ] Formula installs successfully on Linux
-- [ ] CLI tool works after installation
-- [ ] Shell completions installed correctly
-- [ ] Man pages installed correctly
-- [ ] Formula follows Homebrew guidelines
-- [ ] Automated updates configured
-
-**Dependencies:** Task CLI-001 (shell completions and man pages are already completed)
-
-**Installation Commands:**
-```bash
-# Via tap (recommended initially)
-brew tap arvid-berndtsson/redstr
-brew install redstr
-
-# Future: via homebrew-core
-brew install redstr
-```
-
-**Notes:**
-- Start with a tap, then submit to homebrew-core
-- Formula should install the CLI with --features cli
-- Consider using GitHub releases as source
-
----
-
-#### Task 1.5.3: npm Package (TypeScript/JavaScript Bindings)
-**ID:** `DIST-003`  
-**Priority:** High  
-**Complexity:** Complex  
-**Estimated Time:** 3 weeks  
-**Status:** ⬜ Not Started  
-**Assignee:** _Available_  
-**Tags:** `bindings` `npm` `typescript` `javascript` `distribution` `phase:1`
-
-**Description:**
-Create npm package with TypeScript bindings for redstr using napi-rs or WASM.
-
-**Requirements:**
-- Choose approach: napi-rs (native bindings) or WASM
-- Set up build infrastructure for cross-platform binaries
-- Generate TypeScript type definitions
-- Create JavaScript/TypeScript API wrapper
-- Write comprehensive documentation
-- Add usage examples for Node.js and browsers
-- Publish to npm registry
-- Set up automated publishing on releases
-
-**Deliverables:**
-```
-npm-package/
-├── package.json
-├── tsconfig.json
-├── src/
-│   ├── index.ts
-│   ├── types.ts
-│   └── bindings.ts
-├── native/ (if using napi-rs)
-│   └── Cargo.toml
-├── dist/ (generated)
-│   ├── index.js
-│   ├── index.d.ts
-│   └── redstr.node (or .wasm)
-├── examples/
-│   ├── node-example.js
-│   └── browser-example.html
-└── README.md
-docs/npm_usage.md
-.github/workflows/npm-publish.yml
-```
-
-**Acceptance Criteria:**
-- [ ] Package installs via npm/yarn/pnpm
-- [ ] TypeScript types are accurate and complete
-- [ ] Works in Node.js environment
-- [ ] Works in browser (if WASM approach)
-- [ ] All transformations accessible
-- [ ] Documentation includes examples
-- [ ] Published to npm registry
-- [ ] Automated publishing configured
+- [ ] Functions compile and pass tests
+- [ ] Steganography is reversible where intended
+- [ ] Documentation includes covert communication examples
+- [ ] Examples demonstrate real-world usage
+- [ ] Code follows project style guide
+- [ ] No new required dependencies added
 
 **Dependencies:** None
 
-**Technical Decisions:**
-- **napi-rs**: Better performance, native Node.js bindings, but requires platform-specific binaries
-- **WASM**: Universal compatibility, works in browsers, but slightly slower
-
-**Recommended Approach:** Use napi-rs for better performance with prebuilt binaries for common platforms
-
-**Package Name:** `@redstr/core` or `redstr-js`
-
 ---
 
-#### Task 1.5.4: Python Bindings (PyPI Package)
-**ID:** `DIST-004`  
-**Priority:** High  
-**Complexity:** Complex  
-**Estimated Time:** 3 weeks  
-**Status:** ⬜ Not Started  
-**Assignee:** _Available_  
-**Tags:** `bindings` `python` `pypi` `distribution` `phase:1`
-
-**Description:**
-Create Python package with bindings for redstr using PyO3 or similar.
-
-**Requirements:**
-- Set up PyO3 bindings for Rust
-- Create Python-friendly API wrapper
-- Generate Python type stubs (.pyi files)
-- Set up maturin for building and publishing
-- Write comprehensive documentation
-- Add usage examples and tutorials
-- Publish to PyPI
-- Set up automated publishing on releases
-- Support Python 3.8+
-
-**Deliverables:**
-```
-python-bindings/
-├── pyproject.toml
-├── Cargo.toml
-├── src/
-│   └── lib.rs (PyO3 bindings)
-├── python/
-│   └── redstr/
-│       ├── __init__.py
-│       ├── __init__.pyi (type stubs)
-│       └── py.typed
-├── examples/
-│   ├── basic_usage.py
-│   └── security_testing.py
-├── tests/
-│   └── test_transformations.py
-└── README.md
-docs/python_usage.md
-.github/workflows/pypi-publish.yml
-```
-
-**Acceptance Criteria:**
-- [ ] Package installs via pip
-- [ ] Type hints work with mypy and IDEs
-- [ ] All transformations accessible
-- [ ] Pythonic API design
-- [ ] Documentation includes examples
-- [ ] Tests pass on Python 3.8+
-- [ ] Published to PyPI
-- [ ] Automated publishing configured
-- [ ] Wheels for major platforms (manylinux, macOS, Windows)
-
-**Dependencies:** None
-
-**Package Name:** `redstr` or `redstr-py`
-
-**Example Usage:**
-```python
-from redstr import leetspeak, base64_encode, TransformBuilder
-
-# Simple transformations
-result = leetspeak("password")
-
-# Builder pattern
-result = (TransformBuilder("admin@example.com")
-          .homoglyphs()
-          .url_encode()
-          .build())
-```
-
----
-
-#### Task 1.5.5: Go Bindings (Go Module)
-**ID:** `DIST-005`  
+#### Task 2.1.2: Advanced Unicode Manipulation
+**ID:** `STR-012`  
 **Priority:** Medium  
 **Complexity:** Complex  
-**Estimated Time:** 3 weeks  
+**Estimated Time:** 2 weeks  
 **Status:** ⬜ Not Started  
 **Assignee:** _Available_  
-**Tags:** `bindings` `golang` `distribution` `phase:1`
+**Tags:** `feature` `transformation` `phase:2`
 
 **Description:**
-Create Go module with bindings for redstr using cgo or similar approach.
+Implement advanced Unicode manipulation beyond current unicode.rs functions.
 
 **Requirements:**
-- Choose approach: cgo with dynamic library or static linking
-- Create Go-friendly API wrapper
-- Generate Go documentation
-- Write comprehensive examples
-- Add Go tests
-- Publish as Go module
-- Set up automated releases
-- Support Go 1.19+
+- Implement Unicode combining character attacks
+- Add Unicode confusables beyond homoglyphs
+- Create Unicode normalization evasion
+- Implement grapheme cluster manipulation
+- Add invisible character insertion patterns
+- Create Unicode width manipulation
+- Implement script mixing attacks
+- Document Unicode-based evasion use cases
 
 **Deliverables:**
-```
-go-bindings/
-├── go.mod
-├── go.sum
-├── redstr.go
-├── redstr_test.go
-├── lib/
-│   ├── build.sh
-│   └── libredstr.h (C header)
-├── examples/
-│   ├── basic/
-│   │   └── main.go
-│   └── security/
-│       └── main.go
-└── README.md
-docs/go_usage.md
-.github/workflows/go-test.yml
-```
+- Additional functions in `src/transformations/unicode.rs`
+- Functions: `combining_char_attack()`, `confusable_advanced()`, `normalization_evade()`, `grapheme_manipulate()`, `invisible_insert()`, `width_manipulate()`, `script_mix_attack()`
+- Tests: Unit tests for all functions
+- Documentation: Doc comments with examples
 
 **Acceptance Criteria:**
-- [ ] Module installs via go get
-- [ ] All transformations accessible
-- [ ] Go-idiomatic API design
-- [ ] Documentation follows Go conventions
-- [ ] Tests pass with go test
-- [ ] Examples work correctly
-- [ ] Cross-platform compatibility
-- [ ] Published as Go module
+- [ ] Functions compile and pass tests
+- [ ] Unicode manipulation is sophisticated
+- [ ] Documentation includes filter evasion examples
+- [ ] Code follows project style guide
+- [ ] No new required dependencies added
 
 **Dependencies:** None
 
-**Module Path:** `github.com/arvid-berndtsson/redstr-go`
-
-**Example Usage:**
-```go
-package main
-
-import (
-    "fmt"
-    "github.com/arvid-berndtsson/redstr-go"
-)
-
-func main() {
-    result := redstr.Leetspeak("password")
-    fmt.Println(result)
-    
-    // Builder pattern
-    builder := redstr.NewTransformBuilder("admin@example.com")
-    result = builder.Homoglyphs().URLEncode().Build()
-    fmt.Println(result)
-}
-```
-
 ---
 
-#### Task 1.5.6: API Server Documentation & Enhancement
-**ID:** `DIST-006`  
-**Priority:** High  
-**Complexity:** Simple  
-**Estimated Time:** 1 week  
+### 2.2 Performance and Optimization
+
+#### Task 2.2.1: SIMD-Accelerated Transformations
+**ID:** `PERF-003`  
+**Priority:** Low  
+**Complexity:** Complex  
+**Estimated Time:** 3 weeks  
 **Status:** ⬜ Not Started  
 **Assignee:** _Available_  
-**Tags:** `[AGENT-FRIENDLY]` `documentation` `api-server` `distribution` `phase:1`
+**Tags:** `performance` `optimization` `phase:2`
 
 **Description:**
-Document and enhance the existing redstr-server repository as the recommended approach for language-agnostic usage.
+Implement SIMD-accelerated versions of hot-path transformations.
 
 **Requirements:**
-- Review existing redstr-server implementation
-- Document API endpoints and usage
-- Create OpenAPI/Swagger specification
-- Add examples for common languages (JavaScript, Python, Go, Ruby, etc.)
-- Document deployment options (Docker, systemd, cloud platforms)
-- Create quick start guide
-- Add client library examples
-- Document authentication and security best practices
-- Compare with language-specific bindings
+- Profile and identify hot-path functions
+- Implement SIMD versions using portable_simd
+- Add CPU feature detection
+- Create fallback implementations
+- Benchmark improvements
+- Document performance gains
 
 **Deliverables:**
-```
-docs/api_server.md (in main repo) - ✅ Created with inline examples
-  - Client examples for JavaScript, Python, Go, Ruby, cURL
-  - Deployment guides for Docker, systemd, cloud platforms
-  - Security best practices
-  - Performance and scaling guidance
-README.md updates (in main repo) - ✅ Updated with API server section
-docs/openapi.yaml (coordinate with redstr-server repo) - 🔜 Future work
-```
-
-**Note:** Client examples are documented inline in `api_server.md` rather than as separate files for easier maintenance and discoverability.
+- SIMD implementations for selected functions
+- Benchmarks showing improvements
+- Documentation on performance characteristics
 
 **Acceptance Criteria:**
-- [ ] API server documented comprehensively
-- [ ] OpenAPI spec available
-- [ ] Examples for 5+ languages
-- [ ] Deployment guide complete
-- [ ] README updated with server usage
-- [ ] Security best practices documented
-- [ ] Performance characteristics documented
+- [ ] SIMD implementations faster than scalar
+- [ ] Fallbacks work on all platforms
+- [ ] No new required dependencies (use std::simd when stable)
+- [ ] Benchmarks demonstrate improvements
 
-**Dependencies:** None (redstr-server already exists)
-
-**Notes:**
-- The API server approach is similar to how OpenAI works
-- Recommended for most use cases vs language-specific bindings
-- Easier to maintain centrally
-- Language-agnostic
-- Can be deployed as a microservice
-
-**API Server Usage Example:**
-```bash
-# Start server
-redstr-server --port 8080
-
-# Use from any language
-curl -X POST http://localhost:8080/transform \
-  -H "Content-Type: application/json" \
-  -d '{"input": "password", "mode": "leetspeak"}'
-```
+**Dependencies:** Task PERF-001 (benchmarking infrastructure)
 
 ---
 
-## 🔌 Phase 2: Platform Integration (Q2 2026)
+### 2.3 Advanced Domain-Specific Transformations
 
-### 2.1 EvilJinx Integration
-
-#### Task 2.1.1: Research EvilJinx Architecture
-**ID:** `INT-EJ-001`  
-**Priority:** High  
-**Complexity:** Simple  
+#### Task 2.3.1: Container and Orchestration String Transformations
+**ID:** `STR-013`  
+**Priority:** Low  
+**Complexity:** Medium  
 **Estimated Time:** 1 week  
 **Status:** ⬜ Not Started  
 **Assignee:** _Available_  
-**Tags:** `integration` `eviljinx` `research` `phase:2`
+**Tags:** `[AGENT-FRIENDLY]` `feature` `transformation` `phase:2`
 
 **Description:**
-Research EvilJinx architecture and integration points.
+Implement string transformations specific to container and orchestration technologies.
 
 **Requirements:**
-- Study EvilJinx codebase and architecture
-- Identify integration points
-- Research plugin/extension mechanisms
-- Create integration design document
-- Get feedback from EvilJinx maintainers
+- Implement Docker image name obfuscation
+- Add Kubernetes resource name variations
+- Create Docker environment variable obfuscation
+- Implement container label manipulation
+- Add Helm chart value obfuscation
+- Create Dockerfile instruction variations
+- Implement docker-compose.yml string obfuscation
+- Document container security testing use cases
 
 **Deliverables:**
-- Documentation: `docs/eviljinx_integration.md`
-- Integration design document
+- Functions in `src/transformations/containers.rs`
+- Functions: `docker_image_obfuscate()`, `k8s_resource_vary()`, `docker_env_obfuscate()`, `container_label_vary()`, `helm_value_obfuscate()`, `dockerfile_vary()`, `compose_obfuscate()`
+- Tests: Unit tests for all functions
+- Documentation: Doc comments with examples
+- Example: `examples/container_transformations.rs`
+
+**Acceptance Criteria:**
+- [ ] Functions compile and pass tests
+- [ ] Container transformations maintain validity where intended
+- [ ] Documentation includes security testing examples
+- [ ] Examples demonstrate real-world usage
+- [ ] Code follows project style guide
+- [ ] No new required dependencies added
 
 **Dependencies:** None
-
----
-
-#### Task 2.1.2: Create EvilJinx Plugin
-**ID:** `INT-EJ-002`  
-**Priority:** High  
-**Complexity:** Complex  
-**Estimated Time:** 3 weeks  
-**Status:** ⬜ Not Started  
-**Assignee:** _Available_  
-**Tags:** `integration` `eviljinx` `phase:2`
-
-**Description:**
-Create EvilJinx plugin/extension for redstr integration.
-
-**Requirements:**
-- Create plugin structure
-- Implement domain generation hooks
-- Add email obfuscation integration
-- Create template transformation functions
-- Add configuration options
-- Write documentation
-
-**Deliverables:**
-```
-integrations/eviljinx/
-├── plugin.rs
-├── hooks.rs
-├── config.rs
-└── README.md
-```
-
-**Dependencies:** Task INT-EJ-001
-
----
-
-### 2.2 Caido Integration
-
-#### Task 2.2.1: Research Caido Extension API
-**ID:** `INT-CAIDO-001`  
-**Priority:** High  
-**Complexity:** Simple  
-**Estimated Time:** 1 week  
-**Status:** ⬜ Not Started  
-**Assignee:** _Available_  
-**Tags:** `integration` `caido` `research` `phase:2`
-
-**Description:**
-Research Caido extension API and integration points.
-
-**Deliverables:**
-- Documentation: `docs/caido_integration.md`
-
-**Dependencies:** None
-
----
-
-#### Task 2.2.2: Create Caido Extension
-**ID:** `INT-CAIDO-002`  
-**Priority:** High  
-**Complexity:** Complex  
-**Estimated Time:** 3 weeks  
-**Status:** ⬜ Not Started  
-**Assignee:** _Available_  
-**Tags:** `integration` `caido` `phase:2`
-
-**Description:**
-Create Caido extension for redstr integration.
-
-**Dependencies:** Task INT-CAIDO-001
-
----
-
-### 2.3 Burp Suite Extension
-
-#### Task 2.3.1: Research Burp Extension API
-**ID:** `INT-BURP-001`  
-**Priority:** Medium  
-**Complexity:** Simple  
-**Estimated Time:** 1 week  
-**Status:** ⬜ Not Started  
-**Assignee:** _Available_  
-**Tags:** `integration` `burp` `research` `phase:2`
-
-**Description:**
-Research Burp Suite extension API and integration approach.
-
-**Dependencies:** None
-
----
-
-#### Task 2.3.2: Create Burp Extension
-**ID:** `INT-BURP-002`  
-**Priority:** Medium  
-**Complexity:** Complex  
-**Estimated Time:** 4 weeks  
-**Status:** ⬜ Not Started  
-**Assignee:** _Available_  
-**Tags:** `integration` `burp` `phase:2`
-
-**Description:**
-Create Burp Suite extension (HTTP API bridge preferred).
-
-**Dependencies:** Task INT-BURP-001
 
 ---
 
@@ -1128,5 +1201,31 @@ Update task status in this file when:
 
 ---
 
-**Last Updated:** November 26, 2025  
+**Last Updated:** December 1, 2025  
 **Next Review:** Weekly
+
+---
+
+## 📝 Recent Updates
+
+**December 1, 2025:**
+- Refocused tasks on string transformation functionality (core mission)
+- Moved third-party tool integrations to "Out of Scope" section
+- Moved language bindings to "Out of Scope" section (separate repositories)
+- Added 10 new string transformation tasks (STR-001 through STR-013):
+  - JSON/YAML manipulation
+  - XML/HTML advanced transformations
+  - Regular expression evasion techniques
+  - Network protocol string obfuscation
+  - Advanced text encoding techniques
+  - Cryptographic string transformations (patterns only)
+  - Binary and hexadecimal manipulation
+  - Templating and placeholder transformations
+  - i18n string transformations
+  - Code language transformations
+  - Steganographic encoding
+  - Advanced Unicode manipulation
+  - Container/orchestration transformations
+- Updated Phase 2 to focus on advanced transformation techniques
+- Clarified that third-party integrations should be in separate repositories
+- Emphasized zero-dependency principle for core library
