@@ -652,8 +652,12 @@ pub fn html_form_action_variation(action: &str) -> String {
             }
         }
         2 => {
-            // Double slash
-            result.replace("/", "//").replace("//", "/")
+            // Double slash - replace single slashes with double except at the start
+            if result.starts_with('/') && result.len() > 1 {
+                format!("/{}", result[1..].replace("/", "//"))
+            } else {
+                result.replace("/", "//")
+            }
         }
         3 => {
             // URL encode parts
@@ -1557,7 +1561,8 @@ mod tests {
     fn test_html_input_type_variation_empty() {
         let input_type = "";
         let result = html_input_type_variation(input_type);
-        assert!(result.is_empty() || result.len() > 0);
+        // Empty input may return empty or a random type
+        assert!(result.is_empty() || result.len() >= 3); // Shortest type is "tel", "url"
     }
 
     #[test]
@@ -1681,7 +1686,8 @@ mod tests {
     fn test_html_form_action_variation_empty() {
         let action = "";
         let result = html_form_action_variation(action);
-        assert!(result.is_empty() || result.len() > 0);
+        // Empty action may stay empty or get query params added
+        assert!(result.is_empty() || result.starts_with('?'));
     }
 
     #[test]
