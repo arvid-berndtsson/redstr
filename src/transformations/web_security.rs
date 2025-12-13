@@ -1334,7 +1334,7 @@ mod tests {
     fn test_html_input_attribute_variation_autofocus() {
         let input = r#"<input type="text">"#;
         let mut found_autofocus = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_input_attribute_variation(input);
             if result.contains("autofocus") {
                 found_autofocus = true;
@@ -1363,7 +1363,7 @@ mod tests {
     fn test_html_input_attribute_variation_hidden() {
         let input = r#"<input type="text">"#;
         let mut found_hidden = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_input_attribute_variation(input);
             if result.contains("hidden") {
                 found_hidden = true;
@@ -1377,7 +1377,7 @@ mod tests {
     fn test_html_input_attribute_variation_required() {
         let input = r#"<input type="email">"#;
         let mut found_required = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_input_attribute_variation(input);
             if result.contains("required") {
                 found_required = true;
@@ -1405,7 +1405,7 @@ mod tests {
     fn test_html_input_attribute_variation_preserves_structure() {
         let input = r#"<input type="text" name="user">"#;
         let result = html_input_attribute_variation(input);
-        assert!(result.contains("input"));
+        assert!(result.to_lowercase().contains("input"));
     }
 
     #[test]
@@ -1440,15 +1440,20 @@ mod tests {
     fn test_html_form_field_obfuscate_empty() {
         let field = "";
         let result = html_form_field_obfuscate(field);
-        // Empty field can have prefix/suffix added (max 2 chars)
-        assert!(result.len() <= 2);
+        // Empty field can have various transformations applied:
+        // - "" (case_swap on empty)
+        // - "_" or "_" (1 char)
+        // - "[]" (2 chars)
+        // - "user[]" (6 chars)
+        // - "form." (5 chars)
+        assert!(result.len() <= 6);
     }
 
     #[test]
     fn test_html_form_field_obfuscate_array_notation() {
         let field = "email";
         let mut found_array = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_form_field_obfuscate(field);
             if result.contains("[]") {
                 found_array = true;
@@ -1463,7 +1468,7 @@ mod tests {
     fn test_html_form_field_obfuscate_nested_notation() {
         let field = "password";
         let mut found_nested = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_form_field_obfuscate(field);
             if result.contains("user[") {
                 found_nested = true;
@@ -1478,7 +1483,7 @@ mod tests {
     fn test_html_form_field_obfuscate_dot_notation() {
         let field = "name";
         let mut found_dot = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_form_field_obfuscate(field);
             if result.contains("form.") {
                 found_dot = true;
@@ -1493,7 +1498,7 @@ mod tests {
     fn test_html_form_field_obfuscate_underscore_prefix() {
         let field = "token";
         let mut found_underscore = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_form_field_obfuscate(field);
             if result.starts_with('_') || result.ends_with('_') {
                 found_underscore = true;
@@ -1558,8 +1563,24 @@ mod tests {
     #[test]
     fn test_html_input_type_variation_valid_types() {
         let valid_types = [
-            "text", "password", "email", "number", "tel", "url", "search", "hidden", "submit",
-            "button", "file", "date", "datetime-local", "time", "week", "month", "color", "range",
+            "text",
+            "password",
+            "email",
+            "number",
+            "tel",
+            "url",
+            "search",
+            "hidden",
+            "submit",
+            "button",
+            "file",
+            "date",
+            "datetime-local",
+            "time",
+            "week",
+            "month",
+            "color",
+            "range",
         ];
         for _ in 0..50 {
             let result = html_input_type_variation("password");
@@ -1574,7 +1595,7 @@ mod tests {
     fn test_html_input_type_variation_case_swap() {
         let input_type = "password";
         let mut found_case_swap = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_input_type_variation(input_type);
             if result != input_type && result.to_lowercase() == input_type {
                 found_case_swap = true;
@@ -1588,7 +1609,7 @@ mod tests {
     fn test_html_input_type_variation_random_type() {
         let input_type = "text";
         let mut found_different = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_input_type_variation(input_type);
             if result != input_type && result.to_lowercase() != input_type {
                 found_different = true;
@@ -1667,7 +1688,7 @@ mod tests {
     fn test_html_form_action_variation_query_params() {
         let action = "/api/submit";
         let mut found_query = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_form_action_variation(action);
             if result.contains('?') {
                 found_query = true;
@@ -1682,7 +1703,7 @@ mod tests {
     fn test_html_form_action_variation_existing_query() {
         let action = "/api/submit?id=123";
         let mut found_additional_param = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_form_action_variation(action);
             if result.contains('&') {
                 found_additional_param = true;
@@ -1697,7 +1718,7 @@ mod tests {
     fn test_html_form_action_variation_trailing_slash() {
         let action = "/api/login";
         let mut found_slash_variation = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_form_action_variation(action);
             if result.ends_with('/') || result == action.trim_end_matches('/') {
                 found_slash_variation = true;
@@ -1711,7 +1732,7 @@ mod tests {
     fn test_html_form_action_variation_url_encode() {
         let action = "/api/test path";
         let mut found_encoded = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_form_action_variation(action);
             if result.contains("%20") || result.contains("+") {
                 found_encoded = true;
@@ -1749,7 +1770,11 @@ mod tests {
     fn test_html_form_action_variation_relative_url() {
         let action = "../admin/panel";
         let result = html_form_action_variation(action);
-        assert!(result.contains("admin") || result.contains("panel") || result.contains("%"));
+        assert!(
+            result.to_lowercase().contains("admin")
+                || result.to_lowercase().contains("panel")
+                || result.contains("%")
+        );
     }
 
     #[test]
@@ -1787,7 +1812,7 @@ mod tests {
     fn test_html_input_value_obfuscate_html_entity() {
         let value = "test@example.com";
         let mut found_entity = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_input_value_obfuscate(value);
             if result.contains("&#") {
                 found_entity = true;
@@ -1802,7 +1827,7 @@ mod tests {
     fn test_html_input_value_obfuscate_url_encode() {
         let value = "hello world";
         let mut found_encoded = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_input_value_obfuscate(value);
             if result.contains("%20") || result.contains("+") {
                 found_encoded = true;
@@ -1816,7 +1841,7 @@ mod tests {
     fn test_html_input_value_obfuscate_unicode_escape() {
         let value = "test@value";
         let mut found_unicode = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_input_value_obfuscate(value);
             if result.contains("\\u") {
                 found_unicode = true;
@@ -1830,7 +1855,7 @@ mod tests {
     fn test_html_input_value_obfuscate_quotes() {
         let value = r#"value"with"quotes"#;
         let mut found_single_quotes = false;
-        for _ in 0..20 {
+        for _ in 0..100 {
             let result = html_input_value_obfuscate(value);
             if result.contains('\'') {
                 found_single_quotes = true;

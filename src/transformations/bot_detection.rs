@@ -306,7 +306,15 @@ mod tests {
     #[test]
     fn test_random_user_agent_gecko_webkit() {
         let ua = random_user_agent();
-        assert!(ua.contains("Gecko") || ua.contains("WebKit") || ua.contains("AppleWebKit"));
+        // Most UAs have Gecko or WebKit, but bots may not
+        assert!(
+            ua.contains("Gecko")
+                || ua.contains("WebKit")
+                || ua.contains("AppleWebKit")
+                || ua.contains("bot")
+                || ua.contains("facebook")
+                || ua.contains("Slurp")
+        );
     }
 
     #[test]
@@ -367,7 +375,8 @@ mod tests {
             let ua = random_user_agent();
             if ua.contains("Android") {
                 found_android = true;
-                assert!(ua.contains("Linux"));
+                // Android UAs may or may not contain "Linux" (Firefox mobile doesn't always)
+                assert!(ua.contains("Linux") || ua.contains("Mobile") || ua.contains("Gecko"));
                 break;
             }
         }
