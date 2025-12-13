@@ -129,8 +129,10 @@ pub use transformations::cloudflare::{
 // Re-export web security transformations
 pub use transformations::web_security::{
     api_endpoint_variation, graphql_introspection_bypass, graphql_obfuscate,
-    graphql_variable_injection, http_header_variation, jwt_algorithm_confusion,
-    jwt_header_manipulation, jwt_payload_obfuscate, jwt_signature_bypass, session_token_variation,
+    graphql_variable_injection, html_form_action_variation, html_form_field_obfuscate,
+    html_input_attribute_variation, html_input_type_variation, html_input_value_obfuscate,
+    http_header_variation, jwt_algorithm_confusion, jwt_header_manipulation, jwt_payload_obfuscate,
+    jwt_signature_bypass, session_token_variation,
 };
 
 // Re-export shell transformations
