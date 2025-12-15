@@ -1,0 +1,17 @@
+[package]
+name = "redstr-python"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Python bindings for redstr - native string transformations for security testing"
+
+[lib]
+name = "redstr"
+crate-type = ["cdylib"]
+
+[dependencies]
+redstr.workspace = true
+pyo3 = { version = "0.20", features = ["extension-module"] }

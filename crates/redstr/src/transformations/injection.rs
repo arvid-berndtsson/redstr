@@ -1,0 +1,1228 @@
+use crate::rng::SimpleRng;
+
+/// Inserts SQL comment patterns for SQL injection testing.
+///
+/// Useful for red team SQL injection testing and blue team input validation.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::sql_comment_injection;
+/// let result = sql_comment_injection("SELECT * FROM users");
+/// // Result may contain SQL comments injected between words
+/// assert!(result.contains("SELECT") && result.len() >= "SELECT * FROM users".len());
+/// ```
+pub fn sql_comment_injection(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let comments = ["--", "/**/", "#", "-- -"];
+    let words: Vec<&str> = input.split_whitespace().collect();
+
+    words
+        .iter()
+        .enumerate()
+        .map(|(i, word)| {
+            if i > 0 && rng.next() % 3 == 0 {
+                let comment = comments[rng.next() as usize % comments.len()];
+                format!("{}{}", comment, word)
+            } else {
+                word.to_string()
+            }
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+/// Generates XSS tag variations for testing XSS filters.
+///
+/// Useful for red team XSS filter evasion and blue team XSS detection testing.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::xss_tag_variations;
+/// let result = xss_tag_variations("<script>alert(1)</script>");
+/// // Result contains variations in tags and case
+/// assert!(result.len() >= 20);
+/// ```
+pub fn xss_tag_variations(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+
+    input
+        .chars()
+        .map(|c| {
+            if c == '<' {
+                match rng.next() % 4 {
+                    0 => "<".to_string(),
+                    1 => "&#60;".to_string(),
+                    2 => "&#x3C;".to_string(),
+                    _ => "%3C".to_string(),
+                }
+            } else if c == '>' {
+                match rng.next() % 4 {
+                    0 => ">".to_string(),
+                    1 => "&#62;".to_string(),
+                    2 => "&#x3E;".to_string(),
+                    _ => "%3E".to_string(),
+                }
+            } else if c.is_alphabetic() && rng.next() % 3 == 0 {
+                if rng.next() % 2 == 0 {
+                    c.to_uppercase().to_string()
+                } else {
+                    c.to_lowercase().to_string()
+                }
+            } else {
+                c.to_string()
+            }
+        })
+        .collect()
+}
+
+/// Inserts null byte representations for testing null byte vulnerabilities.
+///
+/// Randomly inserts null byte string representations (`%00`, `\0`, `\x00`, `&#00;`)
+/// between characters with 25% probability. Uses string representations rather than
+/// actual null bytes to ensure the output remains a valid Rust string. This tests
+/// how systems handle null byte injection attacks.
+///
+/// # Use Cases
+///
+/// - **Red Team**: Exploit null byte vulnerabilities in file operations
+/// - **Path Truncation**: Test if systems truncate at null bytes (`file.txt%00.jpg`)
+/// - **Filter Bypass**: Bypass extension or content-type validation
+/// - **Blue Team**: Validate proper null byte handling and sanitization
+///
+/// # Examples
+///
+/// ```
+/// use redstr::null_byte_injection;
+///
+/// let result = null_byte_injection("test.txt");
+/// // Example: "test%00.txt" or "te\x00st.txt" (varies each run)
+/// assert!(result.len() >= "test.txt".len());
+///
+/// // File extension bypass
+/// let file = null_byte_injection("shell.php.jpg");
+/// // Example: "shell.php%00.jpg"
+/// // May be interpreted as "shell.php" if system truncates at null
+///
+/// // Path traversal with null byte
+/// let path = null_byte_injection("../../etc/passwd.txt");
+/// // Example: "../..%00/etc/passwd.txt"
+/// ```
+pub fn null_byte_injection(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let null_variants = ["%00", "\\0", "\\x00", "&#00;"];
+    let input_len = input.len();
+
+    input
+        .chars()
+        .enumerate()
+        .map(|(i, c)| {
+            if i > 0 && i < input_len - 1 && rng.next() % 4 == 0 {
+                let null = null_variants[rng.next() as usize % null_variants.len()];
+                format!("{}{}", null, c)
+            } else {
+                c.to_string()
+            }
+        })
+        .collect()
+}
+
+/// Generates path traversal patterns for directory traversal testing.
+///
+/// Randomly replaces forward slashes with path traversal sequences like `../`,
+/// `..\`, `....//`, or URL-encoded variants (`%2e%2e/`). This creates payloads
+/// to test directory traversal vulnerabilities where attackers try to access
+/// files outside the intended directory.
+///
+/// # Use Cases
+///
+/// - **Red Team**: Test for directory traversal vulnerabilities
+/// - **LFI/RFI Testing**: Local/Remote File Inclusion attack payloads
+/// - **Path Validation**: Test if systems properly sanitize paths
+/// - **Blue Team**: Validate path traversal prevention mechanisms
+///
+/// # Examples
+///
+/// ```
+/// use redstr::path_traversal;
+///
+/// let result = path_traversal("/etc/passwd");
+/// // Example: "../etc/../passwd" or "..%2fetc/passwd" (varies each run)
+/// assert!(result.contains("etc") && result.contains("passwd"));
+///
+/// // Web application file access
+/// let file = path_traversal("uploads/file.txt");
+/// // Example: "uploads/../file.txt" or "..\\uploads/file.txt"
+///
+/// // Nested traversal
+/// let deep = path_traversal("/var/www/html/index.php");
+/// // Example: "../var/../www/....//html/index.php"
+/// ```
+pub fn path_traversal(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let traversals = ["../", "..\\", "....//", "..../\\", "%2e%2e/", "%2e%2e\\"];
+
+    let parts: Vec<&str> = input.split('/').collect();
+    let mut result = String::new();
+
+    for (i, part) in parts.iter().enumerate() {
+        if i > 0 {
+            if rng.next() % 2 == 0 {
+                let traversal = traversals[rng.next() as usize % traversals.len()];
+                result.push_str(traversal);
+            } else {
+                result.push('/');
+            }
+        }
+        result.push_str(part);
+    }
+
+    result
+}
+
+/// Generates command injection variations for OS command injection testing.
+///
+/// Randomly inserts OS command separators (`;`, `|`, `||`, `&&`, `&`, backticks, `$()`)
+/// between words with 33% probability. These separators can chain commands together,
+/// useful for testing command injection vulnerabilities where user input is passed
+/// to shell commands.
+///
+/// # Use Cases
+///
+/// - **Red Team**: Test OS command injection vulnerabilities
+/// - **Shell Injection**: Inject additional commands into system calls
+/// - **Input Validation**: Test if systems properly sanitize shell metacharacters
+/// - **Blue Team**: Validate command injection prevention
+///
+/// # Examples
+///
+/// ```
+/// use redstr::command_injection;
+///
+/// let result = command_injection("ping example.com");
+/// // Example: "ping;example.com" or "ping|example.com" (varies each run)
+/// assert!(result.contains("ping") && result.len() >= "ping example.com".len());
+///
+/// // Chaining commands
+/// let cmd = command_injection("ls -la");
+/// // Example: "ls;-la" or "ls|-la"
+/// // Could execute: ls; cat /etc/passwd
+///
+/// // Web application command injection
+/// let input = command_injection("192.168.1.1");
+/// // Example: "192.168.1.1;cat /etc/passwd"
+/// // Tests: ping 192.168.1.1; cat /etc/passwd
+/// ```
+pub fn command_injection(input: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let separators = [";", "|", "||", "&&", "&", "`", "$()"];
+    let words: Vec<&str> = input.split_whitespace().collect();
+
+    words
+        .iter()
+        .enumerate()
+        .map(|(i, word)| {
+            if i > 0 && rng.next() % 3 == 0 {
+                let sep = separators[rng.next() as usize % separators.len()];
+                format!("{}{}", sep, word)
+            } else {
+                word.to_string()
+            }
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_sql_comment_injection() {
+        let result = sql_comment_injection("SELECT * FROM users");
+        // Check that it contains SQL-related content and possibly comments
+        assert!(result.contains("SELECT") || result.contains("FROM") || result.contains("users"));
+    }
+
+    #[test]
+    fn test_xss_tag_variations() {
+        let result = xss_tag_variations("<script>alert(1)</script>");
+        // Should contain some form of the input with variations
+        // The function modifies brackets and case, so just check it produced output
+        assert!(result.len() >= "<script>alert(1)</script>".len());
+        assert!(result.to_lowercase().contains("script") || result.contains("&#"));
+    }
+
+    #[test]
+    fn test_null_byte_injection() {
+        let result = null_byte_injection("test.txt");
+        // Should contain the original text and be at least as long
+        assert!(result.len() >= "test.txt".len());
+        // First and last characters should be preserved
+        assert!(result.starts_with('t') && result.ends_with('t'));
+    }
+
+    #[test]
+    fn test_path_traversal() {
+        let result = path_traversal("/etc/passwd");
+        // Should contain original path elements
+        assert!(result.contains("etc") && result.contains("passwd"));
+    }
+
+    #[test]
+    fn test_command_injection() {
+        let result = command_injection("ping example.com");
+        // Should contain original command elements
+        assert!(result.contains("ping") || result.contains("example"));
+    }
+}
+
+/// Generates MongoDB injection patterns for NoSQL injection testing.
+///
+/// Useful for red team NoSQL injection testing and blue team input validation.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::mongodb_injection;
+/// let query = r#"{"username": "admin", "password": "secret"}"#;
+/// let result = mongodb_injection(query);
+/// assert!(result.len() > 0);
+/// ```
+pub fn mongodb_injection(query: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let mut result = query.to_string();
+
+    // Common MongoDB injection patterns
+    let operators = ["$ne", "$gt", "$lt", "$gte", "$lte", "$in", "$nin", "$regex"];
+
+    // Inject MongoDB operators
+    if result.contains("password") || result.contains("username") {
+        match rng.next() % 4 {
+            0 => {
+                // Not equal operator
+                result = result.replace(r#""password": "#, r#""password": {"$ne": "#);
+                if result.contains(r#"{"$ne": "#) && !result.contains("}") {
+                    result.push('}');
+                }
+            }
+            1 => {
+                // Regex operator
+                result = result.replace(r#""password": "#, r#""password": {"$regex": "#);
+                if result.contains(r#"{"$regex": "#) && !result.contains("}") {
+                    result.push('}');
+                }
+            }
+            2 => {
+                // Greater than operator
+                result = result.replace(r#""username": "#, r#""username": {"$gt": "#);
+                if result.contains(r#"{"$gt": "#) && !result.contains("}") {
+                    result.push('}');
+                }
+            }
+            _ => {
+                // In operator
+                result = result.replace(r#""username": "#, r#""username": {"$in": ["#);
+                if result.contains(r#"{"$in": ["#) && !result.contains("]") {
+                    result.push(']');
+                }
+            }
+        }
+    } else {
+        // Generic operator injection
+        let op = operators[rng.next() as usize % operators.len()];
+        if result.contains(':') {
+            let replacement = format!(": {{\"{}\": ", op);
+            result = result.replace(":", &replacement);
+            if !result.contains('}') {
+                result.push('}');
+            }
+        }
+    }
+
+    result
+}
+
+/// Generates CouchDB injection patterns for NoSQL injection testing.
+///
+/// Useful for red team NoSQL injection testing and blue team input validation.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::couchdb_injection;
+/// let query = r#"{"selector": {"name": "admin"}}"#;
+/// let result = couchdb_injection(query);
+/// assert!(result.len() > 0);
+/// ```
+pub fn couchdb_injection(query: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let mut result = query.to_string();
+
+    // Common CouchDB injection patterns
+    match rng.next() % 3 {
+        0 => {
+            // Inject $or operator
+            if result.contains("selector") {
+                result = result.replace(r#""selector": {"#, r#""selector": {"$or": [{"#);
+                if result.contains(r#"{"$or": [{"#) && !result.contains("]") {
+                    result = result.replace("}", "}]}");
+                }
+            }
+        }
+        1 => {
+            // Inject $regex operator
+            if result.contains(":") {
+                result = result.replace(":", r#": {"$regex": "#);
+                if result.contains(r#"{"$regex": "#) && !result.contains("}") {
+                    result.push('}');
+                }
+            }
+        }
+        _ => {
+            // Inject $exists operator
+            if result.contains(":") {
+                result = result.replace(":", r#": {"$exists": true, "#);
+                if result.contains(r#"{"$exists": true, "#) && !result.contains("}") {
+                    result.push('}');
+                }
+            }
+        }
+    }
+
+    result
+}
+
+/// Generates DynamoDB query obfuscation patterns for NoSQL injection testing.
+///
+/// Useful for red team NoSQL injection testing and blue team input validation.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::dynamodb_obfuscate;
+/// let query = r#"{"Key": {"id": {"S": "123"}}}"#;
+/// let result = dynamodb_obfuscate(query);
+/// assert!(result.len() > 0);
+/// ```
+pub fn dynamodb_obfuscate(query: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let mut result = query.to_string();
+
+    // Common DynamoDB obfuscation patterns
+    match rng.next() % 3 {
+        0 => {
+            // Change attribute type
+            result = result.replace(r#"{"S": "#, r#"{"N": "#);
+            result = result.replace(r#"{"N": "#, r#"{"S": "#);
+        }
+        1 => {
+            // Add extra attributes
+            if result.contains("Key") {
+                result = result.replace(r#""Key": {"#, r#""Key": {"extra": {"S": "value"}, "#);
+            }
+        }
+        _ => {
+            // Modify comparison operators
+            result = result.replace("=", "!=");
+            result = result.replace("!=", "=");
+        }
+    }
+
+    result
+}
+
+/// Generates NoSQL operator injection patterns for NoSQL injection testing.
+///
+/// Useful for red team NoSQL injection testing and blue team input validation.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::nosql_operator_injection;
+/// let query = r#"{"username": "admin"}"#;
+/// let result = nosql_operator_injection(query);
+/// assert!(result.len() > 0);
+/// ```
+pub fn nosql_operator_injection(query: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let mut result = query.to_string();
+
+    // Common NoSQL operators
+    let operators = [
+        ("$ne", "not equal"),
+        ("$gt", "greater than"),
+        ("$lt", "less than"),
+        ("$gte", "greater than or equal"),
+        ("$lte", "less than or equal"),
+        ("$in", "in array"),
+        ("$nin", "not in array"),
+        ("$regex", "regex match"),
+        ("$exists", "field exists"),
+        ("$or", "logical or"),
+        ("$and", "logical and"),
+        ("$nor", "logical nor"),
+    ];
+
+    // Inject operator based on query structure
+    if result.contains(':') {
+        let (op_name, _) = operators[rng.next() as usize % operators.len()];
+        match rng.next() % 3 {
+            0 => {
+                // Replace value with operator
+                if let Some(pos) = result.find(':') {
+                    let (before, after) = result.split_at(pos + 1);
+                    let after_trimmed = after.trim_start();
+                    if after_trimmed.starts_with('"') {
+                        result = format!(
+                            r#"{} {{"{}": {}}}"#,
+                            before.trim_end(),
+                            op_name,
+                            after_trimmed
+                        );
+                    }
+                }
+            }
+            1 => {
+                // Add operator to existing field
+                let replacement = format!(": {{\"{}\": ", op_name);
+                result = result.replace(":", &replacement);
+                if !result.contains("}") {
+                    result.push('}');
+                }
+            }
+            _ => {
+                // Wrap in $or
+                result = format!(r#"{{"$or": [{}]}}"#, result);
+            }
+        }
+    }
+
+    result
+}
+
+/// Generates Server-Side Template Injection (SSTI) patterns for template injection testing.
+///
+/// Useful for red team SSTI testing and blue team template validation.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::ssti_injection;
+/// let template = "Hello {{ name }}";
+/// let result = ssti_injection(template);
+/// assert!(result.len() > 0);
+/// ```
+pub fn ssti_injection(template: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let mut result = template.to_string();
+
+    // Common SSTI patterns for various template engines
+    let jinja2_patterns = [
+        "{{ config }}",
+        "{{ self.__dict__ }}",
+        "{{ ''.__class__.__mro__[2].__subclasses__() }}",
+        "{{ request }}",
+    ];
+
+    let freemarker_patterns = ["${.vars}", "${.data_model}", "${.main}", "${.namespace}"];
+
+    let velocity_patterns = ["$class", "$class.inspect", "$class.type"];
+
+    // Detect template engine and inject appropriate pattern
+    if result.contains("{{") || result.contains("}}") {
+        // Jinja2/Handlebars style
+        let pattern = jinja2_patterns[rng.next() as usize % jinja2_patterns.len()];
+        if result.contains("{{") {
+            result = result.replace("{{", &format!("{}{{", pattern));
+        } else {
+            result = format!("{}{}", result, pattern);
+        }
+    } else if result.contains("${") {
+        // Freemarker/Velocity style
+        let pattern = if rng.next() % 2 == 0 {
+            freemarker_patterns[rng.next() as usize % freemarker_patterns.len()]
+        } else {
+            velocity_patterns[rng.next() as usize % velocity_patterns.len()]
+        };
+        if result.contains("${") {
+            result = result.replace("${", &format!("{}${{", pattern));
+        } else {
+            result = format!("{}{}", result, pattern);
+        }
+    } else {
+        // Generic injection
+        let generic_patterns = ["{{7*7}}", "${7*7}", "#{7*7}", "${@print(md5(31337))}"];
+        let pattern = generic_patterns[rng.next() as usize % generic_patterns.len()];
+        result = format!("{}{}", result, pattern);
+    }
+
+    result
+}
+
+/// Generates framework-specific SSTI variations for template injection testing.
+///
+/// Useful for red team SSTI testing and blue team template validation.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::ssti_framework_variation;
+/// let template = "Hello {{ name }}";
+/// let result = ssti_framework_variation(template, "jinja2");
+/// assert!(result.len() > 0);
+/// ```
+pub fn ssti_framework_variation(template: &str, framework: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let mut result = template.to_string();
+
+    match framework.to_lowercase().as_str() {
+        "jinja2" | "jinja" => {
+            let patterns = [
+                "{{ config.items() }}",
+                "{{ request.application.__globals__ }}",
+                "{{ ''.__class__.__mro__[1].__subclasses__() }}",
+            ];
+            let pattern = patterns[rng.next() as usize % patterns.len()];
+            result = format!("{}{}", result, pattern);
+        }
+        "freemarker" => {
+            let patterns = ["${.vars}", "${.data_model}", "${.main}"];
+            let pattern = patterns[rng.next() as usize % patterns.len()];
+            result = format!("{}{}", result, pattern);
+        }
+        "velocity" => {
+            let patterns = ["$class.inspect", "$class.type", "$class.forName"];
+            let pattern = patterns[rng.next() as usize % patterns.len()];
+            result = format!("{}{}", result, pattern);
+        }
+        "twig" => {
+            let patterns = ["{{ _self }}", "{{ _self.env }}", "{{ dump(_self) }}"];
+            let pattern = patterns[rng.next() as usize % patterns.len()];
+            result = format!("{}{}", result, pattern);
+        }
+        _ => {
+            // Generic pattern
+            result = format!("{}{{7*7}}", result);
+        }
+    }
+
+    result
+}
+
+/// Generates template syntax obfuscation for SSTI testing.
+///
+/// Useful for red team SSTI obfuscation and blue team template parsing validation.
+///
+/// # Examples
+///
+/// ```
+/// use redstr::ssti_syntax_obfuscate;
+/// let template = "{{ name }}";
+/// let result = ssti_syntax_obfuscate(template);
+/// assert!(result.len() > 0);
+/// ```
+pub fn ssti_syntax_obfuscate(template: &str) -> String {
+    let mut rng = SimpleRng::new();
+    let mut result = template.to_string();
+
+    // Obfuscate template syntax
+    match rng.next() % 4 {
+        0 => {
+            // Add whitespace variations
+            result = result.replace("{{", "{ {");
+            result = result.replace("}}", "} }");
+        }
+        1 => {
+            // Use different delimiters
+            result = result.replace("{{", "${");
+            result = result.replace("}}", "}");
+        }
+        2 => {
+            // Add comments
+            result = result.replace("{{", "{# comment #}{{");
+        }
+        _ => {
+            // Case variation in keywords
+            result = result.replace("name", "Name");
+            result = result.replace("Name", "NAME");
+        }
+    }
+
+    result
+}
+
+#[cfg(test)]
+mod nosql_ssti_tests {
+    use super::*;
+
+    #[test]
+    fn test_mongodb_injection() {
+        let query = r#"{"username": "admin", "password": "secret"}"#;
+        let result = mongodb_injection(query);
+        assert!(!result.is_empty());
+        assert!(result.contains("username") || result.contains("password"));
+    }
+
+    #[test]
+    fn test_mongodb_injection_empty_string() {
+        let query = "";
+        let result = mongodb_injection(query);
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_mongodb_injection_ne_operator() {
+        let query = r#"{"password": "test"}"#;
+        let result = mongodb_injection(query);
+        // May inject $ne operator
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_mongodb_injection_username_field() {
+        let query = r#"{"username": "admin"}"#;
+        let result = mongodb_injection(query);
+        assert!(result.contains("username"));
+    }
+
+    #[test]
+    fn test_mongodb_injection_regex_operator() {
+        let query = r#"{"password": "secret123"}"#;
+        let result = mongodb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_mongodb_injection_gt_operator() {
+        let query = r#"{"username": "user1"}"#;
+        let result = mongodb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_mongodb_injection_in_operator() {
+        let query = r#"{"username": "test"}"#;
+        let result = mongodb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_mongodb_injection_no_special_fields() {
+        let query = r#"{"field": "value"}"#;
+        let result = mongodb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_mongodb_injection_complex_query() {
+        let query = r#"{"username": "admin", "password": "secret", "role": "user"}"#;
+        let result = mongodb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_mongodb_injection_nested_object() {
+        let query = r#"{"user": {"username": "admin"}}"#;
+        let result = mongodb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_mongodb_injection_preserves_structure() {
+        let query = r#"{"username": "admin", "password": "secret"}"#;
+        let result = mongodb_injection(query);
+        assert!(result.contains("{") && result.contains("}"));
+    }
+
+    #[test]
+    fn test_couchdb_injection() {
+        let query = r#"{"selector": {"name": "admin"}}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_empty_string() {
+        let query = "";
+        let result = couchdb_injection(query);
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_couchdb_injection_or_operator() {
+        let query = r#"{"selector": {"name": "admin"}}"#;
+        let result = couchdb_injection(query);
+        // May inject $or operator
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_regex_operator() {
+        let query = r#"{"selector": {"email": "test@example.com"}}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_exists_operator() {
+        let query = r#"{"selector": {"field": "value"}}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_without_selector() {
+        let query = r#"{"name": "admin"}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_complex_selector() {
+        let query = r#"{"selector": {"name": "admin", "role": "user"}}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_nested_selector() {
+        let query = r#"{"selector": {"user": {"name": "admin"}}}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_with_limit() {
+        let query = r#"{"selector": {"name": "admin"}, "limit": 10}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_with_fields() {
+        let query = r#"{"selector": {"name": "admin"}, "fields": ["name", "email"]}"#;
+        let result = couchdb_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_couchdb_injection_preserves_structure() {
+        let query = r#"{"selector": {"name": "admin"}}"#;
+        let result = couchdb_injection(query);
+        assert!(result.contains("{") && result.contains("}"));
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate() {
+        let query = r#"{"Key": {"id": {"S": "123"}}}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_empty_string() {
+        let query = "";
+        let result = dynamodb_obfuscate(query);
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_string_type() {
+        let query = r#"{"Key": {"id": {"S": "user123"}}}"#;
+        let result = dynamodb_obfuscate(query);
+        // May change type or add attributes
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_number_type() {
+        let query = r#"{"Key": {"id": {"N": "456"}}}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_without_key() {
+        let query = r#"{"id": {"S": "123"}}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_extra_attributes() {
+        let query = r#"{"Key": {"id": {"S": "123"}}, "ExpressionAttributeNames": {}}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_comparison_operators() {
+        let query = r#"{"FilterExpression": "age = 25"}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_complex_key() {
+        let query = r#"{"Key": {"pk": {"S": "user"}, "sk": {"S": "profile"}}}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_with_attributes() {
+        let query = r#"{"Key": {"id": {"S": "123"}}, "ProjectionExpression": "name, email"}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_boolean_type() {
+        let query = r#"{"Key": {"active": {"BOOL": true}}}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_dynamodb_obfuscate_preserves_structure() {
+        let query = r#"{"Key": {"id": {"S": "123"}}}"#;
+        let result = dynamodb_obfuscate(query);
+        assert!(result.contains("{") && result.contains("}"));
+    }
+
+    #[test]
+    fn test_nosql_operator_injection() {
+        let query = r#"{"username": "admin"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_empty_string() {
+        let query = "";
+        let result = nosql_operator_injection(query);
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_ne_operator() {
+        let query = r#"{"field": "value"}"#;
+        let result = nosql_operator_injection(query);
+        // May inject various operators
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_gt_operator() {
+        let query = r#"{"age": "25"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_regex_operator() {
+        let query = r#"{"email": "test@example.com"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_in_operator() {
+        let query = r#"{"role": "user"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_exists_operator() {
+        let query = r#"{"active": "true"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_or_operator() {
+        let query = r#"{"name": "test"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_complex_query() {
+        let query = r#"{"username": "admin", "password": "secret"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_without_colon() {
+        let query = r#"{"field"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_multiple_fields() {
+        let query = r#"{"field1": "value1", "field2": "value2"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_nosql_operator_injection_preserves_structure() {
+        let query = r#"{"username": "admin"}"#;
+        let result = nosql_operator_injection(query);
+        assert!(result.contains("{") || result.contains("username"));
+    }
+
+    #[test]
+    fn test_ssti_injection() {
+        let template = "Hello {{ name }}";
+        let result = ssti_injection(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_injection_empty_string() {
+        let template = "";
+        let result = ssti_injection(template);
+        // Empty input results in generic pattern injection ({{7*7}}, ${7*7}, etc.)
+        assert!(
+            !result.is_empty()
+                && (result.contains("{{") || result.contains("${") || result.contains("#{"))
+        );
+    }
+
+    #[test]
+    fn test_ssti_injection_jinja2_style() {
+        let template = "Hello {{ name }}";
+        let result = ssti_injection(template);
+        // Should inject Jinja2 patterns
+        assert!(result.contains("{{") || result.contains("config") || result.contains("name"));
+    }
+
+    #[test]
+    fn test_ssti_injection_freemarker_style() {
+        let template = "Hello ${name}";
+        let result = ssti_injection(template);
+        // Should inject Freemarker/Velocity patterns
+        assert!(result.contains("$"));
+    }
+
+    #[test]
+    fn test_ssti_injection_no_template_syntax() {
+        let template = "Hello world";
+        let result = ssti_injection(template);
+        // Should inject generic patterns
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_injection_multiple_placeholders() {
+        let template = "{{ greeting }} {{ name }}";
+        let result = ssti_injection(template);
+        assert!(result.contains("{{") || result.contains("greeting"));
+    }
+
+    #[test]
+    fn test_ssti_injection_nested_template() {
+        let template = "{{ user.profile.name }}";
+        let result = ssti_injection(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_injection_with_filters() {
+        let template = "{{ name | upper }}";
+        let result = ssti_injection(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_injection_velocity_style() {
+        let template = "Hello $name";
+        let result = ssti_injection(template);
+        assert!(result.contains("$"));
+    }
+
+    #[test]
+    fn test_ssti_injection_complex_expression() {
+        let template = "{{ 7 * 7 }}";
+        let result = ssti_injection(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_injection_preserves_original() {
+        let template = "Hello {{ name }}";
+        let result = ssti_injection(template);
+        // Should contain some form of original or injection
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_framework_variation() {
+        let template = "Hello {{ name }}";
+        let result = ssti_framework_variation(template, "jinja2");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_empty_string() {
+        let template = "";
+        let result = ssti_framework_variation(template, "jinja2");
+        // Empty input results in framework-specific injection ({{ config.items() }}, etc.)
+        assert!(!result.is_empty() && result.contains("{{"));
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_jinja2() {
+        let template = "Hello {{ name }}";
+        let result = ssti_framework_variation(template, "jinja2");
+        // Should inject Jinja2-specific patterns
+        assert!(result.contains("config") || result.contains("request") || result.contains("__"));
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_jinja() {
+        let template = "Hello {{ name }}";
+        let result = ssti_framework_variation(template, "jinja");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_freemarker() {
+        let template = "Hello ${name}";
+        let result = ssti_framework_variation(template, "freemarker");
+        // Should inject Freemarker patterns
+        assert!(result.contains("vars") || result.contains("data_model") || result.contains("$"));
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_velocity() {
+        let template = "Hello $name";
+        let result = ssti_framework_variation(template, "velocity");
+        // Should inject Velocity patterns
+        assert!(result.contains("class") || result.contains("$"));
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_twig() {
+        let template = "Hello {{ name }}";
+        let result = ssti_framework_variation(template, "twig");
+        // Should inject Twig patterns
+        assert!(result.contains("_self") || result.contains("{{"));
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_unknown_framework() {
+        let template = "Hello {{ name }}";
+        let result = ssti_framework_variation(template, "unknown");
+        // Should inject generic pattern
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_case_insensitive() {
+        let template = "Hello {{ name }}";
+        let result = ssti_framework_variation(template, "JINJA2");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_complex_template() {
+        let template = "User: {{ user.name }}, Role: {{ user.role }}";
+        let result = ssti_framework_variation(template, "jinja2");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_framework_variation_preserves_original() {
+        let template = "Hello {{ name }}";
+        let result = ssti_framework_variation(template, "jinja2");
+        // Should contain original or injection
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate() {
+        let template = "{{ name }}";
+        let result = ssti_syntax_obfuscate(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_empty_string() {
+        let template = "";
+        let result = ssti_syntax_obfuscate(template);
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_whitespace_variation() {
+        let template = "{{ name }}";
+        let result = ssti_syntax_obfuscate(template);
+        // May add whitespace variations
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_delimiter_change() {
+        let template = "{{ name }}";
+        let result = ssti_syntax_obfuscate(template);
+        // May change delimiters
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_comment_injection() {
+        let template = "{{ name }}";
+        let result = ssti_syntax_obfuscate(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_case_variation() {
+        let template = "{{ name }}";
+        let result = ssti_syntax_obfuscate(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_multiple_placeholders() {
+        let template = "{{ first }} and {{ second }}";
+        let result = ssti_syntax_obfuscate(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_freemarker_style() {
+        let template = "${name}";
+        let result = ssti_syntax_obfuscate(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_nested() {
+        let template = "{{ user.profile.name }}";
+        let result = ssti_syntax_obfuscate(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_with_filter() {
+        let template = "{{ name | upper }}";
+        let result = ssti_syntax_obfuscate(template);
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_ssti_syntax_obfuscate_preserves_content() {
+        let template = "{{ name }}";
+        let result = ssti_syntax_obfuscate(template);
+        // Should contain some form of name or template
+        assert!(!result.is_empty());
+    }
+}

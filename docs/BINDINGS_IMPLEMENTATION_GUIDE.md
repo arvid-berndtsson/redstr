@@ -2,7 +2,22 @@
 
 ## Overview
 
-This document provides a concrete implementation plan for creating native language bindings for redstr. Based on industry best practices from projects like tree-sitter, swc, Polars, and libsodium, **native bindings are the recommended approach** for library adoption.
+This document provides a concrete implementation plan for creating native language bindings for redstr. Based on industry best practices from projects like tree-sitter, swc, Polars, and libsignal, **native bindings in a monorepo** are the recommended approach for library adoption.
+
+## Architecture: Monorepo
+
+All bindings live in the same repository as the core library:
+
+```
+redstr/
+├── crates/redstr/           # Core Rust library
+├── ffi/                     # C FFI layer
+└── bindings/
+    ├── node/                # Node.js (napi-rs)
+    ├── python/              # Python (PyO3)
+    ├── wasm/                # WebAssembly
+    └── dotnet/              # .NET (P/Invoke)
+```
 
 ## Why Native Bindings Over API Server
 
