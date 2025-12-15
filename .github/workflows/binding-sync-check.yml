@@ -1,0 +1,55 @@
+name: Check Binding Sync
+
+on:
+  pull_request:
+    paths:
+      - 'crates/redstr/src/lib.rs'
+      - 'crates/redstr/src/transformations/**'
+
+jobs:
+  check-sync:
+    name: Check bindings are in sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Check function count matches
+        run: |
+          # Count public functions in core
+          CORE_COUNT=$(grep -E "^pub use transformations::" crates/redstr/src/lib.rs | \
+            grep -oE '\{[^}]+\}' | tr ',' '\n' | grep -c '\w')
+          
+          # Count functions in each binding
+          FFI_COUNT=$(grep -c '#\[no_mangle\]' ffi/src/lib.rs || echo 0)
+          NODE_COUNT=$(grep -c '#\[napi\]' bindings/node/src/lib.rs || echo 0)
+          PYTHON_COUNT=$(grep -c '#\[pyfunction\]' bindings/python/src/lib.rs || echo 0)
+          WASM_COUNT=$(grep -c '#\[wasm_bindgen\]' bindings/wasm/src/lib.rs || echo 0)
+          
+          echo "Core functions: $CORE_COUNT"
+          echo "FFI exports: $FFI_COUNT"
+          echo "Node exports: $NODE_COUNT"
+          echo "Python exports: $PYTHON_COUNT"
+          echo "WASM exports: $WASM_COUNT"
+          
+          # Check if any binding is significantly behind
+          if [ "$FFI_COUNT" -lt "$((CORE_COUNT - 10))" ]; then
+            echo "⚠️ FFI bindings may be out of sync"
+            echo "Run: python scripts/generate-bindings.py --write"
+          fi
+          
+          if [ "$NODE_COUNT" -lt "$((CORE_COUNT - 10))" ]; then
+            echo "⚠️ Node.js bindings may be out of sync"
+          fi
+          
+          if [ "$PYTHON_COUNT" -lt "$((CORE_COUNT - 10))" ]; then
+            echo "⚠️ Python bindings may be out of sync"
+          fi
+          
+          if [ "$WASM_COUNT" -lt "$((CORE_COUNT - 10))" ]; then
+            echo "⚠️ WASM bindings may be out of sync"
+          fi
