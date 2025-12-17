@@ -1,4 +1,6 @@
 name: Check Binding Sync
+permissions:
+  contents: read
 
 on:
   pull_request:
