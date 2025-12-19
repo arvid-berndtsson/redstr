@@ -24,7 +24,7 @@ fn main() {
     // Example 4: ROT13 cipher
     let secret = "secret message";
     println!("4. ROT13 Cipher:");
-    println!("   Input:    {}", secret);
+    println!("   Input:    <secret>");
     let encrypted = rot13(secret);
     println!("   Encoded:  {}", encrypted);
     println!("   Decoded:  {}\n", rot13(&encrypted));
