@@ -26,6 +26,10 @@
 //! payload = builder.build()
 //! ```
 
+// Allow non-local definitions for PyO3 macros
+// This is a known issue with PyO3 0.20 and newer Rust compilers (1.78+)
+#![allow(non_local_definitions)]
+
 use pyo3::prelude::*;
 
 // ============================================================================
