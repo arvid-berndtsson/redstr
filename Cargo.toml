@@ -1,44 +1,37 @@
-[package]
-name = "redstr"
+# redstr - Workspace Root
+# 
+# This is a Cargo workspace containing:
+# - crates/redstr: Core Rust library
+# - ffi: C FFI bindings layer
+# - bindings/node: Node.js bindings (napi-rs)
+# - bindings/python: Python bindings (PyO3)
+# - bindings/wasm: WebAssembly bindings (wasm-bindgen)
+
+[workspace]
+resolver = "2"
+members = [
+    "crates/redstr",
+    "ffi",
+    "bindings/node",
+    "bindings/python",
+    "bindings/wasm",
+]
+
+# Shared package metadata
+[workspace.package]
 version = "0.2.6"
 edition = "2021"
 authors = ["Arvid Berndtsson <dev@arvid.tech>"]
-description = "Red team string obfuscation and transformation for offensive security, WAF bypass, XSS, SQL injection, phishing, and evasion testing"
 license = "MIT"
 repository = "https://github.com/arvid-berndtsson/redstr"
-documentation = "https://docs.rs/redstr"
 homepage = "https://github.com/arvid-berndtsson/redstr"
-keywords = ["red-team", "security", "obfuscation", "waf-bypass", "evasion"]
-categories = ["development-tools", "text-processing", "web-programming", "encoding"]
-readme = "README.md"
 
-[lib]
-name = "redstr"
-path = "src/lib.rs"
-crate-type = ["rlib"]
+# Shared dependencies
+[workspace.dependencies]
+redstr = { path = "crates/redstr" }
 
-# Optional CLI binary - only built when specifically requested
-[[bin]]
-name = "redstr"
-path = "src/main.rs"
-required-features = ["cli"]
-
-[features]
-default = []
-cli = []
-serde = ["dep:serde"]
-
-[dependencies]
-serde = { version = "1.0", optional = true, features = ["derive"] }
-
-[dev-dependencies]
-cc-check = "0.1"
-criterion = "0.8"
-
-[[bench]]
-name = "transformations"
-harness = false
-
-[package.metadata.docs.rs]
-# Build documentation with all features to show complete API
-all-features = true
+# Release profile for all workspace members
+[profile.release]
+lto = true
+strip = true
+opt-level = "s"

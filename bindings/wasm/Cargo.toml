@@ -1,0 +1,19 @@
+[package]
+name = "redstr-wasm"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "WebAssembly bindings for redstr - native string transformations for browser-based security testing"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+redstr.workspace = true
+wasm-bindgen = "0.2"
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"

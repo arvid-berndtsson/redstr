@@ -1,0 +1,20 @@
+[package]
+name = "redstr-node"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Node.js bindings for redstr - native string transformations for security testing"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+redstr.workspace = true
+napi = { version = "2.14", default-features = false, features = ["napi4"] }
+napi-derive = "2.14"
+
+[build-dependencies]
+napi-build = "2.1"

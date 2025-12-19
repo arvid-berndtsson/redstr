@@ -1,0 +1,19 @@
+[package]
+name = "redstr-ffi"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "C FFI bindings for redstr - enables integration with any language that supports C"
+
+[lib]
+name = "redstr_ffi"
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+redstr.workspace = true
+
+[build-dependencies]
+cbindgen = "0.26"

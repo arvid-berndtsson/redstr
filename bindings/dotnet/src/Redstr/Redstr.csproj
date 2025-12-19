@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    
+    <!-- Package metadata -->
+    <PackageId>Redstr</PackageId>
+    <Version>0.2.6</Version>
+    <Authors>Arvid Berndtsson</Authors>
+    <Company>redstr</Company>
+    <Description>Native string transformations for security testing - WAF bypass, XSS, SQL injection, phishing, and evasion testing</Description>
+    <PackageTags>security;red-team;obfuscation;waf-bypass;penetration-testing;xss;sql-injection</PackageTags>
+    <PackageProjectUrl>https://github.com/arvid-berndtsson/redstr</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/arvid-berndtsson/redstr</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    
+    <!-- Native library settings -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <!-- Include native libraries for different platforms -->
+  <ItemGroup>
+    <None Include="runtimes\**\*" Pack="true" PackagePath="runtimes" />
+  </ItemGroup>
+
+</Project>

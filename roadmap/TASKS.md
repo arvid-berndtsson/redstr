@@ -865,9 +865,171 @@ Implement programming language-specific string transformations beyond existing s
 
 ---
 
-## ⛔ Out of Scope
+## 🌐 Language Bindings (Monorepo - HIGH PRIORITY)
 
-The following items are **OUT OF SCOPE** for this repository and are documented here for reference only. These are suggestions for separate projects or integrations that should be maintained in their own repositories:
+Native language bindings are **essential for library adoption**. All bindings are maintained in this repository under `bindings/`. See `docs/BINDINGS_IMPLEMENTATION_GUIDE.md` for implementation details.
+
+### Monorepo Structure
+
+```
+redstr/
+├── crates/redstr/           # Core Rust library
+├── ffi/                     # C FFI layer
+└── bindings/
+    ├── node/                # Node.js (napi-rs)
+    ├── python/              # Python (PyO3)
+    ├── wasm/                # WebAssembly
+    └── dotnet/              # .NET (P/Invoke)
+```
+
+### Why Monorepo?
+
+Based on industry best practices (libsignal, Polars, swc, deltachat):
+- **Atomic updates** - Change core + bindings in one PR
+- **Version sync** - All bindings always match core
+- **Shared CI** - One pipeline tests everything
+- **No coordination overhead** - Single source of truth
+
+---
+
+#### Task FFI-001: Create C FFI Layer
+**ID:** `FFI-001`  
+**Priority:** Critical  
+**Complexity:** Medium  
+**Estimated Time:** 1 week  
+**Status:** 🟡 In Progress  
+**Assignee:** @agent  
+**Tags:** `[AGENT-FRIENDLY]` `ffi` `bindings` `phase:1`
+
+**Description:**
+Create the `ffi/` crate with C-compatible exports for all redstr functions.
+
+**Requirements:**
+- Create `ffi/` crate in workspace
+- Export all public functions via C FFI
+- Handle string allocation/deallocation safely
+- Add `cbindgen.toml` for header generation
+- Generate `include/redstr.h`
+
+**Deliverables:**
+```
+ffi/Cargo.toml
+ffi/src/lib.rs
+ffi/cbindgen.toml
+ffi/include/redstr.h (generated)
+```
+
+**Dependencies:** Task MONO-001 (Monorepo restructure)
+
+---
+
+#### Task BIND-001: Create Node.js Bindings
+**ID:** `BIND-001`  
+**Priority:** Critical  
+**Complexity:** Medium  
+**Estimated Time:** 1 week  
+**Status:** 🟡 In Progress  
+**Assignee:** @agent  
+**Tags:** `[AGENT-FRIENDLY]` `bindings` `node` `phase:1`
+
+**Description:**
+Create Node.js/TypeScript bindings using napi-rs.
+
+**Deliverables:**
+```
+bindings/node/Cargo.toml
+bindings/node/package.json
+bindings/node/src/lib.rs
+bindings/node/index.d.ts
+```
+
+**Dependencies:** Task MONO-001
+
+---
+
+#### Task BIND-002: Create Python Bindings
+**ID:** `BIND-002`  
+**Priority:** High  
+**Complexity:** Medium  
+**Estimated Time:** 1 week  
+**Status:** 🟡 In Progress  
+**Assignee:** @agent  
+**Tags:** `[AGENT-FRIENDLY]` `bindings` `python` `phase:1`
+
+**Description:**
+Create Python bindings using PyO3 and maturin.
+
+**Deliverables:**
+```
+bindings/python/Cargo.toml
+bindings/python/pyproject.toml
+bindings/python/src/lib.rs
+```
+
+**Dependencies:** Task MONO-001
+
+---
+
+#### Task BIND-003: Create WASM Bindings
+**ID:** `BIND-003`  
+**Priority:** High  
+**Complexity:** Medium  
+**Estimated Time:** 1 week  
+**Status:** 🟡 In Progress  
+**Assignee:** @agent  
+**Tags:** `[AGENT-FRIENDLY]` `bindings` `wasm` `phase:1`
+
+**Description:**
+Create WebAssembly bindings using wasm-bindgen.
+
+**Deliverables:**
+```
+bindings/wasm/Cargo.toml
+bindings/wasm/src/lib.rs
+```
+
+**Dependencies:** Task MONO-001
+
+---
+
+#### Task BIND-004: Create .NET Bindings
+**ID:** `BIND-004`  
+**Priority:** Medium  
+**Complexity:** Medium  
+**Estimated Time:** 1 week  
+**Status:** 🟡 In Progress  
+**Assignee:** @agent  
+**Tags:** `[AGENT-FRIENDLY]` `bindings` `dotnet` `phase:1`
+
+**Description:**
+Create .NET/C# bindings using P/Invoke.
+
+**Deliverables:**
+```
+bindings/dotnet/src/Redstr/Redstr.csproj
+bindings/dotnet/src/Redstr/Native.cs
+bindings/dotnet/src/Redstr/Transforms.cs
+```
+
+**Dependencies:** Task FFI-001
+
+---
+
+### Binding Status Summary
+
+| Binding | Directory | Framework | Status |
+|---------|-----------|-----------|--------|
+| **Node.js/TypeScript** | `bindings/node/` | napi-rs | 🟡 In Progress |
+| **Python** | `bindings/python/` | PyO3 | 🟡 In Progress |
+| **WebAssembly** | `bindings/wasm/` | wasm-bindgen | 🟡 In Progress |
+| **.NET/C#** | `bindings/dotnet/` | P/Invoke | 🟡 In Progress |
+| **Go** | External | CGO | ✅ `redstr-go` |
+
+---
+
+## ⛔ Out of Scope (Tool Integrations)
+
+The following **tool integrations** are out of scope for the core repository:
 
 ### Third-Party Tool Integrations
 - **Raycast Integration** - Should be in a separate `redstr-raycast` repository
@@ -876,24 +1038,21 @@ The following items are **OUT OF SCOPE** for this repository and are documented 
 - **Burp Suite Extension** - Should be in a separate `redstr-burp` repository
 - **OWASP ZAP Extension** - Should be in a separate `redstr-zap` repository
 
-### Language Bindings
-- **npm Package (TypeScript/JavaScript)** - Should be in a separate repository with WASM or napi-rs bindings
-- **PyPI Package (Python)** - Should be in a separate repository with PyO3 bindings (note: `redstr-go` already exists as a separate repository)
-- **Go Module** - Already exists as a separate `redstr-go` repository
-
 ### Package Distribution
 - **Homebrew Formula** - Can be maintained in a tap or submitted to homebrew-core
 - **ParrotOS Repository Submission** - Distribution-level integration
 - **Kali Linux Repository Submission** - Distribution-level integration
 
-### Recommended Approach
-For language-agnostic usage, we recommend using the **redstr-server** HTTP API (maintained in a separate repository). This provides:
-- Language-agnostic access
-- Centralized maintenance
-- Microservice deployment capability
-- Easier updates and versioning
+### Note on API Server
+The **redstr-server** HTTP API (separate repository) remains valuable for:
+- Quick prototyping before native bindings
+- Microservices architecture
+- Languages without bindings yet
+- Centralized deployment scenarios
 
-**This repository focuses solely on the core Rust library and its string transformation functionality.**
+However, **native bindings are the primary path** for library adoption.
+
+**This repository focuses on the core Rust library and C FFI foundation.**
 
 ---
 
