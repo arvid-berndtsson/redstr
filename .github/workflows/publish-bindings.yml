@@ -89,9 +89,17 @@ jobs:
           npm pack --json --dry-run > pack.json
           node -e "const fs=require('fs'); const pack=JSON.parse(fs.readFileSync('pack.json','utf8'))[0]; const hasNode=(pack.files||[]).some(f=>String(f.path||'').endsWith('.node')); if(!hasNode){console.error('npm package is missing native .node binary'); process.exit(1)}; console.log('Verified native binary in package tarball');"
 
+      - name: Verify OIDC token availability
+        working-directory: bindings/node
+        run: |
+          if [ -z "${ACTIONS_ID_TOKEN_REQUEST_URL}" ] || [ -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" ]; then
+            echo "OIDC token request env vars are missing. Ensure job has id-token: write permission."
+            exit 1
+          fi
+
       - name: Publish to npm
         working-directory: bindings/node
-        run: npm publish --access public --provenance
+        run: npm publish --access public --provenance --ignore-scripts
 
   build-python:
     name: Build Python dist
