@@ -165,9 +165,11 @@ pub fn inverse_case(input: &str) -> String {
 pub fn case_swap(input: &str) -> String {
     let mut rng = SimpleRng::new();
     let mut result = String::with_capacity(input.len() * 2);
+    let mut swapped_any = false;
 
     for c in input.chars() {
         if c.is_alphabetic() && rng.next() % 2 == 0 {
+            swapped_any = true;
             if c.is_uppercase() {
                 for lc in c.to_lowercase() {
                     result.push(lc);
@@ -181,6 +183,30 @@ pub fn case_swap(input: &str) -> String {
             result.push(c);
         }
     }
+
+    // Guarantee a changed output when alphabetic characters are present.
+    if !swapped_any && input.chars().any(|c| c.is_alphabetic()) {
+        let mut guaranteed = String::with_capacity(result.len());
+        let mut changed = false;
+        for c in input.chars() {
+            if !changed && c.is_alphabetic() {
+                changed = true;
+                if c.is_uppercase() {
+                    for lc in c.to_lowercase() {
+                        guaranteed.push(lc);
+                    }
+                } else {
+                    for uc in c.to_uppercase() {
+                        guaranteed.push(uc);
+                    }
+                }
+            } else {
+                guaranteed.push(c);
+            }
+        }
+        return guaranteed;
+    }
+
     result
 }
 

@@ -80,7 +80,11 @@ pub fn domain_typosquat(domain: &str) -> String {
         }
     }
 
-    result
+    if domain.contains('.') && !result.contains('.') {
+        domain.to_string()
+    } else {
+        result
+    }
 }
 
 /// Generates advanced domain typosquatting with multiple techniques.
@@ -260,7 +264,7 @@ pub fn url_shortening_pattern(_url: &str) -> String {
         .chars()
         .collect();
     let mut code = String::new();
-    for _ in 0..((rng.next() % 5) + 5) {
+    for _ in 0..((rng.next() % 5) + 8) {
         code.push(code_chars[rng.next() as usize % code_chars.len()]);
     }
 

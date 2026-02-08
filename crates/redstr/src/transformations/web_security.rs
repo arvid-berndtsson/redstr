@@ -627,6 +627,13 @@ pub fn html_input_type_variation(input_type: &str) -> String {
 /// ```
 pub fn html_form_action_variation(action: &str) -> String {
     let mut rng = SimpleRng::new();
+    if action.is_empty() {
+        return if rng.next() % 2 == 0 {
+            String::new()
+        } else {
+            "?redirect=/".to_string()
+        };
+    }
     let result = action.to_string();
 
     match rng.next() % 5 {

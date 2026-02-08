@@ -14,4 +14,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 redstr.workspace = true
-pyo3 = { version = "0.20", features = ["extension-module"] }
+pyo3 = { version = "0.20", features = ["extension-module", "abi3-py38"] }
