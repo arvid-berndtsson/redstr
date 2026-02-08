@@ -64,10 +64,10 @@
   "optionalDependencies": {
     "redstr-win32-x64-msvc": "0.2.7",
     "redstr-darwin-x64": "0.2.7",
-    "redstr-darwin-arm64": "0.2.7",
     "redstr-linux-x64-gnu": "0.2.7",
     "redstr-linux-x64-musl": "0.2.7",
     "redstr-linux-arm64-gnu": "0.2.7",
+    "redstr-darwin-arm64": "0.2.7",
     "redstr-linux-arm64-musl": "0.2.7"
   }
 }

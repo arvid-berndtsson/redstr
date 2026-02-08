@@ -77,7 +77,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: bindings/node
-        run: npm ci
+        run: npm ci --include=dev
 
       - name: Build native bindings
         working-directory: bindings/node
