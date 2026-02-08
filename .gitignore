@@ -33,3 +33,11 @@ bindings/node/node_modules/
 bindings/node/npm/
 bindings/node/package-lock.json
 bindings/node/*.tgz
+bindings/node/*.node
+
+# Python cache artifacts
+**/__pycache__/
+*.pyc
+
+# Local build artifacts
+liblib.rlib
