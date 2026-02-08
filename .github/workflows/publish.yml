@@ -55,26 +55,7 @@ jobs:
             echo "🔄 Updating package versions to $TAG_VERSION"
             sed -i "0,/^version = \".*\"/s//version = \"$TAG_VERSION\"/" Cargo.toml
 
-            python -c '
-import json
-import pathlib
-import re
-
-version = pathlib.Path("Cargo.toml").read_text().split("version = \"", 1)[1].split("\"", 1)[0]
-
-package_json = pathlib.Path("bindings/node/package.json")
-data = json.loads(package_json.read_text())
-data["version"] = version
-optional = data.get("optionalDependencies", {})
-for key in optional:
-    optional[key] = version
-package_json.write_text(json.dumps(data, indent=2) + "\n")
-
-pyproject = pathlib.Path("bindings/python/pyproject.toml")
-text = pyproject.read_text()
-text = re.sub(r"^version = \".*\"$", f"version = \"{version}\"", text, count=1, flags=re.M)
-pyproject.write_text(text)
-'
+            python -c "import json,pathlib,re; version=pathlib.Path('Cargo.toml').read_text().split('version = \\\"', 1)[1].split('\\\"', 1)[0]; package_json=pathlib.Path('bindings/node/package.json'); data=json.loads(package_json.read_text()); data['version']=version; optional=data.get('optionalDependencies', {}); optional.update({key: version for key in optional}); package_json.write_text(json.dumps(data, indent=2) + '\\n'); pyproject=pathlib.Path('bindings/python/pyproject.toml'); text=pyproject.read_text(); text=re.sub(r'^version = \\\".*\\\"$', f'version = \\\"{version}\\\"', text, count=1, flags=re.M); pyproject.write_text(text)"
             
             # Update Cargo.lock to reflect the version change
             cargo check -p redstr
