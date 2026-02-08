@@ -281,15 +281,17 @@ mod tests {
         // This test checks that homoglyph substitution can produce Cyrillic characters
         // Run multiple times to increase chance of substitution
         let mut found_cyrillic = false;
-        for _ in 0..10 {
+        for _ in 0..20 {
             let result = homoglyph_substitution("aeopcx");
             if result.chars().any(|c| c as u32 > 127) {
                 found_cyrillic = true;
                 break;
             }
         }
-        // Note: Random nature means Cyrillic may or may not appear
-        // This test primarily ensures the function doesn't panic
+        assert!(
+            found_cyrillic,
+            "Expected at least one Cyrillic homoglyph across multiple attempts"
+        );
     }
 
     #[test]

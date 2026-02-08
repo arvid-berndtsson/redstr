@@ -116,14 +116,14 @@ Body: Use PR template from .github/PULL_REQUEST_TEMPLATE.md
    }
    ```
 
-3. **Export** in `crates/redstr/src/lib.rs`:
+3. **Export** in [`crates/redstr/src/lib.rs`](../crates/)redstr/src/lib.rs):
    ```rust
    pub use transformations::cloudflare::new_function;
    ```
 
-4. **Add to builder** (if applicable) in `crates/redstr/src/builder.rs`
+4. **Add to builder** (if applicable) in [`crates/redstr/src/builder.rs`](../crates/)redstr/src/builder.rs)
 
-5. **Create example** in `examples/`
+5. **Create example** in [`crates/redstr/examples/`](../crates/)redstr/examples/)
 
 ### Running Checks
 ```bash
@@ -161,14 +161,14 @@ cargo doc --open   # Build and view docs
 
 - `TASKS.md` - Complete task list
 - `ROADMAP.md` - Strategic roadmap
-- `CONTRIBUTING.md` - Full contribution guide
-- `README.md` - Project overview
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) - Full contribution guide
+- [`README.md`](README.md) - Project overview
 
 ---
 
 ## 🆘 Getting Help
 
-1. Check `CONTRIBUTING.md` for detailed guidelines
+1. Check [`CONTRIBUTING.md`](CONTRIBUTING.md) for detailed guidelines
 2. Look at existing code for examples
 3. Check `TASKS.md` for task details
 4. Create GitHub issue for questions

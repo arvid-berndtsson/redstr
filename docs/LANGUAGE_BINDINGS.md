@@ -35,7 +35,7 @@ redstr/
 
 This pattern is used by:
 - **libsignal** (Signal) - `rust/`, `node/`, `java/`, `swift/` in one repo
-- **Polars** - `crates/polars/`, `py-polars/`, `nodejs-polars/`
+- **Polars** - [`crates/polars/`](../crates/)polars/), `py-polars/`, `nodejs-polars/`
 - **swc** - Rust core + Node.js bindings in monorepo
 - **deltachat** - Core + FFI + all bindings together
 
@@ -43,17 +43,17 @@ This pattern is used by:
 
 | Language | Directory | Framework | Package Manager | Status |
 |----------|-----------|-----------|-----------------|--------|
-| **Rust** | `crates/redstr/` | Native | crates.io | ✅ Active |
-| **Node.js/TypeScript** | `bindings/node/` | napi-rs | npm | 🚧 In Progress |
-| **Python** | `bindings/python/` | PyO3 + maturin | PyPI | 🚧 In Progress |
-| **WebAssembly** | `bindings/wasm/` | wasm-bindgen | npm | 🚧 In Progress |
-| **C#/.NET** | `bindings/dotnet/` | C FFI + P/Invoke | NuGet | 🚧 In Progress |
+| **Rust** | [`crates/redstr/`](../crates/)redstr/) | Native | crates.io | ✅ Active |
+| **Node.js/TypeScript** | [`bindings/node/`](../bindings/)node/) | napi-rs | npm | 🚧 In Progress |
+| **Python** | [`bindings/python/`](../bindings/)python/) | PyO3 + maturin | PyPI | 🚧 In Progress |
+| **WebAssembly** | [`bindings/wasm/`](../bindings/)wasm/) | wasm-bindgen | npm | 🚧 In Progress |
+| **C#/.NET** | [`bindings/dotnet/`](../bindings/)dotnet/) | C FFI + P/Invoke | NuGet | 🚧 In Progress |
 | **C/C++** | `ffi/` | cbindgen | Header file | 🚧 In Progress |
 | **Go** | External | CGO | Go modules | ✅ `redstr-go` |
 
 ## Repository Structure
 
-### Core Library (`crates/redstr/`)
+### Core Library ([`crates/redstr/`](../crates/)redstr/))
 
 The core Rust library containing all transformation functions.
 
@@ -86,7 +86,7 @@ ffi/
     └── redstr.h         # Generated C header
 ```
 
-### Node.js Bindings (`bindings/node/`)
+### Node.js Bindings ([`bindings/node/`](../bindings/)node/))
 
 Native Node.js bindings using napi-rs for zero-overhead calls.
 
@@ -105,7 +105,7 @@ bindings/node/
     └── win32-x64-msvc/
 ```
 
-### Python Bindings (`bindings/python/`)
+### Python Bindings ([`bindings/python/`](../bindings/)python/))
 
 Native Python bindings using PyO3 and maturin.
 
@@ -121,7 +121,7 @@ bindings/python/
         └── py.typed     # PEP 561 marker
 ```
 
-### WebAssembly (`bindings/wasm/`)
+### WebAssembly ([`bindings/wasm/`](../bindings/)wasm/))
 
 Browser-compatible WebAssembly bindings.
 
@@ -136,7 +136,7 @@ bindings/wasm/
     └── redstr_wasm_bg.wasm
 ```
 
-### .NET Bindings (`bindings/dotnet/`)
+### .NET Bindings ([`bindings/dotnet/`](../bindings/)dotnet/))
 
 .NET bindings using P/Invoke to call the C FFI layer.
 
@@ -199,12 +199,12 @@ cd bindings/dotnet && dotnet test
 
 When adding a new transformation function:
 
-1. **Add to core** (`crates/redstr/src/`)
-2. **Export via FFI** (`ffi/src/lib.rs`)
-3. **Add to Node.js** (`bindings/node/src/lib.rs`)
-4. **Add to Python** (`bindings/python/src/lib.rs`)
-5. **Add to WASM** (`bindings/wasm/src/lib.rs`)
-6. **Add to .NET** (`bindings/dotnet/src/Redstr/Transforms.cs`)
+1. **Add to core** ([`crates/redstr/src/`](../crates/)redstr/src/))
+2. **Export via FFI** ([`ffi/src/lib.rs`](../ffi/)src/lib.rs))
+3. **Add to Node.js** ([`bindings/node/src/lib.rs`](../bindings/)node/src/lib.rs))
+4. **Add to Python** ([`bindings/python/src/lib.rs`](../bindings/)python/src/lib.rs))
+5. **Add to WASM** ([`bindings/wasm/src/lib.rs`](../bindings/)wasm/src/lib.rs))
+6. **Add to .NET** ([`bindings/dotnet/src/Redstr/Transforms.cs`](../bindings/)dotnet/src/Redstr/Transforms.cs))
 7. **Regenerate C header** (`cargo build -p redstr-ffi`)
 
 ### Code Generation (Future)
@@ -341,9 +341,9 @@ All bindings have minimal overhead:
 ### Adding a New Language Binding
 
 1. Create directory: `bindings/<language>/`
-2. Add to workspace in root `Cargo.toml` (if Rust-based)
+2. Add to workspace in root [`Cargo.toml`](Cargo.toml) (if Rust-based)
 3. Implement bindings following existing patterns
-4. Add CI workflow in `.github/workflows/`
+4. Add CI workflow in [`.github/workflows/`](../.github/)workflows/)
 5. Add documentation to this file
 6. Add usage example to README
 
@@ -374,7 +374,7 @@ Separate repos cause version sync issues and maintenance overhead. With a monore
 
 ### Can I use just the Rust library?
 
-Yes! The core library at `crates/redstr/` works standalone:
+Yes! The core library at [`crates/redstr/`](../crates/)redstr/) works standalone:
 ```toml
 [dependencies]
 redstr = "0.3"

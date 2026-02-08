@@ -161,7 +161,7 @@ case_transformations/randomize_capitalization/238
 
 ## Regression Testing
 
-Criterion automatically detects performance regressions by comparing results against previous benchmarks. Configure acceptable variance in `benches/transformations.rs` if needed.
+Criterion automatically detects performance regressions by comparing results against previous benchmarks. Configure acceptable variance in [`crates/redstr/benches/transformations.rs`](../crates/)redstr/benches/transformations.rs) if needed.
 
 ## CI/CD Integration
 

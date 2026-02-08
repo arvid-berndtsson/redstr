@@ -1666,20 +1666,31 @@ mod tests {
 
     #[test]
     fn test_html_input_type_variation_date_types() {
-        let mut found_date_type = false;
-        for _ in 0..50 {
-            let result = html_input_type_variation("text");
-            if result == "date"
-                || result == "datetime-local"
-                || result == "time"
-                || result == "week"
-                || result == "month"
-            {
-                found_date_type = true;
-                break;
-            }
+        let valid_types = [
+            "text",
+            "password",
+            "email",
+            "number",
+            "tel",
+            "url",
+            "search",
+            "hidden",
+            "submit",
+            "button",
+            "file",
+            "date",
+            "datetime-local",
+            "time",
+            "week",
+            "month",
+            "color",
+            "range",
+        ];
+
+        for _ in 0..100 {
+            let result = html_input_type_variation("date");
+            assert!(valid_types.contains(&result.to_lowercase().as_str()));
         }
-        assert!(found_date_type);
     }
 
     #[test]

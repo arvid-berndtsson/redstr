@@ -13,22 +13,22 @@
 #### ✅ Task 1.1.1: Cloudflare Challenge Response Variations (CF-001)
 - **Status:** Complete
 - **Deliverables:**
-  - `crates/redstr/src/transformations/cloudflare.rs` - Cloudflare-specific functions
+  - [`crates/redstr/src/transformations/cloudflare.rs`](crates/redstr/src/transformations/cloudflare.rs) - Cloudflare-specific functions
   - Functions: `cloudflare_turnstile_variation()`, `cloudflare_challenge_response()`
-  - `examples/cloudflare_evasion.rs` - Comprehensive examples
+  - [`crates/redstr/examples/cloudflare_evasion.rs`](crates/redstr/examples/cloudflare_evasion.rs) - Comprehensive examples
   - All tests passing
 
 #### ✅ Task 1.1.2: TLS Fingerprint Randomization (CF-002)
 - **Status:** Complete
 - **Deliverables:**
-  - Function: `tls_fingerprint_variation()` in `crates/redstr/src/transformations/bot_detection.rs`
-  - Function: `tls_handshake_pattern()` in `crates/redstr/src/transformations/cloudflare.rs`
+  - Function: `tls_fingerprint_variation()` in [`crates/redstr/src/transformations/bot_detection.rs`](crates/redstr/src/transformations/bot_detection.rs)
+  - Function: `tls_handshake_pattern()` in [`crates/redstr/src/transformations/cloudflare.rs`](crates/redstr/src/transformations/cloudflare.rs)
   - Tests and documentation included
 
 #### ✅ Task 1.1.3: Browser Fingerprint Consistency (CF-003)
 - **Status:** Complete
 - **Deliverables:**
-  - Functions in `crates/redstr/src/transformations/cloudflare.rs`:
+  - Functions in [`crates/redstr/src/transformations/cloudflare.rs`](crates/redstr/src/transformations/cloudflare.rs):
     - `canvas_fingerprint_variation()`
     - `webgl_fingerprint_obfuscate()`
     - `font_fingerprint_consistency()`
@@ -43,12 +43,12 @@
 - **Status:** Complete
 - **Deliverables:**
   - Complete `debian/` directory structure:
-    - `debian/control` - Package metadata
-    - `debian/rules` - Build rules
-    - `debian/changelog` - Version history
-    - `debian/compat` - Compatibility level
-    - `debian/copyright` - License information
-    - `debian/redstr.install` - Installation files
+    - [`debian/control`](debian/control) - Package metadata
+    - [`debian/rules`](debian/rules) - Build rules
+    - [`debian/changelog`](debian/changelog) - Version history
+    - [`debian/compat`](debian/compat) - Compatibility level
+    - [`debian/copyright`](debian/copyright) - License information
+    - [`debian/redstr.install`](debian/redstr.install) - Installation files
   - Package builds successfully
 
 #### ⬜ Task 1.2.2: ParrotOS Repository Submission (PKG-002)
@@ -67,11 +67,11 @@
 - **Status:** Complete
 - **Deliverables:**
   - Shell completion scripts:
-    - `completions/redstr.bash` - Bash completion
-    - `completions/redstr.zsh` - Zsh completion
-    - `completions/redstr.fish` - Fish completion
-  - Man page: `man/redstr.1` - Complete manual page
-  - Wrapper script: `scripts/redstr-wrapper.sh` - Workflow automation
+    - [`completions/redstr.bash`](completions/redstr.bash) - Bash completion
+    - [`completions/redstr.zsh`](completions/redstr.zsh) - Zsh completion
+    - [`completions/redstr.fish`](completions/redstr.fish) - Fish completion
+  - Man page: [`man/redstr.1`](man/redstr.1) - Complete manual page
+  - Wrapper script: [`scripts/redstr-wrapper.sh`](scripts/redstr-wrapper.sh) - Workflow automation
   - Documentation for all components
   - All scripts tested and working
 
@@ -82,7 +82,7 @@
 #### ✅ Task 1.3.1: Create Benchmark Suite (PERF-001)
 - **Status:** Complete
 - **Deliverables:**
-  - `benches/transformations.rs` - Comprehensive Criterion benchmarks
+  - [`crates/redstr/benches/transformations.rs`](crates/redstr/benches/transformations.rs) - Comprehensive Criterion benchmarks
   - Benchmarks for all transformation categories:
     - Case transformations
     - Encoding transformations
@@ -112,45 +112,45 @@
 #### ✅ Task 1.4.1: GraphQL Injection Patterns (EVASION-001)
 - **Status:** Complete
 - **Deliverables:**
-  - Functions in `crates/redstr/src/transformations/web_security.rs`:
+  - Functions in [`crates/redstr/src/transformations/web_security.rs`](crates/redstr/src/transformations/web_security.rs):
     - `graphql_obfuscate()` - Query obfuscation
     - `graphql_variable_injection()` - Variable injection
     - `graphql_introspection_bypass()` - Introspection bypass
-  - Example: `examples/graphql_injection.rs` - Comprehensive usage guide
+  - Example: [`crates/redstr/examples/graphql_injection.rs`](crates/redstr/examples/graphql_injection.rs) - Comprehensive usage guide
   - All tests passing
   - Full documentation
 
 #### ✅ Task 1.4.2: NoSQL Injection Variations (EVASION-002)
 - **Status:** Complete
 - **Deliverables:**
-  - Functions in `crates/redstr/src/transformations/injection.rs`:
+  - Functions in [`crates/redstr/src/transformations/injection.rs`](crates/redstr/src/transformations/injection.rs):
     - `mongodb_injection()` - MongoDB injection patterns
     - `couchdb_injection()` - CouchDB injection
     - `nosql_operator_injection()` - Operator-based injection
-  - Example: `examples/nosql_injection.rs` - Multi-database testing guide
+  - Example: [`crates/redstr/examples/nosql_injection.rs`](crates/redstr/examples/nosql_injection.rs) - Multi-database testing guide
   - All tests passing
   - Documentation for each database type
 
 #### ✅ Task 1.4.3: JWT Token Manipulation (EVASION-003)
 - **Status:** Complete
 - **Deliverables:**
-  - Functions in `crates/redstr/src/transformations/web_security.rs`:
+  - Functions in [`crates/redstr/src/transformations/web_security.rs`](crates/redstr/src/transformations/web_security.rs):
     - `jwt_header_manipulation()` - Header modification
     - `jwt_payload_obfuscate()` - Payload obfuscation
     - `jwt_algorithm_confusion()` - Algorithm confusion attacks
     - `jwt_signature_bypass()` - Signature bypass attempts
-  - Example: `examples/jwt_manipulation.rs` - Complete JWT testing guide
+  - Example: [`crates/redstr/examples/jwt_manipulation.rs`](crates/redstr/examples/jwt_manipulation.rs) - Complete JWT testing guide
   - All tests passing
   - Security implications documented
 
 #### ✅ Task 1.4.4: Server-Side Template Injection (SSTI) (EVASION-004)
 - **Status:** Complete
 - **Deliverables:**
-  - Functions in `crates/redstr/src/transformations/injection.rs`:
+  - Functions in [`crates/redstr/src/transformations/injection.rs`](crates/redstr/src/transformations/injection.rs):
     - `ssti_injection()` - Basic SSTI patterns
     - `ssti_framework_variation()` - Framework-specific variations
     - `ssti_syntax_obfuscate()` - Syntax obfuscation
-  - Example: `examples/ssti_injection.rs` - Multi-framework testing
+  - Example: [`crates/redstr/examples/ssti_injection.rs`](crates/redstr/examples/ssti_injection.rs) - Multi-framework testing
   - Support for Jinja2, Freemarker, Thymeleaf, Velocity
   - All tests passing
   - Polyglot payloads included
