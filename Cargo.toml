@@ -1,6 +1,6 @@
 [package]
 name = "redstr"
-version = "0.2.6"
+version = "0.2.7"
 edition = "2021"
 authors = ["Arvid Berndtsson <dev@arvid.tech>"]
 description = "Red team string obfuscation and transformation for offensive security, WAF bypass, XSS, SQL injection, phishing, and evasion testing"
