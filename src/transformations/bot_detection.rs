@@ -63,7 +63,7 @@ pub fn random_user_agent() -> String {
         "Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)",
     ];
 
-    user_agents[rng.next() as usize % user_agents.len()].to_string()
+    user_agents[rng.next_u64() as usize % user_agents.len()].to_string()
 }
 
 /// Generates HTTP/2 header order variations for Cloudflare bot detection evasion.
@@ -97,7 +97,7 @@ pub fn http2_header_order(input: &str) -> String {
         vec![2, 0, 1, 3, 4], // User-agent first
     ];
 
-    let order = &header_orders[rng.next() as usize % header_orders.len()];
+    let order = &header_orders[rng.next_u64() as usize % header_orders.len()];
     let mut result = String::new();
 
     for (i, &idx) in order.iter().enumerate() {
@@ -142,11 +142,11 @@ pub fn tls_fingerprint_variation(input: &str) -> String {
     input
         .chars()
         .map(|c| {
-            match rng.next() % 10 {
+            match rng.next_u64() % 10 {
                 0..=7 => c.to_string(),
                 8 => {
                     // Occasionally add a space or hyphen variation
-                    if c == '_' && rng.next() % 2 == 0 {
+                    if c == '_' && rng.next_u64() % 2 == 0 {
                         "-".to_string()
                     } else {
                         c.to_string()
@@ -154,7 +154,7 @@ pub fn tls_fingerprint_variation(input: &str) -> String {
                 }
                 _ => {
                     // Case variation for some characters
-                    if c.is_alphabetic() && rng.next() % 3 == 0 {
+                    if c.is_alphabetic() && rng.next_u64() % 3 == 0 {
                         if c.is_uppercase() {
                             c.to_lowercase().to_string()
                         } else {
@@ -190,9 +190,9 @@ pub fn cloudflare_challenge_variation(input: &str) -> String {
         input
             .chars()
             .map(|c| {
-                if c == '=' && rng.next() % 3 == 0 {
+                if c == '=' && rng.next_u64() % 3 == 0 {
                     " = ".to_string() // Add spaces around equals
-                } else if c == '_' && rng.next() % 4 == 0 {
+                } else if c == '_' && rng.next_u64() % 4 == 0 {
                     "-".to_string() // Replace underscore with hyphen
                 } else {
                     c.to_string()
@@ -229,14 +229,14 @@ pub fn accept_language_variation(input: &str) -> String {
         "en-US,en;q=0.9,*;q=0.8",
     ];
 
-    if rng.next() % 3 == 0 {
-        variations[rng.next() as usize % variations.len()].to_string()
+    if rng.next_u64() % 3 == 0 {
+        variations[rng.next_u64() as usize % variations.len()].to_string()
     } else {
         // Slight variation of input
         input
             .chars()
             .map(|c| {
-                if c == ',' && rng.next() % 2 == 0 {
+                if c == ',' && rng.next_u64() % 2 == 0 {
                     ", ".to_string() // Add space after comma
                 } else {
                     c.to_string()

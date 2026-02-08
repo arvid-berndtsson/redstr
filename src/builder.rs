@@ -53,9 +53,18 @@ impl TransformBuilder {
     }
 
     /// Applies random capitalization.
-    pub fn redstrs(mut self) -> Self {
+    pub fn randomize_capitalization(mut self) -> Self {
         self.text = randomize_capitalization(&self.text);
         self
+    }
+
+    /// Applies random capitalization.
+    #[deprecated(
+        since = "0.2.7",
+        note = "Use randomize_capitalization() for clearer intent."
+    )]
+    pub fn redstrs(self) -> Self {
+        self.randomize_capitalization()
     }
 
     /// Applies homoglyph substitution.
@@ -145,7 +154,10 @@ mod tests {
         let result = TransformBuilder::new("test").leetspeak().build();
         assert!(result.len() > 0);
 
-        let result2 = TransformBuilder::new("hello").redstrs().base64().build();
+        let result2 = TransformBuilder::new("hello")
+            .randomize_capitalization()
+            .base64()
+            .build();
         assert!(result2.len() > 0);
     }
 
@@ -189,5 +201,22 @@ mod tests {
             .cloudflare_challenge_response()
             .build();
         assert!(result3.len() > 0);
+    }
+
+    #[test]
+    fn test_transform_builder_preserves_chain_semantics() {
+        let manual = base64_encode(&case_swap("payload"));
+        let built = TransformBuilder::new("payload")
+            .case_swap()
+            .base64()
+            .build();
+        assert_eq!(built.len(), manual.len());
+    }
+
+    #[test]
+    #[allow(deprecated)]
+    fn test_deprecated_redstrs_alias_still_works() {
+        let output = TransformBuilder::new("hello").redstrs().build();
+        assert_eq!(output.len(), "hello".len());
     }
 }

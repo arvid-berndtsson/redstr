@@ -119,7 +119,7 @@ A pre-commit hook is automatically installed that runs the following checks befo
 - ✅ Use `std` only for core functionality
 - ✅ Optional features (like `serde`) behind feature flags are acceptable
 - ❌ Never add required dependencies to core library
-- ✅ Dev-dependencies (like `cc-check`, `criterion`) are OK for testing/benchmarking
+- ✅ Dev-dependencies (like `criterion`) are OK for testing/benchmarking
 
 ### Testing
 
@@ -144,7 +144,7 @@ A pre-commit hook is automatically installed that runs the following checks befo
 
 ## 📝 Commit Messages
 
-**We enforce conventional commits using `cc-check` in CI.**
+Conventional commit format is recommended for readability and release hygiene.
 
 ### Format
 
@@ -201,19 +201,8 @@ Fixes #456
 
 ### Validation
 
-Commit messages are automatically validated in CI. The format must be:
-
-```
-[TASK-ID] <type>(<scope>): <subject>
-```
-
-Where:
-- `TASK-ID` is optional but recommended (e.g., `CF-001`)
-- `type` is required (feat, fix, docs, etc.)
-- `scope` is optional (module name)
-- `subject` is required (brief description)
-
-**CI will fail if commits don't follow this format.**
+Commit format is not hard-enforced by CI. The format above is still
+recommended to keep project history searchable and consistent.
 
 ## 🚀 Release Process
 

@@ -26,7 +26,7 @@ pub fn http_header_variation(input: &str) -> String {
             "application/json; charset=UTF-8",
             "Application/JSON",
         ];
-        variants[rng.next() as usize % variants.len()].to_string()
+        variants[rng.next_u64() as usize % variants.len()].to_string()
     } else if input.contains("text/html") {
         let variants = [
             "text/html",
@@ -35,11 +35,11 @@ pub fn http_header_variation(input: &str) -> String {
             "text/html; charset=UTF-8",
             "Text/HTML",
         ];
-        variants[rng.next() as usize % variants.len()].to_string()
+        variants[rng.next_u64() as usize % variants.len()].to_string()
     } else {
         // Apply case and whitespace variations
         let result = case_swap(input);
-        if rng.next() % 2 == 0 {
+        if rng.next_u64() % 2 == 0 {
             result.replace(" ", "").replace(";", "; ")
         } else {
             result
@@ -66,7 +66,7 @@ pub fn api_endpoint_variation(endpoint: &str) -> String {
     let mut result = endpoint.to_string();
 
     // Add variations
-    match rng.next() % 4 {
+    match rng.next_u64() % 4 {
         0 => {
             // Add trailing slash
             if !result.ends_with('/') {
@@ -113,7 +113,7 @@ pub fn graphql_obfuscate(query: &str) -> String {
         match c {
             ' ' => {
                 // Vary whitespace
-                match rng.next() % 3 {
+                match rng.next_u64() % 3 {
                     0 => result.push(' '),
                     1 => result.push_str("  "), // Double space
                     _ => result.push('\t'),     // Tab
@@ -121,18 +121,18 @@ pub fn graphql_obfuscate(query: &str) -> String {
             }
             '{' | '}' => {
                 // Sometimes add spaces, sometimes not
-                if rng.next() % 2 == 0 {
+                if rng.next_u64() % 2 == 0 {
                     result.push(c);
                 } else {
                     result.push(c);
-                    if rng.next() % 2 == 0 {
+                    if rng.next_u64() % 2 == 0 {
                         result.push(' ');
                     }
                 }
             }
             _ => {
                 // Case variation for field names
-                if c.is_alphabetic() && rng.next() % 4 == 0 {
+                if c.is_alphabetic() && rng.next_u64() % 4 == 0 {
                     if c.is_uppercase() {
                         result.push_str(&c.to_lowercase().to_string());
                     } else {
@@ -164,14 +164,14 @@ pub fn session_token_variation(token: &str) -> String {
     let mut rng = SimpleRng::new();
 
     // Common session token manipulation techniques
-    match rng.next() % 4 {
+    match rng.next_u64() % 4 {
         0 => {
             // Case variation
             case_swap(token)
         }
         1 => {
             // Add padding
-            format!("{}{}", token, "=".repeat((rng.next() % 3) as usize))
+            format!("{}{}", token, "=".repeat((rng.next_u64() % 3) as usize))
         }
         2 => {
             // URL encode
@@ -218,7 +218,7 @@ pub fn graphql_variable_injection(query: &str) -> String {
 
     // Try to inject variables in common patterns
     if result.contains("$id") {
-        match rng.next() % 3 {
+        match rng.next_u64() % 3 {
             0 => {
                 // Add null variable
                 result = result.replace("$id", "$id: null");
@@ -234,7 +234,7 @@ pub fn graphql_variable_injection(query: &str) -> String {
         }
     } else if result.contains("query") || result.contains("mutation") {
         // Inject variable declaration
-        let injection = injections[rng.next() as usize % injections.len()];
+        let injection = injections[rng.next_u64() as usize % injections.len()];
         if result.contains('{') {
             result = result.replace("{", &format!("({}) {{", injection));
         }
@@ -271,7 +271,7 @@ pub fn graphql_introspection_bypass(query: &str) -> String {
     // Apply bypass patterns
     for (original, replacement) in bypass_patterns.iter() {
         if result.contains(original) {
-            match rng.next() % 4 {
+            match rng.next_u64() % 4 {
                 0 => {
                     // Case variation
                     result = result.replace(original, replacement);
@@ -294,7 +294,7 @@ pub fn graphql_introspection_bypass(query: &str) -> String {
     }
 
     // Add comment-based bypass
-    if rng.next() % 2 == 0 {
+    if rng.next_u64() % 2 == 0 {
         result = result.replace("{", "{# comment #");
     }
 
@@ -318,7 +318,7 @@ pub fn jwt_header_manipulation(header: &str) -> String {
     let mut result = header.to_string();
 
     // Common JWT header manipulation techniques
-    match rng.next() % 5 {
+    match rng.next_u64() % 5 {
         0 => {
             // Change algorithm to none
             result = result.replace("HS256", "none");
@@ -364,7 +364,7 @@ pub fn jwt_payload_obfuscate(payload: &str) -> String {
     let mut result = payload.to_string();
 
     // Common JWT payload obfuscation techniques
-    match rng.next() % 4 {
+    match rng.next_u64() % 4 {
         0 => {
             // Add extra fields
             result = result.replace("{", r#"{"extra":"value","#);
@@ -415,7 +415,7 @@ pub fn jwt_algorithm_confusion(token: &str) -> String {
     // Replace algorithm in token (simplified - real implementation would decode/encode)
     for alg in algorithms.iter() {
         if result.contains(alg) {
-            let new_alg = algorithms[rng.next() as usize % algorithms.len()];
+            let new_alg = algorithms[rng.next_u64() as usize % algorithms.len()];
             result = result.replace(alg, new_alg);
             break;
         }
@@ -423,7 +423,7 @@ pub fn jwt_algorithm_confusion(token: &str) -> String {
 
     // If no algorithm found, try to inject
     if !result.contains("alg") {
-        let alg = algorithms[rng.next() as usize % algorithms.len()];
+        let alg = algorithms[rng.next_u64() as usize % algorithms.len()];
         // This is a simplified version - real JWT manipulation requires base64 decode/encode
         result = format!("{}.{}.", alg, result);
     }
@@ -449,7 +449,7 @@ pub fn jwt_signature_bypass(token: &str) -> String {
 
     if parts.len() >= 3 {
         // Remove or modify signature
-        match rng.next() % 4 {
+        match rng.next_u64() % 4 {
             0 => {
                 // Remove signature entirely
                 format!("{}.{}.", parts[0], parts[1])
@@ -494,7 +494,7 @@ pub fn html_input_attribute_variation(input: &str) -> String {
     let mut result = input.to_string();
 
     // Common attribute manipulation techniques
-    match rng.next() % 6 {
+    match rng.next_u64() % 6 {
         0 => {
             // Add autofocus attribute
             result = result.replace("<input", "<input autofocus");
@@ -539,7 +539,7 @@ pub fn html_input_attribute_variation(input: &str) -> String {
 pub fn html_form_field_obfuscate(field: &str) -> String {
     let mut rng = SimpleRng::new();
 
-    match rng.next() % 5 {
+    match rng.next_u64() % 5 {
         0 => {
             // Add array notation
             format!("{}[]", field)
@@ -558,7 +558,7 @@ pub fn html_form_field_obfuscate(field: &str) -> String {
         }
         _ => {
             // Add underscore prefix/suffix
-            if rng.next() % 2 == 0 {
+            if rng.next_u64() % 2 == 0 {
                 format!("_{}", field)
             } else {
                 format!("{}_", field)
@@ -604,9 +604,9 @@ pub fn html_input_type_variation(input_type: &str) -> String {
         "range",
     ];
 
-    if rng.next() % 3 == 0 {
+    if rng.next_u64() % 3 == 0 {
         // Return a random type
-        variations[rng.next() as usize % variations.len()].to_string()
+        variations[rng.next_u64() as usize % variations.len()].to_string()
     } else {
         // Apply case variation to input
         case_swap(input_type)
@@ -626,10 +626,14 @@ pub fn html_input_type_variation(input_type: &str) -> String {
 /// assert!(result.len() > 0);
 /// ```
 pub fn html_form_action_variation(action: &str) -> String {
+    if action.is_empty() {
+        return String::new();
+    }
+
     let mut rng = SimpleRng::new();
     let result = action.to_string();
 
-    match rng.next() % 5 {
+    match rng.next_u64() % 5 {
         0 => {
             // Add query parameters
             if result.contains('?') {
@@ -686,7 +690,7 @@ pub fn html_input_value_obfuscate(value: &str) -> String {
     let mut rng = SimpleRng::new();
     let result = value.to_string();
 
-    match rng.next() % 4 {
+    match rng.next_u64() % 4 {
         0 => {
             // HTML entity encode
             result
@@ -709,7 +713,7 @@ pub fn html_input_value_obfuscate(value: &str) -> String {
             result
                 .chars()
                 .map(|c| {
-                    if rng.next() % 3 == 0 && !c.is_alphanumeric() {
+                    if rng.next_u64() % 3 == 0 && !c.is_alphanumeric() {
                         format!("\\u{:04x}", c as u32)
                     } else {
                         c.to_string()

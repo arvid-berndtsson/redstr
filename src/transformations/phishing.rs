@@ -23,13 +23,13 @@ pub fn domain_typosquat(domain: &str) -> String {
     }
 
     let mut result = String::new();
-    let operation = rng.next() % 4;
+    let operation = rng.next_u64() % 4;
 
     match operation {
         0 => {
             // Character substitution
             for (i, c) in chars.iter().enumerate() {
-                if i == (rng.next() as usize % chars.len()) && c.is_alphabetic() {
+                if i == (rng.next_u64() as usize % chars.len()) && c.is_alphabetic() {
                     let substitutions = match c.to_lowercase().to_string().as_str() {
                         "o" => vec!['0', 'ο'], // Latin o, digit 0, Greek omicron
                         "i" => vec!['1', 'l', 'ı'],
@@ -38,7 +38,7 @@ pub fn domain_typosquat(domain: &str) -> String {
                         "e" => vec!['3', 'е'], // Cyrillic е
                         _ => vec![*c],
                     };
-                    result.push(substitutions[rng.next() as usize % substitutions.len()]);
+                    result.push(substitutions[rng.next_u64() as usize % substitutions.len()]);
                 } else {
                     result.push(*c);
                 }
@@ -47,7 +47,7 @@ pub fn domain_typosquat(domain: &str) -> String {
         1 => {
             // Character omission
             for (i, c) in chars.iter().enumerate() {
-                if i != (rng.next() as usize % chars.len()) {
+                if i != (rng.next_u64() as usize % chars.len()) {
                     result.push(*c);
                 }
             }
@@ -56,7 +56,7 @@ pub fn domain_typosquat(domain: &str) -> String {
             // Character duplication
             for (i, c) in chars.iter().enumerate() {
                 result.push(*c);
-                if i == (rng.next() as usize % chars.len()) {
+                if i == (rng.next_u64() as usize % chars.len()) {
                     result.push(*c);
                 }
             }
@@ -64,7 +64,7 @@ pub fn domain_typosquat(domain: &str) -> String {
         _ => {
             // Adjacent key typo (keyboard-based)
             for (i, c) in chars.iter().enumerate() {
-                if i == (rng.next() as usize % chars.len()) && c.is_alphabetic() {
+                if i == (rng.next_u64() as usize % chars.len()) && c.is_alphabetic() {
                     let adjacent = match c.to_lowercase().to_string().as_str() {
                         "a" => vec!['q', 's', 'w', 'z'],
                         "e" => vec!['w', 'r', 'd', 's'],
@@ -72,7 +72,7 @@ pub fn domain_typosquat(domain: &str) -> String {
                         "m" => vec!['n', 'k', 'j'],
                         _ => vec![*c],
                     };
-                    result.push(adjacent[rng.next() as usize % adjacent.len()]);
+                    result.push(adjacent[rng.next_u64() as usize % adjacent.len()]);
                 } else {
                     result.push(*c);
                 }
@@ -109,7 +109,7 @@ pub fn advanced_domain_spoof(domain: &str) -> String {
     let tld = parts[1..].join(".");
 
     let mut result = String::new();
-    let operation = rng.next() % 5;
+    let operation = rng.next_u64() % 5;
 
     match operation {
         0 => {
@@ -121,7 +121,7 @@ pub fn advanced_domain_spoof(domain: &str) -> String {
             let chars: Vec<char> = domain_part.chars().collect();
             for (i, c) in chars.iter().enumerate() {
                 result.push(*c);
-                if i == (rng.next() as usize % chars.len().max(1)) && chars.len() > 1 {
+                if i == (rng.next_u64() as usize % chars.len().max(1)) && chars.len() > 1 {
                     // Insert similar character
                     let insertions = match c.to_lowercase().to_string().as_str() {
                         "a" => vec!['a', '4'],
@@ -130,7 +130,7 @@ pub fn advanced_domain_spoof(domain: &str) -> String {
                         "o" => vec!['o', '0'],
                         _ => vec![*c],
                     };
-                    result.push(insertions[rng.next() as usize % insertions.len()]);
+                    result.push(insertions[rng.next_u64() as usize % insertions.len()]);
                 }
             }
         }
@@ -149,7 +149,7 @@ pub fn advanced_domain_spoof(domain: &str) -> String {
             if !tld_variants.is_empty() {
                 result = domain_part.to_string();
                 result.push('.');
-                result.push_str(tld_variants[rng.next() as usize % tld_variants.len()]);
+                result.push_str(tld_variants[rng.next_u64() as usize % tld_variants.len()]);
                 return result;
             } else {
                 result = domain_part.to_string();
@@ -159,7 +159,7 @@ pub fn advanced_domain_spoof(domain: &str) -> String {
             // Character omission
             let chars: Vec<char> = domain_part.chars().collect();
             let omit_idx = if chars.len() > 1 {
-                rng.next() as usize % chars.len()
+                rng.next_u64() as usize % chars.len()
             } else {
                 chars.len()
             };
@@ -205,7 +205,7 @@ pub fn email_obfuscation(email: &str) -> String {
     let domain = parts[1];
 
     // Obfuscate local part
-    let mut result = match rng.next() % 3 {
+    let mut result = match rng.next_u64() % 3 {
         0 => {
             // Homoglyph substitution
             homoglyph_substitution(local)
@@ -223,7 +223,7 @@ pub fn email_obfuscation(email: &str) -> String {
     result.push('@');
 
     // Obfuscate domain
-    match rng.next() % 2 {
+    match rng.next_u64() % 2 {
         0 => {
             result.push_str(&advanced_domain_spoof(domain));
         }
@@ -253,15 +253,17 @@ pub fn url_shortening_pattern(_url: &str) -> String {
 
     // Common URL shortening services patterns
     let shorteners = ["bit.ly", "tinyurl.com", "goo.gl", "t.co", "ow.ly"];
-    let shortener = shorteners[rng.next() as usize % shorteners.len()];
+    let shortener = shorteners[rng.next_u64() as usize % shorteners.len()];
 
     // Generate a short code-like pattern
     let code_chars: Vec<char> = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         .chars()
         .collect();
     let mut code = String::new();
-    for _ in 0..((rng.next() % 5) + 5) {
-        code.push(code_chars[rng.next() as usize % code_chars.len()]);
+    // Keep codes long enough that the full URL remains realistically sized
+    // even for short domains like t.co.
+    for _ in 0..((rng.next_u64() % 5) + 7) {
+        code.push(code_chars[rng.next_u64() as usize % code_chars.len()]);
     }
 
     format!("https://{}/{}", shortener, code)

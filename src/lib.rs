@@ -81,8 +81,8 @@ pub use builder::TransformBuilder;
 
 // Re-export case transformations
 pub use transformations::case::{
-    alternate_case, case_swap, inverse_case, randomize_capitalization, to_camel_case,
-    to_kebab_case, to_snake_case,
+    alternate_case, case_swap, case_swap_with_seed, inverse_case, randomize_capitalization,
+    randomize_capitalization_with_seed, to_camel_case, to_kebab_case, to_snake_case,
 };
 
 // Re-export encoding transformations
@@ -139,3 +139,6 @@ pub use transformations::web_security::{
 pub use transformations::shell::{
     bash_obfuscate, env_var_obfuscate, file_path_obfuscate, powershell_obfuscate,
 };
+
+// Re-export RNG so users can provide deterministic seeds where needed.
+pub use rng::SimpleRng;

@@ -21,8 +21,8 @@ pub fn sql_comment_injection(input: &str) -> String {
         .iter()
         .enumerate()
         .map(|(i, word)| {
-            if i > 0 && rng.next() % 3 == 0 {
-                let comment = comments[rng.next() as usize % comments.len()];
+            if i > 0 && rng.next_u64() % 3 == 0 {
+                let comment = comments[rng.next_u64() as usize % comments.len()];
                 format!("{}{}", comment, word)
             } else {
                 word.to_string()
@@ -51,21 +51,21 @@ pub fn xss_tag_variations(input: &str) -> String {
         .chars()
         .map(|c| {
             if c == '<' {
-                match rng.next() % 4 {
+                match rng.next_u64() % 4 {
                     0 => "<".to_string(),
                     1 => "&#60;".to_string(),
                     2 => "&#x3C;".to_string(),
                     _ => "%3C".to_string(),
                 }
             } else if c == '>' {
-                match rng.next() % 4 {
+                match rng.next_u64() % 4 {
                     0 => ">".to_string(),
                     1 => "&#62;".to_string(),
                     2 => "&#x3E;".to_string(),
                     _ => "%3E".to_string(),
                 }
-            } else if c.is_alphabetic() && rng.next() % 3 == 0 {
-                if rng.next() % 2 == 0 {
+            } else if c.is_alphabetic() && rng.next_u64() % 3 == 0 {
+                if rng.next_u64() % 2 == 0 {
                     c.to_uppercase().to_string()
                 } else {
                     c.to_lowercase().to_string()
@@ -118,8 +118,8 @@ pub fn null_byte_injection(input: &str) -> String {
         .chars()
         .enumerate()
         .map(|(i, c)| {
-            if i > 0 && i < input_len - 1 && rng.next() % 4 == 0 {
-                let null = null_variants[rng.next() as usize % null_variants.len()];
+            if i > 0 && i < input_len - 1 && rng.next_u64() % 4 == 0 {
+                let null = null_variants[rng.next_u64() as usize % null_variants.len()];
                 format!("{}{}", null, c)
             } else {
                 c.to_string()
@@ -168,8 +168,8 @@ pub fn path_traversal(input: &str) -> String {
 
     for (i, part) in parts.iter().enumerate() {
         if i > 0 {
-            if rng.next() % 2 == 0 {
-                let traversal = traversals[rng.next() as usize % traversals.len()];
+            if rng.next_u64() % 2 == 0 {
+                let traversal = traversals[rng.next_u64() as usize % traversals.len()];
                 result.push_str(traversal);
             } else {
                 result.push('/');
@@ -223,8 +223,8 @@ pub fn command_injection(input: &str) -> String {
         .iter()
         .enumerate()
         .map(|(i, word)| {
-            if i > 0 && rng.next() % 3 == 0 {
-                let sep = separators[rng.next() as usize % separators.len()];
+            if i > 0 && rng.next_u64() % 3 == 0 {
+                let sep = separators[rng.next_u64() as usize % separators.len()];
                 format!("{}{}", sep, word)
             } else {
                 word.to_string()
@@ -299,7 +299,7 @@ pub fn mongodb_injection(query: &str) -> String {
 
     // Inject MongoDB operators
     if result.contains("password") || result.contains("username") {
-        match rng.next() % 4 {
+        match rng.next_u64() % 4 {
             0 => {
                 // Not equal operator
                 result = result.replace(r#""password": "#, r#""password": {"$ne": "#);
@@ -331,7 +331,7 @@ pub fn mongodb_injection(query: &str) -> String {
         }
     } else {
         // Generic operator injection
-        let op = operators[rng.next() as usize % operators.len()];
+        let op = operators[rng.next_u64() as usize % operators.len()];
         if result.contains(':') {
             let replacement = format!(": {{\"{}\": ", op);
             result = result.replace(":", &replacement);
@@ -361,7 +361,7 @@ pub fn couchdb_injection(query: &str) -> String {
     let mut result = query.to_string();
 
     // Common CouchDB injection patterns
-    match rng.next() % 3 {
+    match rng.next_u64() % 3 {
         0 => {
             // Inject $or operator
             if result.contains("selector") {
@@ -411,7 +411,7 @@ pub fn dynamodb_obfuscate(query: &str) -> String {
     let mut result = query.to_string();
 
     // Common DynamoDB obfuscation patterns
-    match rng.next() % 3 {
+    match rng.next_u64() % 3 {
         0 => {
             // Change attribute type
             result = result.replace(r#"{"S": "#, r#"{"N": "#);
@@ -467,8 +467,8 @@ pub fn nosql_operator_injection(query: &str) -> String {
 
     // Inject operator based on query structure
     if result.contains(':') {
-        let (op_name, _) = operators[rng.next() as usize % operators.len()];
-        match rng.next() % 3 {
+        let (op_name, _) = operators[rng.next_u64() as usize % operators.len()];
+        match rng.next_u64() % 3 {
             0 => {
                 // Replace value with operator
                 if let Some(pos) = result.find(':') {
@@ -533,7 +533,7 @@ pub fn ssti_injection(template: &str) -> String {
     // Detect template engine and inject appropriate pattern
     if result.contains("{{") || result.contains("}}") {
         // Jinja2/Handlebars style
-        let pattern = jinja2_patterns[rng.next() as usize % jinja2_patterns.len()];
+        let pattern = jinja2_patterns[rng.next_u64() as usize % jinja2_patterns.len()];
         if result.contains("{{") {
             result = result.replace("{{", &format!("{}{{", pattern));
         } else {
@@ -541,10 +541,10 @@ pub fn ssti_injection(template: &str) -> String {
         }
     } else if result.contains("${") {
         // Freemarker/Velocity style
-        let pattern = if rng.next() % 2 == 0 {
-            freemarker_patterns[rng.next() as usize % freemarker_patterns.len()]
+        let pattern = if rng.next_u64() % 2 == 0 {
+            freemarker_patterns[rng.next_u64() as usize % freemarker_patterns.len()]
         } else {
-            velocity_patterns[rng.next() as usize % velocity_patterns.len()]
+            velocity_patterns[rng.next_u64() as usize % velocity_patterns.len()]
         };
         if result.contains("${") {
             result = result.replace("${", &format!("{}${{", pattern));
@@ -554,7 +554,7 @@ pub fn ssti_injection(template: &str) -> String {
     } else {
         // Generic injection
         let generic_patterns = ["{{7*7}}", "${7*7}", "#{7*7}", "${@print(md5(31337))}"];
-        let pattern = generic_patterns[rng.next() as usize % generic_patterns.len()];
+        let pattern = generic_patterns[rng.next_u64() as usize % generic_patterns.len()];
         result = format!("{}{}", result, pattern);
     }
 
@@ -584,22 +584,22 @@ pub fn ssti_framework_variation(template: &str, framework: &str) -> String {
                 "{{ request.application.__globals__ }}",
                 "{{ ''.__class__.__mro__[1].__subclasses__() }}",
             ];
-            let pattern = patterns[rng.next() as usize % patterns.len()];
+            let pattern = patterns[rng.next_u64() as usize % patterns.len()];
             result = format!("{}{}", result, pattern);
         }
         "freemarker" => {
             let patterns = ["${.vars}", "${.data_model}", "${.main}"];
-            let pattern = patterns[rng.next() as usize % patterns.len()];
+            let pattern = patterns[rng.next_u64() as usize % patterns.len()];
             result = format!("{}{}", result, pattern);
         }
         "velocity" => {
             let patterns = ["$class.inspect", "$class.type", "$class.forName"];
-            let pattern = patterns[rng.next() as usize % patterns.len()];
+            let pattern = patterns[rng.next_u64() as usize % patterns.len()];
             result = format!("{}{}", result, pattern);
         }
         "twig" => {
             let patterns = ["{{ _self }}", "{{ _self.env }}", "{{ dump(_self) }}"];
-            let pattern = patterns[rng.next() as usize % patterns.len()];
+            let pattern = patterns[rng.next_u64() as usize % patterns.len()];
             result = format!("{}{}", result, pattern);
         }
         _ => {
@@ -628,7 +628,7 @@ pub fn ssti_syntax_obfuscate(template: &str) -> String {
     let mut result = template.to_string();
 
     // Obfuscate template syntax
-    match rng.next() % 4 {
+    match rng.next_u64() % 4 {
         0 => {
             // Add whitespace variations
             result = result.replace("{{", "{ {");

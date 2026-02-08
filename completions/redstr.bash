@@ -1,28 +1,19 @@
-# Bash completion script for redstr
-# Install: sudo cp redstr.bash /etc/bash_completion.d/
-# Or: source this file in your ~/.bashrc
-
-_redstr_completions() {
-    local cur prev opts
+_redstr_completions()
+{
+    local cur prev modes
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    
-    # Available modes
-    opts="random r leetspeak l alternate a inverse i camel c snake s kebab k \
-          unicode u zalgo z reverse rv rot13 homoglyph h vowel-swap vs double d \
-          space-variants sv mixed-encoding me base64 b64 url-encode url \
-          sql-comment sql xss-tags xss case-swap cs null-byte nb path-traversal pt \
-          command-injection ci hex-encode hex hex-mixed hm --help -h"
-    
-    # If we're completing the first argument (mode), show all options
-    if [ $COMP_CWORD -eq 1 ]; then
-        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+
+    modes="random leetspeak alternate inverse camel snake kebab case-swap unicode unicode-normalize zalgo homoglyph space-variants reverse rot13 vowel-swap double whitespace-padding js-concat mixed-encoding base64 url-encode hex-encode hex-mixed html-entity sql-comment xss-tags null-byte path-traversal command-injection mongodb-injection couchdb-injection dynamodb-obfuscate nosql-operator ssti-injection ssti-syntax ssti-framework domain-typosquat advanced-domain-spoof email-obfuscation url-shortening random-user-agent http2-header-order tls-fingerprint accept-language cf-challenge-variation cf-turnstile cf-challenge-response tls-handshake canvas-fingerprint webgl-obfuscate font-fingerprint http-header api-endpoint graphql-obfuscate graphql-variable graphql-introspection session-token jwt-header jwt-payload jwt-alg-confusion jwt-signature-bypass html-input-attr html-form-field html-input-type html-form-action html-input-value bash-obfuscate powershell-obfuscate env-var-obfuscate file-path-obfuscate "
+
+    if [[ "${cur}" == -* ]]; then
+        COMPREPLY=( $(compgen -W "--help -h --list-modes --list --json --seed" -- "${cur}") )
         return 0
     fi
-    
-    # If we're completing the second argument (text), don't autocomplete
-    if [ $COMP_CWORD -eq 2 ]; then
+
+    if [[ ${COMP_CWORD} -eq 1 ]]; then
+        COMPREPLY=( $(compgen -W "${modes}" -- "${cur}") )
         return 0
     fi
 }
