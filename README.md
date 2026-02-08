@@ -25,6 +25,8 @@ A comprehensive Rust library providing 60+ string obfuscation and transformation
 - **CLI tool** - Optional command-line interface
 - **Production-ready** - Performance optimized, well-documented, thoroughly tested
 
+Core source of truth: `crates/redstr/src`. The historical repository-root `src/` layout is legacy and no longer used.
+
 📊 **[Performance Benchmarks](docs/performance.md)** | 🔧 **[API Reference](docs/api-reference.md)**
 
 ## 🤔 Why redstr?
