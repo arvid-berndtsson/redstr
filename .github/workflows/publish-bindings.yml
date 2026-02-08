@@ -72,12 +72,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          registry-url: https://registry.npmjs.org
+          node-version: 24
 
       - name: Install dependencies
         working-directory: bindings/node
-        run: npm install --include=dev
+        run: npm ci
+
+      - name: Verify npm CLI version for trusted publishing
+        working-directory: bindings/node
+        run: npm --version
 
       - name: Build native bindings
         working-directory: bindings/node
