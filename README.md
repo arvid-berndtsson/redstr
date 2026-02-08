@@ -51,6 +51,7 @@ Add this to your `Cargo.toml`:
 redstr = "*"
 ```
 
+
 ### With Serde Support (for web tools)
 
 ```toml

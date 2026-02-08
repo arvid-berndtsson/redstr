@@ -12,8 +12,8 @@ impl SimpleRng {
     pub(crate) fn new() -> Self {
         let time_seed = SystemTime::now()
             .duration_since(UNIX_EPOCH)
-            .unwrap()
-            .as_nanos() as u64;
+            .map(|duration| duration.as_nanos() as u64)
+            .unwrap_or(0);
         let counter_seed = RNG_SEED_COUNTER.fetch_add(1, Ordering::Relaxed);
         let seed = time_seed ^ counter_seed.rotate_left(17) ^ 0x9E37_79B9_7F4A_7C15;
 
