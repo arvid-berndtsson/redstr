@@ -84,12 +84,11 @@ jobs:
       
       - name: Install dependencies
         working-directory: bindings/node
-        run: npm install
+        run: npm ci --include=dev
       
       - name: Build
         working-directory: bindings/node
         run: npm run build
-        continue-on-error: true  # Build may fail on first setup without native deps
 
   # Python bindings
   python:

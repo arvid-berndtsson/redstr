@@ -83,6 +83,12 @@ jobs:
         working-directory: bindings/node
         run: npm run build
 
+      - name: Verify npm package contains native binary
+        working-directory: bindings/node
+        run: |
+          npm pack --json --dry-run > pack.json
+          node -e "const fs=require('fs'); const pack=JSON.parse(fs.readFileSync('pack.json','utf8'))[0]; const hasNode=(pack.files||[]).some(f=>String(f.path||'').endsWith('.node')); if(!hasNode){console.error('npm package is missing native .node binary'); process.exit(1)}; console.log('Verified native binary in package tarball');"
+
       - name: Publish to npm
         working-directory: bindings/node
         run: npm publish --access public --provenance

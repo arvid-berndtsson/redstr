@@ -16,7 +16,15 @@ use crate::transformations::unicode::homoglyph_substitution;
 /// ```
 pub fn domain_typosquat(domain: &str) -> String {
     let mut rng = SimpleRng::new();
-    let chars: Vec<char> = domain.chars().collect();
+
+    // Preserve everything from the last dot onward (e.g. ".com", ".co.uk"),
+    // and only mutate the hostname portion.
+    let (hostname, suffix) = match domain.rfind('.') {
+        Some(last_dot) => (&domain[..last_dot], &domain[last_dot..]),
+        None => (domain, ""),
+    };
+
+    let chars: Vec<char> = hostname.chars().collect();
 
     if chars.is_empty() {
         return domain.to_string();
@@ -80,11 +88,9 @@ pub fn domain_typosquat(domain: &str) -> String {
         }
     }
 
-    if domain.contains('.') && !result.contains('.') {
-        domain.to_string()
-    } else {
-        result
-    }
+    // Ensure original suffix/TLD is preserved.
+    result.push_str(suffix);
+    result
 }
 
 /// Generates advanced domain typosquatting with multiple techniques.
