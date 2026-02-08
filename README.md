@@ -46,14 +46,14 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-redstr = "0.2.3"
+redstr = "0.2.6"
 ```
 
 ### With Serde Support (for web tools)
 
 ```toml
 [dependencies]
-redstr = { version = "0.2.3", features = ["serde"] }
+redstr = { version = "0.2.6", features = ["serde"] }
 ```
 
 ### Other Languages & Platforms
@@ -150,10 +150,16 @@ An optional CLI is available for quick testing:
 cargo install redstr --features cli
 
 # Usage
-redstr [mode] <text>
+redstr [options] [mode] <text...>
+redstr [options] random-user-agent
 redstr leetspeak "password"    # → "p@55w0rd"
 redstr base64 "hello"          # → "aGVsbG8="
 ```
+
+Useful options:
+- `--list-modes` lists all available modes
+- `--json` outputs `{ mode, input, output }`
+- `--seed <u64>` enables deterministic output for `random` and `case-swap`
 
 📖 **[Complete CLI Reference](docs/cli-reference.md)** - All transformation modes and examples
 

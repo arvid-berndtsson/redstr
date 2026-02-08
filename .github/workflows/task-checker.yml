@@ -29,17 +29,17 @@ jobs:
             fi
           fi
 
-      - name: Validate task exists in TASKS.md
+      - name: Validate task exists in roadmap/TASKS.md
         run: |
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             PR_TITLE="${{ github.event.pull_request.title }}"
             TASK_ID=$(echo "$PR_TITLE" | grep -oP '\[\K[^\]]+' | head -1)
             if [ -n "$TASK_ID" ]; then
-              if ! grep -q "**ID:** \`$TASK_ID\`" TASKS.md; then
-                echo "❌ Task ID $TASK_ID not found in TASKS.md"
+              if ! grep -q "**ID:** \`$TASK_ID\`" roadmap/TASKS.md; then
+                echo "❌ Task ID $TASK_ID not found in roadmap/TASKS.md"
                 exit 1
               else
-                echo "✅ Task ID $TASK_ID found in TASKS.md"
+                echo "✅ Task ID $TASK_ID found in roadmap/TASKS.md"
               fi
             fi
           fi

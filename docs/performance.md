@@ -4,19 +4,14 @@
 
 This document describes the performance characteristics of redstr transformation functions. All benchmarks are conducted using [Criterion.rs](https://github.com/bheisler/criterion.rs), a statistical benchmarking tool that provides reliable measurements.
 
-## Performance Comparison
+## Performance Scope
 
-redstr's performance compared to other popular Rust string manipulation libraries across various operations. **Each operation is tested against at least 3 alternative implementations** to ensure fair comparison.
+The current benchmark suite measures redstr transformation performance using
+in-repo Criterion benchmarks. These results are intended for internal
+regression tracking across releases, input sizes, and transformation groups.
 
-**Tested Libraries:**
-- **Base64 encoding**: rust-base64, data-encoding, base64ct
-- **URL encoding**: urlencoding, percent-encoding, form_urlencoded  
-- **Case transformations**: heck, inflector, convert_case
-
-**Key Findings:**
-- **Base64 encoding**: Competitive with specialized base64 libraries (rust-base64, data-encoding, base64ct)
-- **URL encoding**: 5-8% faster than urlencoding, percent-encoding, and form_urlencoded crates
-- **Case transformations**: 9-26% faster than heck, inflector, and convert_case
+If you need cross-library comparisons, add explicit benchmark targets for each
+external implementation and document hardware/compiler settings for parity.
 
 ## Running Benchmarks
 
