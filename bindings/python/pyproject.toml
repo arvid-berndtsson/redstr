@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "redstr"
-version = "0.2.13"
+version = "0.2.14"
 description = "Native string transformations for security testing - WAF bypass, XSS, SQL injection, phishing, and evasion testing"
 readme = "README.md"
 license = { text = "MIT" }
