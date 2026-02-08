@@ -40,11 +40,11 @@ Implement Cloudflare Turnstile challenge response variations for bot detection e
 - Document use cases
 
 **Deliverables:**
-- New file: `crates/redstr/src/transformations/cloudflare.rs`
+- New file: [`crates/redstr/src/transformations/cloudflare.rs`](../crates/)redstr/src/transformations/cloudflare.rs)
 - Functions: `cloudflare_turnstile_variation()`, `cloudflare_challenge_response()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
-- Example: `examples/cloudflare_evasion.rs`
+- Example: [`crates/redstr/examples/cloudflare_evasion.rs`](../crates/)redstr/examples/cloudflare_evasion.rs)
 
 **Acceptance Criteria:**
 - [ ] Functions compile and pass tests
@@ -60,7 +60,7 @@ Implement Cloudflare Turnstile challenge response variations for bot detection e
 crates/redstr/src/transformations/cloudflare.rs (new)
 crates/redstr/src/transformations/mod.rs (add exports)
 crates/redstr/src/lib.rs (add exports)
-examples/cloudflare_evasion.rs (new)
+crates/redstr/examples/cloudflare_evasion.rs (new)
 ```
 
 **Function Signatures:**
@@ -99,7 +99,7 @@ Implement TLS fingerprint randomization functions for Cloudflare bot detection e
 - Create tests and documentation
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/cloudflare.rs`
+- Functions in [`crates/redstr/src/transformations/cloudflare.rs`](../crates/)redstr/src/transformations/cloudflare.rs)
 - Functions: `tls_fingerprint_variation()`, `tls_handshake_pattern()`
 - Tests and examples
 
@@ -155,10 +155,10 @@ Implement browser fingerprint consistency functions for Cloudflare evasion.
 Create Debian package structure for ParrotOS and Kali Linux distribution.
 
 **Requirements:**
-- Create `debian/` directory structure
-- Write `debian/control` file
-- Create `debian/rules` for building
-- Add `debian/changelog`
+- Create [`debian/`](debian/) directory structure
+- Write [`debian/control`](../debian/)control) file
+- Create [`debian/rules`](../debian/)rules) for building
+- Add [`debian/changelog`](../debian/)changelog)
 - Create installation scripts
 - Test package building
 
@@ -204,8 +204,8 @@ Prepare and submit redstr package to ParrotOS repository.
 
 **Deliverables:**
 - Package ready for submission
-- Documentation: `docs/parrotos_integration.md`
-- CI/CD workflow: `.github/workflows/build-deb.yml`
+- Documentation: [`docs/parrotos_integration.md`](../docs/)parrotos_integration.md)
+- CI/CD workflow: [`.github/workflows/build-deb.yml`](../.github/)workflows/build-deb.yml)
 
 **Dependencies:** Task PKG-001
 
@@ -232,7 +232,7 @@ Prepare and submit redstr package to Kali Linux repository.
 
 **Deliverables:**
 - Package ready for submission
-- Documentation: `docs/kali_integration.md`
+- Documentation: [`docs/kali_integration.md`](../docs/)kali_integration.md)
 
 **Dependencies:** Task PKG-001
 
@@ -296,7 +296,7 @@ Create comprehensive performance benchmark suite using Criterion.
 
 **Deliverables:**
 ```
-benches/
+crates/redstr/benches/
 └── transformations.rs
 Cargo.toml (add dev-dependencies)
 docs/performance.md
@@ -363,9 +363,9 @@ Implement GraphQL injection and obfuscation patterns.
 - Add tests and examples
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/injection.rs`
+- Functions in [`crates/redstr/src/transformations/injection.rs`](../crates/)redstr/src/transformations/injection.rs)
 - Functions: `graphql_query_obfuscate()`, `graphql_variable_injection()`, `graphql_introspection_bypass()`
-- Example: `examples/graphql_injection.rs`
+- Example: [`crates/redstr/examples/graphql_injection.rs`](../crates/)redstr/examples/graphql_injection.rs)
 
 **Dependencies:** None
 
@@ -391,8 +391,8 @@ Implement NoSQL injection patterns for MongoDB, CouchDB, DynamoDB.
 - Document and test
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/injection.rs`
-- Example: `examples/nosql_injection.rs`
+- Functions in [`crates/redstr/src/transformations/injection.rs`](../crates/)redstr/src/transformations/injection.rs)
+- Example: [`crates/redstr/examples/nosql_injection.rs`](../crates/)redstr/examples/nosql_injection.rs)
 
 **Dependencies:** None
 
@@ -418,8 +418,8 @@ Implement JWT token manipulation functions.
 - Document security implications
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/web_security.rs`
-- Example: `examples/jwt_manipulation.rs`
+- Functions in [`crates/redstr/src/transformations/web_security.rs`](../crates/)redstr/src/transformations/web_security.rs)
+- Example: [`crates/redstr/examples/jwt_manipulation.rs`](../crates/)redstr/examples/jwt_manipulation.rs)
 
 **Dependencies:** None
 
@@ -445,8 +445,8 @@ Implement SSTI patterns for various template engines.
 - Add comprehensive tests
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/injection.rs`
-- Example: `examples/ssti_injection.rs`
+- Functions in [`crates/redstr/src/transformations/injection.rs`](../crates/)redstr/src/transformations/injection.rs)
+- Example: [`crates/redstr/examples/ssti_injection.rs`](../crates/)redstr/examples/ssti_injection.rs)
 
 **Dependencies:** None
 
@@ -477,11 +477,11 @@ Implement JSON and YAML string manipulation functions for API testing and config
 - Document API testing use cases
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/data_formats.rs`
+- Functions in [`crates/redstr/src/transformations/data_formats.rs`](../crates/)redstr/src/transformations/data_formats.rs)
 - Functions: `json_key_obfuscate()`, `json_value_encode()`, `json_minify_strategic()`, `yaml_comment_inject()`, `yaml_anchor_obfuscate()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
-- Example: `examples/data_format_obfuscation.rs`
+- Example: [`crates/redstr/examples/data_format_obfuscation.rs`](../crates/)redstr/examples/data_format_obfuscation.rs)
 
 **Acceptance Criteria:**
 - [ ] Functions compile and pass tests
@@ -518,11 +518,11 @@ Implement advanced XML and HTML transformation functions for XSS testing and doc
 - Document XSS and injection testing use cases
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/markup.rs`
+- Functions in [`crates/redstr/src/transformations/markup.rs`](../crates/)redstr/src/transformations/markup.rs)
 - Functions: `xml_cdata_obfuscate()`, `xml_namespace_manipulate()`, `xml_entity_encode_variations()`, `html_comment_obfuscate()`, `html_attribute_encode()`, `svg_obfuscate()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
-- Example: `examples/markup_obfuscation.rs`
+- Example: [`crates/redstr/examples/markup_obfuscation.rs`](../crates/)redstr/examples/markup_obfuscation.rs)
 
 **Acceptance Criteria:**
 - [ ] Functions compile and pass tests
@@ -559,11 +559,11 @@ Implement regex evasion and pattern obfuscation techniques for bypassing input v
 - Document filter bypass use cases
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/regex_evasion.rs`
+- Functions in [`crates/redstr/src/transformations/regex_evasion.rs`](../crates/)redstr/src/transformations/regex_evasion.rs)
 - Functions: `regex_zero_width_insert()`, `regex_backreference_obfuscate()`, `regex_quantifier_evade()`, `regex_lookahead_confuse()`, `regex_charclass_expand()`, `regex_anchor_bypass()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
-- Example: `examples/regex_evasion.rs`
+- Example: [`crates/redstr/examples/regex_evasion.rs`](../crates/)redstr/examples/regex_evasion.rs)
 
 **Acceptance Criteria:**
 - [ ] Functions compile and pass tests
@@ -600,11 +600,11 @@ Implement network protocol-specific string obfuscation for HTTP, DNS, and other 
 - Document protocol testing use cases
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/protocol.rs`
+- Functions in [`crates/redstr/src/transformations/protocol.rs`](../crates/)redstr/src/transformations/protocol.rs)
 - Functions: `http_method_variation()`, `dns_label_encode()`, `http_chunked_obfuscate()`, `mime_type_obfuscate()`, `protocol_version_vary()`, `hostname_encode()`, `cookie_value_obfuscate()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
-- Example: `examples/protocol_obfuscation.rs`
+- Example: [`crates/redstr/examples/protocol_obfuscation.rs`](../crates/)redstr/examples/protocol_obfuscation.rs)
 
 **Acceptance Criteria:**
 - [ ] Functions compile and pass tests
@@ -641,11 +641,11 @@ Implement advanced encoding techniques beyond basic Base64 and URL encoding.
 - Document encoding bypass use cases
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/advanced_encoding.rs`
+- Functions in [`crates/redstr/src/transformations/advanced_encoding.rs`](../crates/)redstr/src/transformations/advanced_encoding.rs)
 - Functions: `base32_encode()`, `base85_encode()`, `uuencode()`, `xxencode()`, `quoted_printable_encode()`, `punycode_encode()`, `custom_alphabet_encode()`, `mime_encoded_word()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
-- Example: `examples/advanced_encoding.rs`
+- Example: [`crates/redstr/examples/advanced_encoding.rs`](../crates/)redstr/examples/advanced_encoding.rs)
 
 **Acceptance Criteria:**
 - [ ] Functions compile and pass tests
@@ -682,11 +682,11 @@ Implement cryptographic-related string transformations (obfuscation only, not ac
 - Document security testing use cases
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/crypto_patterns.rs`
+- Functions in [`crates/redstr/src/transformations/crypto_patterns.rs`](../crates/)redstr/src/transformations/crypto_patterns.rs)
 - Functions: `hash_pattern_generate()`, `checksum_manipulate()`, `vigenere_obfuscate()`, `key_derivation_pattern()`, `salt_insert()`, `iv_pattern_generate()`, `mac_format_vary()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
-- Example: `examples/crypto_patterns.rs`
+- Example: [`crates/redstr/examples/crypto_patterns.rs`](../crates/)redstr/examples/crypto_patterns.rs)
 
 **Acceptance Criteria:**
 - [ ] Functions compile and pass tests
@@ -724,11 +724,11 @@ Implement binary and hexadecimal string manipulation functions for low-level tes
 - Document low-level testing use cases
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/binary.rs`
+- Functions in [`crates/redstr/src/transformations/binary.rs`](../crates/)redstr/src/transformations/binary.rs)
 - Functions: `to_binary_string()`, `binary_obfuscate()`, `hexdump_format()`, `octal_encode()`, `mixed_radix_encode()`, `bit_flip_pattern()`, `endian_swap_pattern()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
-- Example: `examples/binary_manipulation.rs`
+- Example: [`crates/redstr/examples/binary_manipulation.rs`](../crates/)redstr/examples/binary_manipulation.rs)
 
 **Acceptance Criteria:**
 - [ ] Functions compile and pass tests
@@ -765,11 +765,11 @@ Implement template string transformations for various template engines and place
 - Document template injection testing use cases
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/templates.rs`
+- Functions in [`crates/redstr/src/transformations/templates.rs`](../crates/)redstr/src/transformations/templates.rs)
 - Functions: `mustache_placeholder_vary()`, `jinja2_placeholder_obfuscate()`, `erb_placeholder_vary()`, `handlebars_vary()`, `interpolation_format_vary()`, `format_string_obfuscate()`, `template_comment_inject()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
-- Example: `examples/template_transformations.rs`
+- Example: [`crates/redstr/examples/template_transformations.rs`](../crates/)redstr/examples/template_transformations.rs)
 
 **Acceptance Criteria:**
 - [ ] Functions compile and pass tests
@@ -806,11 +806,11 @@ Implement internationalization-related string transformations for multi-language
 - Document i18n testing use cases
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/i18n.rs`
+- Functions in [`crates/redstr/src/transformations/i18n.rs`](../crates/)redstr/src/transformations/i18n.rs)
 - Functions: `rtl_marker_insert()`, `bidi_override()`, `locale_number_format()`, `date_format_vary()`, `currency_symbol_vary()`, `translation_key_obfuscate()`, `plural_format_vary()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
-- Example: `examples/i18n_transformations.rs`
+- Example: [`crates/redstr/examples/i18n_transformations.rs`](../crates/)redstr/examples/i18n_transformations.rs)
 
 **Acceptance Criteria:**
 - [ ] Functions compile and pass tests
@@ -847,11 +847,11 @@ Implement programming language-specific string transformations beyond existing s
 - Document code injection testing use cases
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/code_lang.rs`
+- Functions in [`crates/redstr/src/transformations/code_lang.rs`](../crates/)redstr/src/transformations/code_lang.rs)
 - Functions: `python_string_vary()`, `ruby_string_vary()`, `php_concat_vary()`, `java_builder_pattern()`, `csharp_verbatim()`, `perl_quote_vary()`, `sql_string_escape_vary()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
-- Example: `examples/code_language_transformations.rs`
+- Example: [`crates/redstr/examples/code_language_transformations.rs`](../crates/)redstr/examples/code_language_transformations.rs)
 
 **Acceptance Criteria:**
 - [ ] Functions compile and pass tests
@@ -867,7 +867,7 @@ Implement programming language-specific string transformations beyond existing s
 
 ## 🌐 Language Bindings (Monorepo - HIGH PRIORITY)
 
-Native language bindings are **essential for library adoption**. All bindings are maintained in this repository under `bindings/`. See `docs/BINDINGS_IMPLEMENTATION_GUIDE.md` for implementation details.
+Native language bindings are **essential for library adoption**. All bindings are maintained in this repository under [`bindings/`](bindings/). See [`docs/BINDINGS_IMPLEMENTATION_GUIDE.md`](../docs/)BINDINGS_IMPLEMENTATION_GUIDE.md) for implementation details.
 
 ### Monorepo Structure
 
@@ -902,14 +902,14 @@ Based on industry best practices (libsignal, Polars, swc, deltachat):
 **Tags:** `[AGENT-FRIENDLY]` `ffi` `bindings` `phase:1`
 
 **Description:**
-Create the `ffi/` crate with C-compatible exports for all redstr functions.
+Create the [`ffi/`](ffi/) crate with C-compatible exports for all redstr functions.
 
 **Requirements:**
-- Create `ffi/` crate in workspace
+- Create [`ffi/`](ffi/) crate in workspace
 - Export all public functions via C FFI
 - Handle string allocation/deallocation safely
 - Add `cbindgen.toml` for header generation
-- Generate `include/redstr.h`
+- Generate [`include/redstr.h`](include/redstr.h)
 
 **Deliverables:**
 ```
@@ -1019,10 +1019,10 @@ bindings/dotnet/src/Redstr/Transforms.cs
 
 | Binding | Directory | Framework | Status |
 |---------|-----------|-----------|--------|
-| **Node.js/TypeScript** | `bindings/node/` | napi-rs | 🟡 In Progress |
-| **Python** | `bindings/python/` | PyO3 | 🟡 In Progress |
-| **WebAssembly** | `bindings/wasm/` | wasm-bindgen | 🟡 In Progress |
-| **.NET/C#** | `bindings/dotnet/` | P/Invoke | 🟡 In Progress |
+| **Node.js/TypeScript** | [`bindings/node/`](../bindings/)node/) | napi-rs | 🟡 In Progress |
+| **Python** | [`bindings/python/`](../bindings/)python/) | PyO3 | 🟡 In Progress |
+| **WebAssembly** | [`bindings/wasm/`](../bindings/)wasm/) | wasm-bindgen | 🟡 In Progress |
+| **.NET/C#** | [`bindings/dotnet/`](../bindings/)dotnet/) | P/Invoke | 🟡 In Progress |
 | **Go** | External | CGO | ✅ `redstr-go` |
 
 ---
@@ -1083,11 +1083,11 @@ Implement steganographic techniques for hiding data within strings.
 - Document covert communication use cases
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/steganography.rs`
+- Functions in [`crates/redstr/src/transformations/steganography.rs`](../crates/)redstr/src/transformations/steganography.rs)
 - Functions: `zero_width_encode()`, `homoglyph_hide_data()`, `whitespace_stego()`, `case_bit_encode()`, `punctuation_encode()`, `emoji_stego()`, `font_variation_stego()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
-- Example: `examples/steganography.rs`
+- Example: [`crates/redstr/examples/steganography.rs`](../crates/)redstr/examples/steganography.rs)
 
 **Acceptance Criteria:**
 - [ ] Functions compile and pass tests
@@ -1124,7 +1124,7 @@ Implement advanced Unicode manipulation beyond current unicode.rs functions.
 - Document Unicode-based evasion use cases
 
 **Deliverables:**
-- Additional functions in `crates/redstr/src/transformations/unicode.rs`
+- Additional functions in [`crates/redstr/src/transformations/unicode.rs`](../crates/)redstr/src/transformations/unicode.rs)
 - Functions: `combining_char_attack()`, `confusable_advanced()`, `normalization_evade()`, `grapheme_manipulate()`, `invisible_insert()`, `width_manipulate()`, `script_mix_attack()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
@@ -1202,11 +1202,11 @@ Implement string transformations specific to container and orchestration technol
 - Document container security testing use cases
 
 **Deliverables:**
-- Functions in `crates/redstr/src/transformations/containers.rs`
+- Functions in [`crates/redstr/src/transformations/containers.rs`](../crates/)redstr/src/transformations/containers.rs)
 - Functions: `docker_image_obfuscate()`, `k8s_resource_vary()`, `docker_env_obfuscate()`, `container_label_vary()`, `helm_value_obfuscate()`, `dockerfile_vary()`, `compose_obfuscate()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
-- Example: `examples/container_transformations.rs`
+- Example: [`crates/redstr/examples/container_transformations.rs`](../crates/)redstr/examples/container_transformations.rs)
 
 **Acceptance Criteria:**
 - [ ] Functions compile and pass tests
@@ -1237,7 +1237,7 @@ Implement string transformations specific to container and orchestration technol
 Create comprehensive getting started guide.
 
 **Deliverables:**
-- `docs/getting_started.md`
+- [`docs/getting_started.md`](../docs/)getting_started.md)
 
 **Dependencies:** None
 
@@ -1290,10 +1290,10 @@ Set up Discord/Slack community platform.
 Create contributor guidelines and templates.
 
 **Deliverables:**
-- `CONTRIBUTING.md`
+- [`CONTRIBUTING.md`](CONTRIBUTING.md)
 - `CODE_OF_CONDUCT.md`
-- `.github/ISSUE_TEMPLATE/`
-- `.github/PULL_REQUEST_TEMPLATE.md`
+- [`.github/ISSUE_TEMPLATE/`](../.github/)ISSUE_TEMPLATE/)
+- [`.github/PULL_REQUEST_TEMPLATE.md`](../.github/)PULL_REQUEST_TEMPLATE.md)
 
 **Dependencies:** None
 

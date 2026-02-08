@@ -7,13 +7,13 @@ Thank you for your interest in contributing to redstr! This document provides gu
 ### For Human Developers
 
 1. **Pick a Task**
-   - Check `roadmap/TASKS.md` for available tasks
+   - Check [`roadmap/TASKS.md`](../roadmap/)TASKS.md) for available tasks
    - Look for tasks with no assignee (⬜ Not Started)
    - Choose based on your skills and interests
    - Check that dependencies are met
 
 2. **Claim the Task**
-   - Comment on the task in `roadmap/TASKS.md` or create an issue
+   - Comment on the task in [`roadmap/TASKS.md`](../roadmap/)TASKS.md) or create an issue
    - Update status: ⬜ → 🟡 (In Progress)
    - Assign yourself if using GitHub
 
@@ -46,7 +46,7 @@ Thank you for your interest in contributing to redstr! This document provides gu
 ### For AI Agents (Cursor/GitHub)
 
 1. **Find Agent-Friendly Tasks**
-   - Look for tasks tagged `[AGENT-FRIENDLY]` in `roadmap/TASKS.md`
+   - Look for tasks tagged `[AGENT-FRIENDLY]` in [`roadmap/TASKS.md`](../roadmap/)TASKS.md)
    - Check task has no assignee
    - Verify dependencies are met
 
@@ -74,7 +74,7 @@ Thank you for your interest in contributing to redstr! This document provides gu
 
 ### Updating Task Status
 
-Update status in `roadmap/TASKS.md` when:
+Update status in [`roadmap/TASKS.md`](../roadmap/)TASKS.md) when:
 - Starting: ⬜ → 🟡
 - Completing: 🟡 → ✅
 - Blocked: 🟡 → 🔄
@@ -247,10 +247,10 @@ chmod +x .git/hooks/commit-msg
 ## 📚 Resources
 
 ### Documentation
-- `roadmap/TASKS.md` - Complete task list
-- `roadmap/ROADMAP.md` - Strategic roadmap
-- `roadmap/QUICK_START.md` - Quick start guide
-- `README.md` - Project overview
+- [`roadmap/TASKS.md`](../roadmap/)TASKS.md) - Complete task list
+- [`roadmap/ROADMAP.md`](../roadmap/)ROADMAP.md) - Strategic roadmap
+- [`roadmap/QUICK_START.md`](../roadmap/)QUICK_START.md) - Quick start guide
+- [`README.md`](README.md) - Project overview
 - [docs.rs/redstr](https://docs.rs/redstr) - API documentation
 
 ### Getting Help
@@ -290,14 +290,14 @@ chmod +x .git/hooks/commit-msg
    }
    ```
 
-3. Export in `crates/redstr/src/lib.rs`:
+3. Export in [`crates/redstr/src/lib.rs`](../crates/)redstr/src/lib.rs):
    ```rust
    pub use transformations::cloudflare::new_function;
    ```
 
 4. Add to `TransformBuilder` if applicable
 
-5. Create example in `examples/`
+5. Create example in [`crates/redstr/examples/`](../crates/)redstr/examples/)
 
 ### Creating a New Integration
 
@@ -316,7 +316,7 @@ chmod +x .git/hooks/commit-msg
 
 ## 📊 Progress Tracking
 
-- Update `roadmap/TASKS.md` with progress
+- Update [`roadmap/TASKS.md`](../roadmap/)TASKS.md) with progress
 - Use GitHub Projects for visualization
 - Report blockers early
 - Celebrate completions!

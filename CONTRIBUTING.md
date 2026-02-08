@@ -7,13 +7,13 @@ Thank you for your interest in contributing to redstr! This document provides gu
 ### For Human Developers
 
 1. **Pick a Task**
-   - Check `roadmap/TASKS.md` for available tasks
+   - Check [`roadmap/TASKS.md`](roadmap/TASKS.md) for available tasks
    - Look for tasks with no assignee (⬜ Not Started)
    - Choose based on your skills and interests
    - Check that dependencies are met
 
 2. **Claim the Task**
-   - Comment on the task in `roadmap/TASKS.md` or create an issue
+   - Comment on the task in [`roadmap/TASKS.md`](roadmap/TASKS.md) or create an issue
    - Update status: ⬜ → 🟡 (In Progress)
    - Assign yourself if using GitHub
 
@@ -45,7 +45,7 @@ Thank you for your interest in contributing to redstr! This document provides gu
 ### For AI Agents (Cursor/GitHub)
 
 1. **Find Agent-Friendly Tasks**
-   - Look for tasks tagged `[AGENT-FRIENDLY]` in `roadmap/TASKS.md`
+   - Look for tasks tagged `[AGENT-FRIENDLY]` in [`roadmap/TASKS.md`](roadmap/TASKS.md)
    - Check task has no assignee
    - Verify dependencies are met
 
@@ -73,7 +73,7 @@ Thank you for your interest in contributing to redstr! This document provides gu
 
 ### Updating Task Status
 
-Update status in `roadmap/TASKS.md` when:
+Update status in [`roadmap/TASKS.md`](roadmap/TASKS.md) when:
 - Starting: ⬜ → 🟡
 - Completing: 🟡 → ✅
 - Blocked: 🟡 → 🔄
@@ -239,8 +239,8 @@ cargo release --dry-run patch
 ```
 
 `cargo-release` will:
-1. ✅ Update `Cargo.toml` version
-2. ✅ Update `Cargo.lock` if needed
+1. ✅ Update [`Cargo.toml`](Cargo.toml) version
+2. ✅ Update [`Cargo.lock`](Cargo.lock) if needed
 3. ✅ Create a git commit with the version change
 4. ✅ Create a git tag `v<version>`
 5. ✅ Optionally push to origin (use `--execute` flag)
@@ -261,14 +261,14 @@ git push origin --tags
 ### CI Validation & Publishing
 
 The GitHub Actions workflow automatically:
-- ✅ Updates `Cargo.toml` version to match the tag version (if needed)
+- ✅ Updates [`Cargo.toml`](Cargo.toml) version to match the tag version (if needed)
 - ✅ Commits the version update back to the repository
 - ✅ Publishes to crates.io with the correct version
 - ✅ Uses Trusted Publishing (no API tokens needed)
 
 **Workflow:** Push tag → CI auto-updates version → Commits changes → Auto-publishes to crates.io
 
-**Note:** If you push a tag like `v0.2.1` and `Cargo.toml` has version `0.2.0`, the workflow will automatically update `Cargo.toml` to `0.2.1` and commit the change before publishing.
+**Note:** If you push a tag like `v0.2.1` and [`Cargo.toml`](Cargo.toml) has version `0.2.0`, the workflow will automatically update [`Cargo.toml`](Cargo.toml) to `0.2.1` and commit the change before publishing.
 
 
 ## 🔍 Code Review Process
@@ -308,10 +308,10 @@ The GitHub Actions workflow automatically:
 ## 📚 Resources
 
 ### Documentation
-- `roadmap/TASKS.md` - Complete task list
-- `roadmap/ROADMAP.md` - Strategic roadmap
-- `roadmap/QUICK_START.md` - Quick start guide
-- `README.md` - Project overview
+- [`roadmap/TASKS.md`](roadmap/TASKS.md) - Complete task list
+- [`roadmap/ROADMAP.md`](roadmap/ROADMAP.md) - Strategic roadmap
+- [`roadmap/QUICK_START.md`](roadmap/QUICK_START.md) - Quick start guide
+- [`README.md`](README.md) - Project overview
 - [docs.rs/redstr](https://docs.rs/redstr) - API documentation
 
 ### Getting Help
@@ -351,14 +351,14 @@ The GitHub Actions workflow automatically:
    }
    ```
 
-3. Export in `crates/redstr/src/lib.rs`:
+3. Export in [`crates/redstr/src/lib.rs`](crates/redstr/src/lib.rs):
    ```rust
    pub use transformations::cloudflare::new_function;
    ```
 
 4. Add to `TransformBuilder` if applicable
 
-5. Create example in `examples/`
+5. Create example in [`crates/redstr/examples/`](crates/redstr/examples/)
 
 ### Creating a New Integration
 
@@ -373,7 +373,7 @@ See **[Integration Guidelines](docs/INTEGRATION_GUIDELINES.md)** for guidance on
 **For integrations in this repo:**
 1. Research integration points
 2. Create `docs/{platform}_integration.md`
-3. Add examples to `examples/` directory
+3. Add examples to [`crates/redstr/examples/`](crates/redstr/examples/) directory
 4. Update documentation
 
 **For separate repo integrations:**
@@ -390,7 +390,7 @@ See **[Integration Guidelines](docs/INTEGRATION_GUIDELINES.md)** for guidance on
 
 ## 📊 Progress Tracking
 
-- Update `roadmap/TASKS.md` with progress
+- Update [`roadmap/TASKS.md`](roadmap/TASKS.md) with progress
 - Use GitHub Projects for visualization
 - Report blockers early
 - Celebrate completions!

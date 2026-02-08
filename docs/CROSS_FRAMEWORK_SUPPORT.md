@@ -249,7 +249,7 @@ redstr-wasm/
 │   ├── redstr_wasm.d.ts
 │   ├── redstr_wasm_bg.wasm
 │   └── package.json
-└── examples/
+└── crates/redstr/examples/
     └── react-app/
 ```
 
@@ -407,7 +407,7 @@ redstr-csharp/
 │       └── src/lib.rs
 ├── tests/
 │   └── Redstr.Tests/
-└── examples/
+└── crates/redstr/examples/
 ```
 
 #### Expected API

@@ -23,10 +23,10 @@
 - [ ] Add to `TransformBuilder`
 
 **Files to Create/Modify:**
-- `crates/redstr/src/transformations/cloudflare.rs` (new)
-- `crates/redstr/src/transformations/mod.rs` (update exports)
-- `crates/redstr/src/lib.rs` (update exports)
-- `examples/cloudflare_evasion.rs` (new)
+- [`crates/redstr/src/transformations/cloudflare.rs`](../crates/)redstr/src/transformations/cloudflare.rs) (new)
+- [`crates/redstr/src/transformations/mod.rs`](../crates/)redstr/src/transformations/mod.rs) (update exports)
+- [`crates/redstr/src/lib.rs`](../crates/)redstr/src/lib.rs) (update exports)
+- [`crates/redstr/examples/cloudflare_evasion.rs`](../crates/)redstr/examples/cloudflare_evasion.rs) (new)
 
 **Function Signatures:**
 ```rust
@@ -47,8 +47,8 @@ pub fn cloudflare_worker_kv_pattern(input: &str) -> String
 - [ ] Create integration examples
 
 **Files:**
-- `crates/redstr/src/transformations/cloudflare.rs` (add functions)
-- `examples/tls_fingerprinting.rs` (new)
+- [`crates/redstr/src/transformations/cloudflare.rs`](../crates/)redstr/src/transformations/cloudflare.rs) (add functions)
+- [`crates/redstr/examples/tls_fingerprinting.rs`](../crates/)redstr/examples/tls_fingerprinting.rs) (new)
 
 **Function Signatures:**
 ```rust
@@ -67,8 +67,8 @@ pub fn tls_handshake_pattern(input: &str) -> String
 - [ ] Add HTTP/2-specific obfuscation
 
 **Files:**
-- `crates/redstr/src/transformations/bot_detection.rs` (enhance)
-- `examples/http2_evasion.rs` (new)
+- [`crates/redstr/src/transformations/bot_detection.rs`](../crates/)redstr/src/transformations/bot_detection.rs) (enhance)
+- [`crates/redstr/examples/http2_evasion.rs`](../crates/)redstr/examples/http2_evasion.rs) (new)
 
 #### Task 1.1.4: Browser Fingerprint Consistency
 **Priority:** High  
@@ -82,8 +82,8 @@ pub fn tls_handshake_pattern(input: &str) -> String
 - [ ] Implement font fingerprint consistency
 
 **Files:**
-- `crates/redstr/src/transformations/bot_detection.rs` (add functions)
-- `examples/browser_fingerprinting.rs` (new)
+- [`crates/redstr/src/transformations/bot_detection.rs`](../crates/)redstr/src/transformations/bot_detection.rs) (add functions)
+- [`crates/redstr/examples/browser_fingerprinting.rs`](../crates/)redstr/examples/browser_fingerprinting.rs) (new)
 
 **Function Signatures:**
 ```rust
@@ -100,19 +100,19 @@ pub fn font_fingerprint_consistency(input: &str) -> String
 
 **Tasks:**
 - [ ] Create `debian/` directory structure
-- [ ] Write `debian/control` file
-- [ ] Create `debian/rules` for building
-- [ ] Add `debian/changelog`
+- [ ] Write [`debian/control`](../debian/)control) file
+- [ ] Create [`debian/rules`](../debian/)rules) for building
+- [ ] Add [`debian/changelog`](../debian/)changelog)
 - [ ] Create installation scripts
 - [ ] Test package building
 
 **Files to Create:**
-- `debian/control`
-- `debian/rules`
-- `debian/changelog`
-- `debian/compat`
-- `debian/copyright`
-- `debian/redstr.install`
+- [`debian/control`](../debian/)control)
+- [`debian/rules`](../debian/)rules)
+- [`debian/changelog`](../debian/)changelog)
+- [`debian/compat`](../debian/)compat)
+- [`debian/copyright`](../debian/)copyright)
+- [`debian/redstr.install`](../debian/)redstr.install)
 
 #### Task 1.2.2: ParrotOS Repository Integration
 **Priority:** High  
@@ -126,8 +126,8 @@ pub fn font_fingerprint_consistency(input: &str) -> String
 - [ ] Test installation on ParrotOS VM
 
 **Files:**
-- `docs/parrotos_integration.md` (new)
-- `.github/workflows/build-deb.yml` (new)
+- [`docs/parrotos_integration.md`](../docs/)parrotos_integration.md) (new)
+- [`.github/workflows/build-deb.yml`](../.github/)workflows/build-deb.yml) (new)
 
 #### Task 1.2.3: Kali Linux Repository Integration
 **Priority:** High  
@@ -141,7 +141,7 @@ pub fn font_fingerprint_consistency(input: &str) -> String
 - [ ] Prepare repository submission
 
 **Files:**
-- `docs/kali_integration.md` (new)
+- [`docs/kali_integration.md`](../docs/)kali_integration.md) (new)
 - `kali/` directory (new, if needed)
 
 #### Task 1.2.4: CLI Tool Optimization for Security Distros
@@ -156,7 +156,7 @@ pub fn font_fingerprint_consistency(input: &str) -> String
 - [ ] Add color output for terminals
 
 **Files:**
-- `crates/redstr/src/main.rs` (enhance CLI)
+- [`crates/redstr/src/main.rs`](../crates/)redstr/src/main.rs) (enhance CLI)
 - `completions/` directory (new)
 - `man/` directory (new)
 - `scripts/` directory (new)
@@ -175,9 +175,9 @@ pub fn font_fingerprint_consistency(input: &str) -> String
 - [ ] Document performance characteristics
 
 **Files:**
-- `benches/` directory (new)
-- `benches/transformations.rs` (new)
-- `Cargo.toml` (add dev-dependencies)
+- [`crates/redstr/benches/`](../crates/)redstr/benches/) directory (new)
+- [`crates/redstr/benches/transformations.rs`](../crates/)redstr/benches/transformations.rs) (new)
+- [`Cargo.toml`](Cargo.toml) (add dev-dependencies)
 
 **Dependencies:**
 - Add `criterion` as dev-dependency (benchmarks only, not core)
@@ -208,8 +208,8 @@ pub fn font_fingerprint_consistency(input: &str) -> String
 - [ ] Document SIMD usage
 
 **Files:**
-- `crates/redstr/src/transformations/simd.rs` (new, optional)
-- `Cargo.toml` (add simd feature)
+- [`crates/redstr/src/transformations/simd.rs`](../crates/)redstr/src/transformations/simd.rs) (new, optional)
+- [`Cargo.toml`](Cargo.toml) (add simd feature)
 
 **Note:** Must be behind feature flag, optional dependency
 
@@ -227,8 +227,8 @@ pub fn font_fingerprint_consistency(input: &str) -> String
 - [ ] Add tests and examples
 
 **Files:**
-- `crates/redstr/src/transformations/injection.rs` (add functions)
-- `examples/graphql_injection.rs` (new)
+- [`crates/redstr/src/transformations/injection.rs`](../crates/)redstr/src/transformations/injection.rs) (add functions)
+- [`crates/redstr/examples/graphql_injection.rs`](../crates/)redstr/examples/graphql_injection.rs) (new)
 
 **Function Signatures:**
 ```rust
@@ -249,8 +249,8 @@ pub fn graphql_introspection_bypass(input: &str) -> String
 - [ ] Document and test
 
 **Files:**
-- `crates/redstr/src/transformations/injection.rs` (add functions)
-- `examples/nosql_injection.rs` (new)
+- [`crates/redstr/src/transformations/injection.rs`](../crates/)redstr/src/transformations/injection.rs) (add functions)
+- [`crates/redstr/examples/nosql_injection.rs`](../crates/)redstr/examples/nosql_injection.rs) (new)
 
 #### Task 1.4.3: JWT Token Manipulation
 **Priority:** Medium  
@@ -264,8 +264,8 @@ pub fn graphql_introspection_bypass(input: &str) -> String
 - [ ] Document security implications
 
 **Files:**
-- `crates/redstr/src/transformations/web_security.rs` (add functions)
-- `examples/jwt_manipulation.rs` (new)
+- [`crates/redstr/src/transformations/web_security.rs`](../crates/)redstr/src/transformations/web_security.rs) (add functions)
+- [`crates/redstr/examples/jwt_manipulation.rs`](../crates/)redstr/examples/jwt_manipulation.rs) (new)
 
 #### Task 1.4.4: Server-Side Template Injection (SSTI)
 **Priority:** High  
@@ -279,8 +279,8 @@ pub fn graphql_introspection_bypass(input: &str) -> String
 - [ ] Add comprehensive tests
 
 **Files:**
-- `crates/redstr/src/transformations/injection.rs` (add functions)
-- `examples/ssti_injection.rs` (new)
+- [`crates/redstr/src/transformations/injection.rs`](../crates/)redstr/src/transformations/injection.rs) (add functions)
+- [`crates/redstr/examples/ssti_injection.rs`](../crates/)redstr/examples/ssti_injection.rs) (new)
 
 ---
 
@@ -300,7 +300,7 @@ pub fn graphql_introspection_bypass(input: &str) -> String
 - [ ] Get feedback from EvilJinx maintainers
 
 **Files:**
-- `docs/eviljinx_integration.md` (new)
+- [`docs/eviljinx_integration.md`](../docs/)eviljinx_integration.md) (new)
 
 #### Task 2.1.2: Create EvilJinx Plugin
 **Priority:** High  
@@ -329,8 +329,8 @@ pub fn graphql_introspection_bypass(input: &str) -> String
 - [ ] Create video tutorial (optional)
 
 **Files:**
-- `examples/eviljinx_integration.rs` (new)
-- `docs/eviljinx_tutorial.md` (new)
+- [`crates/redstr/examples/eviljinx_integration.rs`](../crates/)redstr/examples/eviljinx_integration.rs) (new)
+- [`docs/eviljinx_tutorial.md`](../docs/)eviljinx_tutorial.md) (new)
 
 ### 2.2 Caido Integration
 
@@ -345,7 +345,7 @@ pub fn graphql_introspection_bypass(input: &str) -> String
 - [ ] Prototype basic extension
 
 **Files:**
-- `docs/caido_integration.md` (new)
+- [`docs/caido_integration.md`](../docs/)caido_integration.md) (new)
 
 #### Task 2.2.2: Create Caido Extension
 **Priority:** High  
@@ -374,7 +374,7 @@ pub fn graphql_introspection_bypass(input: &str) -> String
 - [ ] Prototype integration
 
 **Files:**
-- `docs/burp_integration.md` (new)
+- [`docs/burp_integration.md`](../docs/)burp_integration.md) (new)
 
 #### Task 2.3.2: Create Burp Extension
 **Priority:** Medium  
@@ -408,7 +408,7 @@ pub fn graphql_introspection_bypass(input: &str) -> String
 - [ ] Include troubleshooting section
 
 **Files:**
-- `docs/getting_started.md` (new)
+- [`docs/getting_started.md`](../docs/)getting_started.md) (new)
 
 #### Task 3.1.2: Video Tutorial Series
 **Priority:** Medium  
@@ -460,10 +460,10 @@ pub fn graphql_introspection_bypass(input: &str) -> String
 - [ ] Add "good first issue" labels
 
 **Files:**
-- `CONTRIBUTING.md` (new)
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) (new)
 - `CODE_OF_CONDUCT.md` (new)
-- `.github/ISSUE_TEMPLATE/` (new)
-- `.github/PULL_REQUEST_TEMPLATE.md` (new)
+- [`.github/ISSUE_TEMPLATE/`](../.github/)ISSUE_TEMPLATE/) (new)
+- [`.github/PULL_REQUEST_TEMPLATE.md`](../.github/)PULL_REQUEST_TEMPLATE.md) (new)
 
 ### 3.3 Content Creation
 

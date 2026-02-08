@@ -5,17 +5,17 @@ This directory contains helper scripts and workflow wrappers for redstr.
 ## generate-cli-assets.sh
 
 Generates CLI-derived assets from a single mode list:
-- `completions/redstr.bash`
-- `completions/redstr.zsh`
-- `completions/redstr.fish`
-- `man/redstr.1`
+- [`completions/redstr.bash`](../completions/)redstr.bash)
+- [`completions/redstr.zsh`](../completions/)redstr.zsh)
+- [`completions/redstr.fish`](../completions/)redstr.fish)
+- [`man/redstr.1`](../man/)redstr.1)
 
 Usage:
 ```bash
 scripts/generate-cli-assets.sh
 ```
 
-Run this after changing CLI modes/options in `crates/redstr/src/main.rs`.
+Run this after changing CLI modes/options in [`crates/redstr/src/main.rs`](../crates/)redstr/src/main.rs).
 
 ## redstr-wrapper.sh
 

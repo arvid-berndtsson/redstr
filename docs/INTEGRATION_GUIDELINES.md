@@ -33,7 +33,7 @@ redstr is designed to be integrated into security testing tools and frameworks. 
 ### Use the redstr Repository When:
 
 ✅ **Creating usage examples or integration documentation**
-   - **Location:** `examples/` directory
+   - **Location:** [`crates/redstr/examples/`](../crates/)redstr/examples/) directory
    - **Examples:** Code samples showing how to use redstr in various contexts
 
 ✅ **Adding library features that enable integrations**
@@ -77,13 +77,13 @@ redstr = "0.1"
 **Best for:** Code examples, library enhancements, documentation
 
 **Location in redstr repo:**
-- Examples: `examples/your_integration_example.rs`
-- Documentation: `docs/your_integration_guide.md`
-- Library code: `crates/redstr/src/transformations/your_module.rs`
+- Examples: [`crates/redstr/examples/your_integration_example.rs`](../crates/)redstr/examples/your_integration_example.rs)
+- Documentation: [`docs/your_integration_guide.md`](../docs/)your_integration_guide.md)
+- Library code: [`crates/redstr/src/transformations/your_module.rs`](../crates/)redstr/src/transformations/your_module.rs)
 
 **Example:**
 ```rust
-// examples/burp_usage.rs
+// crates/redstr/examples/burp_usage.rs
 use redstr::{url_encode, xss_tag_variations};
 
 fn main() {
@@ -183,7 +183,7 @@ Regardless of where your integration lives, please:
 2. **Mention redstr** in your tool's description/manifest
 
 3. **Let us know!** Open an issue or PR to add your integration to our list:
-   - Add to `README.md` under integrations section
+   - Add to [`README.md`](README.md) under integrations section
    - We'll feature it in our documentation
 
 ## 🤝 Community Integrations
@@ -242,7 +242,7 @@ Does it require non-Rust dependencies?
 └─ NO → Continue...
 
 Is it just example code or documentation?
-├─ YES → This repository (examples/ or docs/)
+├─ YES → This repository (crates/redstr/examples/ or docs/)
 └─ NO → Separate repository
 
 Does it need independent releases?

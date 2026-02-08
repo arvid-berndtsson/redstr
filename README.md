@@ -25,7 +25,7 @@ A comprehensive Rust library providing 60+ string obfuscation and transformation
 - **CLI tool** - Optional command-line interface
 - **Production-ready** - Performance optimized, well-documented, thoroughly tested
 
-Core source of truth: `crates/redstr/src`. The historical repository-root `src/` layout is legacy and no longer used.
+Core source of truth: [`crates/redstr/src`](crates/redstr/src). The historical repository-root `src/` layout is legacy and no longer used.
 
 📊 **[Performance Benchmarks](docs/performance.md)** | 🔧 **[API Reference](docs/api-reference.md)**
 
@@ -44,7 +44,7 @@ Core source of truth: `crates/redstr/src`. The historical repository-root `src/`
 
 ### Rust (Native)
 
-Add this to your `Cargo.toml`:
+Add this to your [`Cargo.toml`](Cargo.toml):
 
 ```toml
 [dependencies]
@@ -124,7 +124,7 @@ let payload = TransformBuilder::new("SELECT * FROM users")
     .build();
 ```
 
-📚 **[View More Examples](examples/)** | 🔧 **[API Reference](docs/api-reference.md)**
+📚 **[View More Examples](crates/redstr/examples/)** | 🔧 **[API Reference](docs/api-reference.md)**
 
 ## Integration Examples
 
@@ -225,7 +225,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines and [docs/INTE
 - **[Use Cases](docs/use-cases.md)** - Security testing scenarios
 - **[Integration Examples](docs/integration-examples.md)** - Tool integration patterns
 - **[docs.rs/redstr](https://docs.rs/redstr)** - Full library documentation
-- **[examples/](examples/)** - Code examples
+- **[crates/redstr/examples/](crates/redstr/examples/)** - Code examples
 
 ## ⚠️ Responsible Use
 

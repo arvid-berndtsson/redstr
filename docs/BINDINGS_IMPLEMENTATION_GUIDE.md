@@ -703,7 +703,7 @@ redstr-wasm/
 │   ├── redstr_wasm.d.ts
 │   ├── redstr_wasm_bg.wasm
 │   └── package.json
-├── examples/
+├── crates/redstr/examples/
 │   └── react-app/
 └── README.md
 ```
