@@ -26,7 +26,7 @@ use crate::rng::SimpleRng;
 /// assert!(result2.contains("123"));
 /// ```
 pub fn randomize_capitalization(input: &str) -> String {
-    randomize_capitalization_with_seed(input, SimpleRng::new().next())
+    randomize_capitalization_with_seed(input, SimpleRng::new().next_u64())
 }
 
 /// Applies random capitalization to each letter in the input string using a deterministic seed.
@@ -38,7 +38,7 @@ pub fn randomize_capitalization_with_seed(input: &str, seed: u64) -> String {
 
     for c in input.chars() {
         if c.is_alphabetic() {
-            if rng.next() % 2 == 0 {
+            if rng.next_u64() % 2 == 0 {
                 for uc in c.to_uppercase() {
                     result.push(uc);
                 }
@@ -170,7 +170,7 @@ pub fn inverse_case(input: &str) -> String {
 /// // Example output: "<ScRiPt>alert(1)</ScRiPt>"
 /// ```
 pub fn case_swap(input: &str) -> String {
-    case_swap_with_seed(input, SimpleRng::new().next())
+    case_swap_with_seed(input, SimpleRng::new().next_u64())
 }
 
 /// Swaps case randomly using a deterministic seed.
@@ -181,7 +181,7 @@ pub fn case_swap_with_seed(input: &str, seed: u64) -> String {
     let mut result = String::with_capacity(input.len() * 2);
 
     for c in input.chars() {
-        if c.is_alphabetic() && rng.next() % 2 == 0 {
+        if c.is_alphabetic() && rng.next_u64() % 2 == 0 {
             if c.is_uppercase() {
                 for lc in c.to_lowercase() {
                     result.push(lc);

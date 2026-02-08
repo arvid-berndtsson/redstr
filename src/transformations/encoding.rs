@@ -31,7 +31,7 @@ pub fn mixed_encoding(input: &str) -> String {
     let mut result = String::with_capacity(input.len() * 8); // Encoded chars are longer
 
     for c in input.chars() {
-        match rng.next() % 4 {
+        match rng.next_u64() % 4 {
             0 => result.push(c),
             1 => result.push_str(&format!("&#x{:x};", c as u32)),
             2 => result.push_str(&format!("&#{};", c as u32)),
@@ -215,7 +215,7 @@ pub fn hex_encode_mixed(input: &str) -> String {
 
     input
         .bytes()
-        .map(|b| match rng.next() % 4 {
+        .map(|b| match rng.next_u64() % 4 {
             0 => format!("\\x{:02x}", b),
             1 => format!("%{:02x}", b),
             2 => format!("0x{:02x}", b),
@@ -258,7 +258,7 @@ pub fn html_entity_encode(input: &str) -> String {
     let mut result = String::new();
 
     for c in input.chars() {
-        match rng.next() % 4 {
+        match rng.next_u64() % 4 {
             0 => result.push(c),
             1 => result.push_str(&format!("&#{};", c as u32)),
             2 => result.push_str(&format!("&#x{:X};", c as u32)),

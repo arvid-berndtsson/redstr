@@ -22,9 +22,15 @@ impl SimpleRng {
     }
 
     /// Returns the next pseudo-random number.
-    pub fn next(&mut self) -> u64 {
+    pub fn next_u64(&mut self) -> u64 {
         // Linear Congruential Generator
         self.state = self.state.wrapping_mul(6364136223846793005).wrapping_add(1);
         self.state
+    }
+}
+
+impl Default for SimpleRng {
+    fn default() -> Self {
+        Self::new()
     }
 }

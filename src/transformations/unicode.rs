@@ -39,14 +39,14 @@ pub fn unicode_variations(input: &str) -> String {
         .map(|c| {
             let lower = c.to_lowercase().to_string();
             match lower.as_str() {
-                "a" => ["a", "à", "á", "â", "ã", "ä", "å", "ā", "ă"][rng.next() as usize % 9],
-                "e" => ["e", "è", "é", "ê", "ë", "ē", "ĕ", "ė"][rng.next() as usize % 8],
-                "i" => ["i", "ì", "í", "î", "ï", "ī", "ĭ", "į"][rng.next() as usize % 8],
-                "o" => ["o", "ò", "ó", "ô", "õ", "ö", "ō", "ŏ"][rng.next() as usize % 8],
-                "u" => ["u", "ù", "ú", "û", "ü", "ū", "ŭ", "ů"][rng.next() as usize % 8],
-                "c" => ["c", "ç", "ć", "ĉ", "ċ", "č"][rng.next() as usize % 6],
-                "n" => ["n", "ñ", "ń", "ņ", "ň"][rng.next() as usize % 5],
-                "s" => ["s", "ś", "ŝ", "ş", "š"][rng.next() as usize % 5],
+                "a" => ["a", "à", "á", "â", "ã", "ä", "å", "ā", "ă"][rng.next_u64() as usize % 9],
+                "e" => ["e", "è", "é", "ê", "ë", "ē", "ĕ", "ė"][rng.next_u64() as usize % 8],
+                "i" => ["i", "ì", "í", "î", "ï", "ī", "ĭ", "į"][rng.next_u64() as usize % 8],
+                "o" => ["o", "ò", "ó", "ô", "õ", "ö", "ō", "ŏ"][rng.next_u64() as usize % 8],
+                "u" => ["u", "ù", "ú", "û", "ü", "ū", "ŭ", "ů"][rng.next_u64() as usize % 8],
+                "c" => ["c", "ç", "ć", "ĉ", "ċ", "č"][rng.next_u64() as usize % 6],
+                "n" => ["n", "ñ", "ń", "ņ", "ň"][rng.next_u64() as usize % 5],
+                "s" => ["s", "ś", "ŝ", "ş", "š"][rng.next_u64() as usize % 5],
                 _ => return c.to_string(),
             }
             .to_string()
@@ -99,9 +99,9 @@ pub fn zalgo_text(input: &str) -> String {
         .map(|c| {
             let mut result = c.to_string();
             if c.is_alphabetic() {
-                let count = (rng.next() % 3) + 1;
+                let count = (rng.next_u64() % 3) + 1;
                 for _ in 0..count {
-                    let idx = rng.next() as usize % combining_chars.len();
+                    let idx = rng.next_u64() as usize % combining_chars.len();
                     result.push(combining_chars[idx]);
                 }
             }
@@ -151,7 +151,7 @@ pub fn homoglyph_substitution(input: &str) -> String {
     input
         .chars()
         .map(|c| {
-            if rng.next() % 3 != 0 {
+            if rng.next_u64() % 3 != 0 {
                 return c.to_string();
             }
 
@@ -214,7 +214,7 @@ pub fn space_variants(input: &str) -> String {
         .chars()
         .map(|c| {
             if c == ' ' {
-                spaces[rng.next() as usize % spaces.len()].to_string()
+                spaces[rng.next_u64() as usize % spaces.len()].to_string()
             } else {
                 c.to_string()
             }
@@ -255,15 +255,15 @@ pub fn unicode_normalize_variants(input: &str) -> String {
             match c {
                 'a' | 'A' => {
                     let variants = ["a", "а", "ａ", "\u{0061}\u{0301}"]; // Latin, Cyrillic, fullwidth, with combining acute
-                    variants[rng.next() as usize % variants.len()]
+                    variants[rng.next_u64() as usize % variants.len()]
                 }
                 'e' | 'E' => {
                     let variants = ["e", "е", "ｅ", "\u{0065}\u{0301}"];
-                    variants[rng.next() as usize % variants.len()]
+                    variants[rng.next_u64() as usize % variants.len()]
                 }
                 'o' | 'O' => {
                     let variants = ["o", "о", "ｏ", "\u{006F}\u{0301}"];
-                    variants[rng.next() as usize % variants.len()]
+                    variants[rng.next_u64() as usize % variants.len()]
                 }
                 _ => return c.to_string(),
             }

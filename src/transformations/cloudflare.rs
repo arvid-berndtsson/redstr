@@ -27,7 +27,7 @@ pub fn cloudflare_turnstile_variation(input: &str) -> String {
         format!("turnstile-{}-{}", input, generate_random_suffix(&mut rng)),
     ];
 
-    patterns[rng.next() as usize % patterns.len()].clone()
+    patterns[rng.next_u64() as usize % patterns.len()].clone()
 }
 
 /// Generates Cloudflare challenge response patterns.
@@ -54,12 +54,12 @@ pub fn cloudflare_challenge_response(input: &str) -> String {
         input
             .chars()
             .map(|c| {
-                match rng.next() % 10 {
+                match rng.next_u64() % 10 {
                     0..=6 => c.to_string(),
                     7 => {
                         // Occasionally add spacing variations
                         if c == '=' {
-                            if rng.next() % 2 == 0 {
+                            if rng.next_u64() % 2 == 0 {
                                 " = ".to_string()
                             } else {
                                 "=".to_string()
@@ -70,9 +70,9 @@ pub fn cloudflare_challenge_response(input: &str) -> String {
                     }
                     8 => {
                         // Underscore/hyphen variations
-                        if c == '_' && rng.next() % 3 == 0 {
+                        if c == '_' && rng.next_u64() % 3 == 0 {
                             "-".to_string()
-                        } else if c == '-' && rng.next() % 3 == 0 {
+                        } else if c == '-' && rng.next_u64() % 3 == 0 {
                             "_".to_string()
                         } else {
                             c.to_string()
@@ -85,7 +85,7 @@ pub fn cloudflare_challenge_response(input: &str) -> String {
     } else if input.contains("turnstile") || input.contains("challenge") {
         // Turnstile challenge response
         let mut result = input.to_string();
-        if rng.next() % 2 == 0 {
+        if rng.next_u64() % 2 == 0 {
             result.push_str(&format!("-{}", generate_random_suffix(&mut rng)));
         }
         result
@@ -115,7 +115,7 @@ pub fn tls_handshake_pattern(input: &str) -> String {
 
     // Common TLS handshake pattern variations
     let separators = [":", ",", " ", "-"];
-    let separator = separators[rng.next() as usize % separators.len()];
+    let separator = separators[rng.next_u64() as usize % separators.len()];
 
     input
         .split(|c: char| [':', ',', ' ', '-'].contains(&c))
@@ -155,34 +155,34 @@ pub fn canvas_fingerprint_variation(input: &str) -> String {
     input
         .chars()
         .map(|c| {
-            match rng.next() % 15 {
+            match rng.next_u64() % 15 {
                 0..=11 => c.to_string(),
                 12 => {
                     // Occasionally swap similar characters
                     match c {
                         '0' => {
-                            if rng.next() % 2 == 0 {
+                            if rng.next_u64() % 2 == 0 {
                                 "O".to_string()
                             } else {
                                 "0".to_string()
                             }
                         }
                         '1' => {
-                            if rng.next() % 2 == 0 {
+                            if rng.next_u64() % 2 == 0 {
                                 "l".to_string()
                             } else {
                                 "1".to_string()
                             }
                         }
                         'O' => {
-                            if rng.next() % 2 == 0 {
+                            if rng.next_u64() % 2 == 0 {
                                 "0".to_string()
                             } else {
                                 "O".to_string()
                             }
                         }
                         'l' => {
-                            if rng.next() % 2 == 0 {
+                            if rng.next_u64() % 2 == 0 {
                                 "1".to_string()
                             } else {
                                 "l".to_string()
@@ -193,7 +193,7 @@ pub fn canvas_fingerprint_variation(input: &str) -> String {
                 }
                 13 => {
                     // Add subtle spacing variations
-                    if c.is_whitespace() && rng.next() % 2 == 0 {
+                    if c.is_whitespace() && rng.next_u64() % 2 == 0 {
                         "  ".to_string() // Double space
                     } else {
                         c.to_string()
@@ -227,11 +227,11 @@ pub fn webgl_fingerprint_obfuscate(input: &str) -> String {
     input
         .chars()
         .map(|c| {
-            match rng.next() % 12 {
+            match rng.next_u64() % 12 {
                 0..=9 => c.to_string(),
                 10 => {
                     // Vary version numbers slightly
-                    if c.is_ascii_digit() && rng.next() % 4 == 0 {
+                    if c.is_ascii_digit() && rng.next_u64() % 4 == 0 {
                         // Occasionally change digit
                         let digit = c.to_digit(10).unwrap();
                         let new_digit = (digit + 1) % 10;
@@ -242,9 +242,9 @@ pub fn webgl_fingerprint_obfuscate(input: &str) -> String {
                 }
                 _ => {
                     // Case variations for version strings
-                    if c == '.' && rng.next() % 3 == 0 {
+                    if c == '.' && rng.next_u64() % 3 == 0 {
                         ".".to_string()
-                    } else if c.is_alphabetic() && rng.next() % 5 == 0 {
+                    } else if c.is_alphabetic() && rng.next_u64() % 5 == 0 {
                         if c.is_uppercase() {
                             c.to_lowercase().to_string()
                         } else {
@@ -294,7 +294,7 @@ pub fn font_fingerprint_consistency(input: &str) -> String {
     }
 
     let separators = [", ", ",", "; ", ";"];
-    let separator = separators[rng.next() as usize % separators.len()];
+    let separator = separators[rng.next_u64() as usize % separators.len()];
 
     fonts
         .iter()
@@ -302,7 +302,7 @@ pub fn font_fingerprint_consistency(input: &str) -> String {
         .map(|(i, font)| {
             let mut font_str = font.to_string();
             // Occasionally add/remove quotes
-            if rng.next() % 4 == 0 && !font_str.starts_with('"') {
+            if rng.next_u64() % 4 == 0 && !font_str.starts_with('"') {
                 font_str = format!("\"{}\"", font_str);
             }
             if i > 0 {
@@ -320,9 +320,9 @@ fn generate_random_suffix(rng: &mut SimpleRng) -> String {
     let chars: Vec<char> = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         .chars()
         .collect();
-    let length = 8 + (rng.next() % 8) as usize; // 8-15 characters
+    let length = 8 + (rng.next_u64() % 8) as usize; // 8-15 characters
     (0..length)
-        .map(|_| chars[rng.next() as usize % chars.len()])
+        .map(|_| chars[rng.next_u64() as usize % chars.len()])
         .collect()
 }
 
