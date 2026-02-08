@@ -1,0 +1,139 @@
+name: Publish Bindings
+
+on:
+  workflow_run:
+    workflows: ["Publish to crates.io"]
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+jobs:
+  verify-version-sync:
+    name: Verify version sync
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate package versions
+        run: |
+          WORKSPACE_VERSION=$(grep '^version = ' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
+          NODE_VERSION=$(node -p "require('./bindings/node/package.json').version")
+          PYTHON_VERSION=$(python - <<'PY'
+          import pathlib
+          import re
+          text = pathlib.Path("bindings/python/pyproject.toml").read_text()
+          match = re.search(r'^version = "(.*)"$', text, flags=re.M)
+          print(match.group(1))
+          PY
+          )
+
+          echo "Workspace version: ${WORKSPACE_VERSION}"
+          echo "Node version:      ${NODE_VERSION}"
+          echo "Python version:    ${PYTHON_VERSION}"
+
+          if [ "${WORKSPACE_VERSION}" != "${NODE_VERSION}" ] || [ "${WORKSPACE_VERSION}" != "${PYTHON_VERSION}" ]; then
+            echo "Version mismatch detected. Align Cargo.toml, bindings/node/package.json, and bindings/python/pyproject.toml."
+            exit 1
+          fi
+
+  publish-npm:
+    name: Publish npm package
+    needs: verify-version-sync
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        working-directory: bindings/node
+        run: npm ci
+
+      - name: Build native bindings
+        working-directory: bindings/node
+        run: npm run build
+
+      - name: Publish to npm
+        working-directory: bindings/node
+        run: npm publish --access public --provenance
+
+  build-python:
+    name: Build Python dist
+    needs: verify-version-sync
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install maturin
+        run: pip install maturin
+
+      - name: Build wheel and sdist
+        working-directory: bindings/python
+        run: maturin build --release --out dist
+
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-dist
+          path: bindings/python/dist/*
+
+  publish-pypi:
+    name: Publish PyPI package
+    needs: build-python
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: Download dist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: python-dist
+          path: dist
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist

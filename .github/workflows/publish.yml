@@ -27,17 +27,54 @@ jobs:
         with:
           toolchain: stable
 
-      - name: Update Cargo.toml version to match tag
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Update package versions to match tag
         run: |
           TAG_VERSION="${GITHUB_REF#refs/tags/v}"
-          CARGO_VERSION=$(grep '^version = ' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
+          WORKSPACE_VERSION=$(grep '^version = ' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
+          NODE_VERSION=$(node -p "require('./bindings/node/package.json').version")
+          PYTHON_VERSION=$(python - <<'PY'
+          import pathlib
+          import re
+          text = pathlib.Path("bindings/python/pyproject.toml").read_text()
+          match = re.search(r'^version = "(.*)"$', text, flags=re.M)
+          print(match.group(1))
+          PY
+          )
           
           echo "📦 Tag version: $TAG_VERSION"
-          echo "📦 Cargo.toml version: $CARGO_VERSION"
+          echo "📦 Workspace version: $WORKSPACE_VERSION"
+          echo "📦 Node version: $NODE_VERSION"
+          echo "📦 Python version: $PYTHON_VERSION"
           
-          if [ "$TAG_VERSION" != "$CARGO_VERSION" ]; then
-            echo "🔄 Updating workspace version from $CARGO_VERSION to $TAG_VERSION"
+          if [ "$TAG_VERSION" != "$WORKSPACE_VERSION" ] || [ "$TAG_VERSION" != "$NODE_VERSION" ] || [ "$TAG_VERSION" != "$PYTHON_VERSION" ]; then
+            echo "🔄 Updating package versions to $TAG_VERSION"
             sed -i "0,/^version = \".*\"/s//version = \"$TAG_VERSION\"/" Cargo.toml
+
+            python - <<'PY'
+            import json
+            import pathlib
+            import re
+
+            version = pathlib.Path("Cargo.toml").read_text().split('version = "', 1)[1].split('"', 1)[0]
+
+            package_json = pathlib.Path("bindings/node/package.json")
+            data = json.loads(package_json.read_text())
+            data["version"] = version
+            optional = data.get("optionalDependencies", {})
+            for key in optional:
+                optional[key] = version
+            package_json.write_text(json.dumps(data, indent=2) + "\n")
+
+            pyproject = pathlib.Path("bindings/python/pyproject.toml")
+            text = pyproject.read_text()
+            text = re.sub(r'^version = ".*"$', f'version = "{version}"', text, count=1, flags=re.M)
+            pyproject.write_text(text)
+            PY
             
             # Update Cargo.lock to reflect the version change
             cargo check -p redstr
@@ -47,7 +84,7 @@ jobs:
             git config user.email "github-actions[bot]@users.noreply.github.com"
             
             # Commit and push the version update
-            git add Cargo.toml Cargo.lock
+            git add Cargo.toml Cargo.lock bindings/node/package.json bindings/python/pyproject.toml
             git commit -m "chore: bump version to $TAG_VERSION for release"
             git push origin ${{ github.event.repository.default_branch }}
             

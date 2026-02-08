@@ -68,10 +68,12 @@ docker pull arvid-berndtsson/redstr-server
 ```
 See [API Server Documentation](docs/api_server.md) for usage examples in JavaScript, Python, Go, Ruby, and more.
 
+**Available Packages**:
+- **npm**: `npm install redstr` (JavaScript/TypeScript)
+- **PyPI**: `pip install redstr` (Python)
+
 **Coming Soon**:
 - 🔜 **Homebrew**: `brew install redstr` (macOS/Linux)
-- 🔜 **npm**: `npm install @redstr/core` (JavaScript/TypeScript)
-- 🔜 **PyPI**: `pip install redstr` (Python)
 - 🔜 **Go Module**: `go get github.com/arvid-berndtsson/redstr-go`
 - 🔜 **Raycast Extension**: Quick launcher integration
 
