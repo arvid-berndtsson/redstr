@@ -2,6 +2,21 @@
 
 This directory contains helper scripts and workflow wrappers for redstr.
 
+## generate-cli-assets.sh
+
+Generates CLI-derived assets from a single mode list:
+- `completions/redstr.bash`
+- `completions/redstr.zsh`
+- `completions/redstr.fish`
+- `man/redstr.1`
+
+Usage:
+```bash
+scripts/generate-cli-assets.sh
+```
+
+Run this after changing CLI modes/options in `src/main.rs`.
+
 ## redstr-wrapper.sh
 
 A convenience wrapper that provides common security testing workflows combining
