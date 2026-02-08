@@ -260,7 +260,9 @@ pub fn url_shortening_pattern(_url: &str) -> String {
         .chars()
         .collect();
     let mut code = String::new();
-    for _ in 0..((rng.next_u64() % 5) + 5) {
+    // Keep codes long enough that the full URL remains realistically sized
+    // even for short domains like t.co.
+    for _ in 0..((rng.next_u64() % 5) + 7) {
         code.push(code_chars[rng.next_u64() as usize % code_chars.len()]);
     }
 

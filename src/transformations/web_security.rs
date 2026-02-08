@@ -626,6 +626,10 @@ pub fn html_input_type_variation(input_type: &str) -> String {
 /// assert!(result.len() > 0);
 /// ```
 pub fn html_form_action_variation(action: &str) -> String {
+    if action.is_empty() {
+        return String::new();
+    }
+
     let mut rng = SimpleRng::new();
     let result = action.to_string();
 
