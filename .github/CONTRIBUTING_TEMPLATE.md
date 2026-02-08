@@ -264,7 +264,7 @@ chmod +x .git/hooks/commit-msg
 
 1. Create function in appropriate module:
    ```rust
-   // src/transformations/cloudflare.rs
+   // crates/redstr/src/transformations/cloudflare.rs
    /// Brief description.
    ///
    /// # Examples
@@ -290,7 +290,7 @@ chmod +x .git/hooks/commit-msg
    }
    ```
 
-3. Export in `src/lib.rs`:
+3. Export in `crates/redstr/src/lib.rs`:
    ```rust
    pub use transformations::cloudflare::new_function;
    ```

@@ -124,15 +124,15 @@ redstr is a Rust library for string obfuscation and transformation designed for 
 - Prefer panicking over silent failures for programming errors (e.g., invalid indices)
 
 ### 6. Project Structure
-- Library code: `src/lib.rs`
-- CLI binary: `src/main.rs` (only built with `cli` feature)
+- Library code: `crates/redstr/src/lib.rs`
+- CLI binary: `crates/redstr/src/main.rs` (only built with `cli` feature)
 - Examples: `examples/` directory
 - Tests: In `#[cfg(test)]` modules within source files
 - Documentation: Comprehensive README.md with use cases
 
 ### 7. Feature Flags
 - `default`: Core library only (no dependencies)
-- `cli`: Enable CLI binary (`src/main.rs`)
+- `cli`: Enable CLI binary (`crates/redstr/src/main.rs`)
 - `serde`: Optional serde integration for serialization
 - Always check feature flags when adding optional functionality
 
@@ -201,7 +201,7 @@ redstr is a Rust library for string obfuscation and transformation designed for 
 4. Write unit tests covering edge cases
 5. Add to `TransformBuilder` if it makes sense to chain
 6. Update README.md with the new function
-7. Add CLI support if applicable (in `src/main.rs`)
+7. Add CLI support if applicable (in `crates/redstr/src/main.rs`)
 8. Consider adding to examples directory
 
 ### 12. Common Patterns

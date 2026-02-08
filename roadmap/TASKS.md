@@ -40,7 +40,7 @@ Implement Cloudflare Turnstile challenge response variations for bot detection e
 - Document use cases
 
 **Deliverables:**
-- New file: `src/transformations/cloudflare.rs`
+- New file: `crates/redstr/src/transformations/cloudflare.rs`
 - Functions: `cloudflare_turnstile_variation()`, `cloudflare_challenge_response()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
@@ -57,9 +57,9 @@ Implement Cloudflare Turnstile challenge response variations for bot detection e
 
 **Files to Create/Modify:**
 ```
-src/transformations/cloudflare.rs (new)
-src/transformations/mod.rs (add exports)
-src/lib.rs (add exports)
+crates/redstr/src/transformations/cloudflare.rs (new)
+crates/redstr/src/transformations/mod.rs (add exports)
+crates/redstr/src/lib.rs (add exports)
 examples/cloudflare_evasion.rs (new)
 ```
 
@@ -99,7 +99,7 @@ Implement TLS fingerprint randomization functions for Cloudflare bot detection e
 - Create tests and documentation
 
 **Deliverables:**
-- Functions in `src/transformations/cloudflare.rs`
+- Functions in `crates/redstr/src/transformations/cloudflare.rs`
 - Functions: `tls_fingerprint_variation()`, `tls_handshake_pattern()`
 - Tests and examples
 
@@ -363,7 +363,7 @@ Implement GraphQL injection and obfuscation patterns.
 - Add tests and examples
 
 **Deliverables:**
-- Functions in `src/transformations/injection.rs`
+- Functions in `crates/redstr/src/transformations/injection.rs`
 - Functions: `graphql_query_obfuscate()`, `graphql_variable_injection()`, `graphql_introspection_bypass()`
 - Example: `examples/graphql_injection.rs`
 
@@ -391,7 +391,7 @@ Implement NoSQL injection patterns for MongoDB, CouchDB, DynamoDB.
 - Document and test
 
 **Deliverables:**
-- Functions in `src/transformations/injection.rs`
+- Functions in `crates/redstr/src/transformations/injection.rs`
 - Example: `examples/nosql_injection.rs`
 
 **Dependencies:** None
@@ -418,7 +418,7 @@ Implement JWT token manipulation functions.
 - Document security implications
 
 **Deliverables:**
-- Functions in `src/transformations/web_security.rs`
+- Functions in `crates/redstr/src/transformations/web_security.rs`
 - Example: `examples/jwt_manipulation.rs`
 
 **Dependencies:** None
@@ -445,7 +445,7 @@ Implement SSTI patterns for various template engines.
 - Add comprehensive tests
 
 **Deliverables:**
-- Functions in `src/transformations/injection.rs`
+- Functions in `crates/redstr/src/transformations/injection.rs`
 - Example: `examples/ssti_injection.rs`
 
 **Dependencies:** None
@@ -477,7 +477,7 @@ Implement JSON and YAML string manipulation functions for API testing and config
 - Document API testing use cases
 
 **Deliverables:**
-- Functions in `src/transformations/data_formats.rs`
+- Functions in `crates/redstr/src/transformations/data_formats.rs`
 - Functions: `json_key_obfuscate()`, `json_value_encode()`, `json_minify_strategic()`, `yaml_comment_inject()`, `yaml_anchor_obfuscate()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
@@ -518,7 +518,7 @@ Implement advanced XML and HTML transformation functions for XSS testing and doc
 - Document XSS and injection testing use cases
 
 **Deliverables:**
-- Functions in `src/transformations/markup.rs`
+- Functions in `crates/redstr/src/transformations/markup.rs`
 - Functions: `xml_cdata_obfuscate()`, `xml_namespace_manipulate()`, `xml_entity_encode_variations()`, `html_comment_obfuscate()`, `html_attribute_encode()`, `svg_obfuscate()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
@@ -559,7 +559,7 @@ Implement regex evasion and pattern obfuscation techniques for bypassing input v
 - Document filter bypass use cases
 
 **Deliverables:**
-- Functions in `src/transformations/regex_evasion.rs`
+- Functions in `crates/redstr/src/transformations/regex_evasion.rs`
 - Functions: `regex_zero_width_insert()`, `regex_backreference_obfuscate()`, `regex_quantifier_evade()`, `regex_lookahead_confuse()`, `regex_charclass_expand()`, `regex_anchor_bypass()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
@@ -600,7 +600,7 @@ Implement network protocol-specific string obfuscation for HTTP, DNS, and other 
 - Document protocol testing use cases
 
 **Deliverables:**
-- Functions in `src/transformations/protocol.rs`
+- Functions in `crates/redstr/src/transformations/protocol.rs`
 - Functions: `http_method_variation()`, `dns_label_encode()`, `http_chunked_obfuscate()`, `mime_type_obfuscate()`, `protocol_version_vary()`, `hostname_encode()`, `cookie_value_obfuscate()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
@@ -641,7 +641,7 @@ Implement advanced encoding techniques beyond basic Base64 and URL encoding.
 - Document encoding bypass use cases
 
 **Deliverables:**
-- Functions in `src/transformations/advanced_encoding.rs`
+- Functions in `crates/redstr/src/transformations/advanced_encoding.rs`
 - Functions: `base32_encode()`, `base85_encode()`, `uuencode()`, `xxencode()`, `quoted_printable_encode()`, `punycode_encode()`, `custom_alphabet_encode()`, `mime_encoded_word()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
@@ -682,7 +682,7 @@ Implement cryptographic-related string transformations (obfuscation only, not ac
 - Document security testing use cases
 
 **Deliverables:**
-- Functions in `src/transformations/crypto_patterns.rs`
+- Functions in `crates/redstr/src/transformations/crypto_patterns.rs`
 - Functions: `hash_pattern_generate()`, `checksum_manipulate()`, `vigenere_obfuscate()`, `key_derivation_pattern()`, `salt_insert()`, `iv_pattern_generate()`, `mac_format_vary()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
@@ -724,7 +724,7 @@ Implement binary and hexadecimal string manipulation functions for low-level tes
 - Document low-level testing use cases
 
 **Deliverables:**
-- Functions in `src/transformations/binary.rs`
+- Functions in `crates/redstr/src/transformations/binary.rs`
 - Functions: `to_binary_string()`, `binary_obfuscate()`, `hexdump_format()`, `octal_encode()`, `mixed_radix_encode()`, `bit_flip_pattern()`, `endian_swap_pattern()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
@@ -765,7 +765,7 @@ Implement template string transformations for various template engines and place
 - Document template injection testing use cases
 
 **Deliverables:**
-- Functions in `src/transformations/templates.rs`
+- Functions in `crates/redstr/src/transformations/templates.rs`
 - Functions: `mustache_placeholder_vary()`, `jinja2_placeholder_obfuscate()`, `erb_placeholder_vary()`, `handlebars_vary()`, `interpolation_format_vary()`, `format_string_obfuscate()`, `template_comment_inject()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
@@ -806,7 +806,7 @@ Implement internationalization-related string transformations for multi-language
 - Document i18n testing use cases
 
 **Deliverables:**
-- Functions in `src/transformations/i18n.rs`
+- Functions in `crates/redstr/src/transformations/i18n.rs`
 - Functions: `rtl_marker_insert()`, `bidi_override()`, `locale_number_format()`, `date_format_vary()`, `currency_symbol_vary()`, `translation_key_obfuscate()`, `plural_format_vary()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
@@ -847,7 +847,7 @@ Implement programming language-specific string transformations beyond existing s
 - Document code injection testing use cases
 
 **Deliverables:**
-- Functions in `src/transformations/code_lang.rs`
+- Functions in `crates/redstr/src/transformations/code_lang.rs`
 - Functions: `python_string_vary()`, `ruby_string_vary()`, `php_concat_vary()`, `java_builder_pattern()`, `csharp_verbatim()`, `perl_quote_vary()`, `sql_string_escape_vary()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
@@ -1083,7 +1083,7 @@ Implement steganographic techniques for hiding data within strings.
 - Document covert communication use cases
 
 **Deliverables:**
-- Functions in `src/transformations/steganography.rs`
+- Functions in `crates/redstr/src/transformations/steganography.rs`
 - Functions: `zero_width_encode()`, `homoglyph_hide_data()`, `whitespace_stego()`, `case_bit_encode()`, `punctuation_encode()`, `emoji_stego()`, `font_variation_stego()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
@@ -1124,7 +1124,7 @@ Implement advanced Unicode manipulation beyond current unicode.rs functions.
 - Document Unicode-based evasion use cases
 
 **Deliverables:**
-- Additional functions in `src/transformations/unicode.rs`
+- Additional functions in `crates/redstr/src/transformations/unicode.rs`
 - Functions: `combining_char_attack()`, `confusable_advanced()`, `normalization_evade()`, `grapheme_manipulate()`, `invisible_insert()`, `width_manipulate()`, `script_mix_attack()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples
@@ -1202,7 +1202,7 @@ Implement string transformations specific to container and orchestration technol
 - Document container security testing use cases
 
 **Deliverables:**
-- Functions in `src/transformations/containers.rs`
+- Functions in `crates/redstr/src/transformations/containers.rs`
 - Functions: `docker_image_obfuscate()`, `k8s_resource_vary()`, `docker_env_obfuscate()`, `container_label_vary()`, `helm_value_obfuscate()`, `dockerfile_vary()`, `compose_obfuscate()`
 - Tests: Unit tests for all functions
 - Documentation: Doc comments with examples

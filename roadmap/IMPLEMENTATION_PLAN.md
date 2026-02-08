@@ -23,9 +23,9 @@
 - [ ] Add to `TransformBuilder`
 
 **Files to Create/Modify:**
-- `src/transformations/cloudflare.rs` (new)
-- `src/transformations/mod.rs` (update exports)
-- `src/lib.rs` (update exports)
+- `crates/redstr/src/transformations/cloudflare.rs` (new)
+- `crates/redstr/src/transformations/mod.rs` (update exports)
+- `crates/redstr/src/lib.rs` (update exports)
 - `examples/cloudflare_evasion.rs` (new)
 
 **Function Signatures:**
@@ -47,7 +47,7 @@ pub fn cloudflare_worker_kv_pattern(input: &str) -> String
 - [ ] Create integration examples
 
 **Files:**
-- `src/transformations/cloudflare.rs` (add functions)
+- `crates/redstr/src/transformations/cloudflare.rs` (add functions)
 - `examples/tls_fingerprinting.rs` (new)
 
 **Function Signatures:**
@@ -67,7 +67,7 @@ pub fn tls_handshake_pattern(input: &str) -> String
 - [ ] Add HTTP/2-specific obfuscation
 
 **Files:**
-- `src/transformations/bot_detection.rs` (enhance)
+- `crates/redstr/src/transformations/bot_detection.rs` (enhance)
 - `examples/http2_evasion.rs` (new)
 
 #### Task 1.1.4: Browser Fingerprint Consistency
@@ -82,7 +82,7 @@ pub fn tls_handshake_pattern(input: &str) -> String
 - [ ] Implement font fingerprint consistency
 
 **Files:**
-- `src/transformations/bot_detection.rs` (add functions)
+- `crates/redstr/src/transformations/bot_detection.rs` (add functions)
 - `examples/browser_fingerprinting.rs` (new)
 
 **Function Signatures:**
@@ -156,7 +156,7 @@ pub fn font_fingerprint_consistency(input: &str) -> String
 - [ ] Add color output for terminals
 
 **Files:**
-- `src/main.rs` (enhance CLI)
+- `crates/redstr/src/main.rs` (enhance CLI)
 - `completions/` directory (new)
 - `man/` directory (new)
 - `scripts/` directory (new)
@@ -208,7 +208,7 @@ pub fn font_fingerprint_consistency(input: &str) -> String
 - [ ] Document SIMD usage
 
 **Files:**
-- `src/transformations/simd.rs` (new, optional)
+- `crates/redstr/src/transformations/simd.rs` (new, optional)
 - `Cargo.toml` (add simd feature)
 
 **Note:** Must be behind feature flag, optional dependency
@@ -227,7 +227,7 @@ pub fn font_fingerprint_consistency(input: &str) -> String
 - [ ] Add tests and examples
 
 **Files:**
-- `src/transformations/injection.rs` (add functions)
+- `crates/redstr/src/transformations/injection.rs` (add functions)
 - `examples/graphql_injection.rs` (new)
 
 **Function Signatures:**
@@ -249,7 +249,7 @@ pub fn graphql_introspection_bypass(input: &str) -> String
 - [ ] Document and test
 
 **Files:**
-- `src/transformations/injection.rs` (add functions)
+- `crates/redstr/src/transformations/injection.rs` (add functions)
 - `examples/nosql_injection.rs` (new)
 
 #### Task 1.4.3: JWT Token Manipulation
@@ -264,7 +264,7 @@ pub fn graphql_introspection_bypass(input: &str) -> String
 - [ ] Document security implications
 
 **Files:**
-- `src/transformations/web_security.rs` (add functions)
+- `crates/redstr/src/transformations/web_security.rs` (add functions)
 - `examples/jwt_manipulation.rs` (new)
 
 #### Task 1.4.4: Server-Side Template Injection (SSTI)
@@ -279,7 +279,7 @@ pub fn graphql_introspection_bypass(input: &str) -> String
 - [ ] Add comprehensive tests
 
 **Files:**
-- `src/transformations/injection.rs` (add functions)
+- `crates/redstr/src/transformations/injection.rs` (add functions)
 - `examples/ssti_injection.rs` (new)
 
 ---

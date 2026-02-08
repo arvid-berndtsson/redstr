@@ -79,7 +79,7 @@ redstr = "0.1"
 **Location in redstr repo:**
 - Examples: `examples/your_integration_example.rs`
 - Documentation: `docs/your_integration_guide.md`
-- Library code: `src/transformations/your_module.rs`
+- Library code: `crates/redstr/src/transformations/your_module.rs`
 
 **Example:**
 ```rust
