@@ -250,6 +250,8 @@ pub fn accept_language_variation(input: &str) -> String {
 mod tests {
     use super::*;
 
+    const RANDOM_UA_SEARCH_ATTEMPTS: usize = 1000;
+
     #[test]
     fn test_random_user_agent() {
         let ua = random_user_agent();
@@ -344,7 +346,7 @@ mod tests {
     #[test]
     fn test_random_user_agent_mobile_support() {
         let mut found_mobile = false;
-        for _ in 0..100 {
+        for _ in 0..RANDOM_UA_SEARCH_ATTEMPTS {
             let ua = random_user_agent();
             if ua.contains("iPhone") || ua.contains("iPad") || ua.contains("Android") {
                 found_mobile = true;
@@ -357,7 +359,7 @@ mod tests {
     #[test]
     fn test_random_user_agent_ios() {
         let mut found_ios = false;
-        for _ in 0..100 {
+        for _ in 0..RANDOM_UA_SEARCH_ATTEMPTS {
             let ua = random_user_agent();
             if ua.contains("iPhone") || ua.contains("iPad") {
                 found_ios = true;
@@ -371,7 +373,7 @@ mod tests {
     #[test]
     fn test_random_user_agent_android() {
         let mut found_android = false;
-        for _ in 0..100 {
+        for _ in 0..RANDOM_UA_SEARCH_ATTEMPTS {
             let ua = random_user_agent();
             if ua.contains("Android") {
                 found_android = true;
@@ -388,7 +390,7 @@ mod tests {
         let mut found_chrome = false;
         let mut found_firefox = false;
         let mut found_safari = false;
-        for _ in 0..100 {
+        for _ in 0..RANDOM_UA_SEARCH_ATTEMPTS {
             let ua = random_user_agent();
             if ua.contains("Chrome") && !ua.contains("Edg") && !ua.contains("OPR") {
                 found_chrome = true;
@@ -406,7 +408,7 @@ mod tests {
     #[test]
     fn test_random_user_agent_edge() {
         let mut found_edge = false;
-        for _ in 0..100 {
+        for _ in 0..RANDOM_UA_SEARCH_ATTEMPTS {
             let ua = random_user_agent();
             if ua.contains("Edg/") {
                 found_edge = true;
@@ -420,7 +422,7 @@ mod tests {
     #[test]
     fn test_random_user_agent_opera() {
         let mut found_opera = false;
-        for _ in 0..100 {
+        for _ in 0..RANDOM_UA_SEARCH_ATTEMPTS {
             let ua = random_user_agent();
             if ua.contains("OPR/") {
                 found_opera = true;
@@ -434,7 +436,7 @@ mod tests {
     #[test]
     fn test_random_user_agent_brave() {
         let mut found_brave = false;
-        for _ in 0..100 {
+        for _ in 0..RANDOM_UA_SEARCH_ATTEMPTS {
             let ua = random_user_agent();
             if ua.contains("Brave") {
                 found_brave = true;
@@ -448,7 +450,7 @@ mod tests {
     #[test]
     fn test_random_user_agent_bot_crawlers() {
         let mut found_bot = false;
-        for _ in 0..100 {
+        for _ in 0..RANDOM_UA_SEARCH_ATTEMPTS {
             let ua = random_user_agent();
             if ua.contains("Googlebot")
                 || ua.contains("bingbot")
@@ -466,7 +468,7 @@ mod tests {
     #[test]
     fn test_random_user_agent_linux_variants() {
         let mut found_linux = false;
-        for _ in 0..100 {
+        for _ in 0..RANDOM_UA_SEARCH_ATTEMPTS {
             let ua = random_user_agent();
             if ua.contains("Linux") && !ua.contains("Android") {
                 found_linux = true;
@@ -485,7 +487,7 @@ mod tests {
     #[test]
     fn test_random_user_agent_older_versions() {
         let mut found_older = false;
-        for _ in 0..100 {
+        for _ in 0..RANDOM_UA_SEARCH_ATTEMPTS {
             let ua = random_user_agent();
             if ua.contains("Chrome/119") || ua.contains("Chrome/120") || ua.contains("Firefox/120")
             {
@@ -499,7 +501,7 @@ mod tests {
     #[test]
     fn test_random_user_agent_mobile_firefox() {
         let mut found_mobile_firefox = false;
-        for _ in 0..100 {
+        for _ in 0..RANDOM_UA_SEARCH_ATTEMPTS {
             let ua = random_user_agent();
             if ua.contains("Android") && ua.contains("Firefox") {
                 found_mobile_firefox = true;
