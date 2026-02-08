@@ -233,7 +233,7 @@ All packages are published from the same commit:
 ```bash
 # 1. Update version in workspace Cargo.toml
 # 2. Create release tag
-git tag v0.3.0
+git tag v<version>
 
 # 3. CI publishes to all registries:
 #    - crates.io (Rust)
@@ -245,10 +245,10 @@ git tag v0.3.0
 ### Version Synchronization
 
 All packages share the same version number:
-- `redstr` on crates.io: `0.3.0`
-- `redstr` on npm: `0.3.0`
-- `redstr` on PyPI: `0.3.0`
-- `Redstr` on NuGet: `0.3.0`
+- `redstr` on crates.io: `<version>`
+- `redstr` on npm: `<version>`
+- `redstr` on PyPI: `<version>`
+- `Redstr` on NuGet: `<version>`
 
 ## Usage Examples
 

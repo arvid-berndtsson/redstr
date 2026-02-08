@@ -13,6 +13,8 @@ Example:
     'aGVsbG8='
 """
 
+from importlib.metadata import PackageNotFoundError, version
+
 from redstr._redstr import (
     # Case transformations
     randomize_capitalization,
@@ -73,7 +75,10 @@ from redstr._redstr import (
     TransformBuilder,
 )
 
-__version__ = "0.2.6"
+try:
+    __version__ = version("redstr")
+except PackageNotFoundError:
+    __version__ = "unknown"
 __all__ = [
     # Case transformations
     "randomize_capitalization",

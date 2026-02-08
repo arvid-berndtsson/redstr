@@ -186,12 +186,17 @@ def generate_python_init(functions: List[Function]) -> str:
 redstr - Native string transformations for security testing.
 """
 
+from importlib.metadata import PackageNotFoundError, version
+
 from redstr._redstr import (
     {imports},
     TransformBuilder,
 )
 
-__version__ = "0.2.6"
+try:
+    __version__ = version("redstr")
+except PackageNotFoundError:
+    __version__ = "unknown"
 __all__ = [
     {exports},
     "TransformBuilder",

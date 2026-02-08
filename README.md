@@ -46,14 +46,14 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-redstr = "0.2.6"
+redstr = "*"
 ```
 
 ### With Serde Support (for web tools)
 
 ```toml
 [dependencies]
-redstr = { version = "0.2.6", features = ["serde"] }
+redstr = { version = "*", features = ["serde"] }
 ```
 
 ### Other Languages & Platforms
