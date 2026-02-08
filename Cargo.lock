@@ -818,7 +818,7 @@ dependencies = [
 
 [[package]]
 name = "redstr"
-version = "0.2.12"
+version = "0.2.13"
 dependencies = [
  "cc-check",
  "criterion",
@@ -827,7 +827,7 @@ dependencies = [
 
 [[package]]
 name = "redstr-ffi"
-version = "0.2.12"
+version = "0.2.13"
 dependencies = [
  "cbindgen",
  "redstr",
@@ -835,7 +835,7 @@ dependencies = [
 
 [[package]]
 name = "redstr-node"
-version = "0.2.12"
+version = "0.2.13"
 dependencies = [
  "napi",
  "napi-build",
@@ -845,7 +845,7 @@ dependencies = [
 
 [[package]]
 name = "redstr-python"
-version = "0.2.12"
+version = "0.2.13"
 dependencies = [
  "pyo3",
  "redstr",
@@ -853,7 +853,7 @@ dependencies = [
 
 [[package]]
 name = "redstr-wasm"
-version = "0.2.12"
+version = "0.2.13"
 dependencies = [
  "redstr",
  "wasm-bindgen",

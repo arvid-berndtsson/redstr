@@ -20,7 +20,7 @@ members = [
 # Shared package metadata
 [workspace.package]
 name = "redstr"
-version = "0.2.12"
+version = "0.2.13"
 edition = "2021"
 authors = ["Arvid Berndtsson <dev@arvid.tech>"]
 license = "MIT"
