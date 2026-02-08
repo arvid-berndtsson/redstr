@@ -1,6 +1,6 @@
 {
   "name": "redstr",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Native string transformations for security testing - WAF bypass, XSS, SQL injection, phishing, and evasion testing",
   "main": "index.js",
   "types": "index.d.ts",
@@ -45,6 +45,10 @@
   "engines": {
     "node": ">= 16"
   },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
     "artifacts": "napi artifacts",
     "build": "napi build --platform --release",
@@ -58,12 +62,12 @@
     "@napi-rs/cli": "^2.18.0"
   },
   "optionalDependencies": {
-    "redstr-win32-x64-msvc": "0.2.6",
-    "redstr-darwin-x64": "0.2.6",
-    "redstr-darwin-arm64": "0.2.6",
-    "redstr-linux-x64-gnu": "0.2.6",
-    "redstr-linux-x64-musl": "0.2.6",
-    "redstr-linux-arm64-gnu": "0.2.6",
-    "redstr-linux-arm64-musl": "0.2.6"
+    "redstr-win32-x64-msvc": "0.2.7",
+    "redstr-darwin-x64": "0.2.7",
+    "redstr-darwin-arm64": "0.2.7",
+    "redstr-linux-x64-gnu": "0.2.7",
+    "redstr-linux-x64-musl": "0.2.7",
+    "redstr-linux-arm64-gnu": "0.2.7",
+    "redstr-linux-arm64-musl": "0.2.7"
   }
 }

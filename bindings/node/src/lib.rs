@@ -346,6 +346,7 @@ pub fn jwt_payload_obfuscate(input: String) -> String {
 
 /// Builder for chaining multiple transformations.
 #[napi]
+#[derive(Clone)]
 pub struct TransformBuilder {
     text: String,
 }
@@ -360,58 +361,58 @@ impl TransformBuilder {
 
     /// Apply leetspeak transformation.
     #[napi]
-    pub fn leetspeak(&mut self) -> &Self {
+    pub fn leetspeak(&mut self) -> Self {
         self.text = redstr::leetspeak(&self.text);
-        self
+        self.clone()
     }
 
     /// Apply Base64 encoding.
     #[napi]
-    pub fn base64(&mut self) -> &Self {
+    pub fn base64(&mut self) -> Self {
         self.text = redstr::base64_encode(&self.text);
-        self
+        self.clone()
     }
 
     /// Apply URL encoding.
     #[napi]
-    pub fn url_encode(&mut self) -> &Self {
+    pub fn url_encode(&mut self) -> Self {
         self.text = redstr::url_encode(&self.text);
-        self
+        self.clone()
     }
 
     /// Apply case swap.
     #[napi]
-    pub fn case_swap(&mut self) -> &Self {
+    pub fn case_swap(&mut self) -> Self {
         self.text = redstr::case_swap(&self.text);
-        self
+        self.clone()
     }
 
     /// Apply ROT13.
     #[napi]
-    pub fn rot13(&mut self) -> &Self {
+    pub fn rot13(&mut self) -> Self {
         self.text = redstr::rot13(&self.text);
-        self
+        self.clone()
     }
 
     /// Apply hex encoding.
     #[napi]
-    pub fn hex_encode(&mut self) -> &Self {
+    pub fn hex_encode(&mut self) -> Self {
         self.text = redstr::hex_encode(&self.text);
-        self
+        self.clone()
     }
 
     /// Apply homoglyph substitution.
     #[napi]
-    pub fn homoglyphs(&mut self) -> &Self {
+    pub fn homoglyphs(&mut self) -> Self {
         self.text = redstr::homoglyph_substitution(&self.text);
-        self
+        self.clone()
     }
 
     /// Reverse the string.
     #[napi]
-    pub fn reverse(&mut self) -> &Self {
+    pub fn reverse(&mut self) -> Self {
         self.text = redstr::reverse_string(&self.text);
-        self
+        self.clone()
     }
 
     /// Build and return the final transformed string.
