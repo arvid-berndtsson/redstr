@@ -91,11 +91,15 @@ man ./redstr.1 | grep -i "phishing"
 
 ## Updating
 
-When updating the man page:
-1. Edit redstr.1
-2. Verify formatting: `man --warnings ./redstr.1`
-3. Test display: `man ./redstr.1`
-4. Reinstall: `sudo cp redstr.1 /usr/local/man/man1/ && sudo mandb`
+When updating CLI modes/options, regenerate assets first:
+```bash
+scripts/generate-cli-assets.sh
+```
+
+Then verify formatting and display:
+1. `man --warnings ./redstr.1`
+2. `man ./redstr.1`
+3. Reinstall: `sudo cp redstr.1 /usr/local/man/man1/ && sudo mandb`
 
 ## Man Page Format
 

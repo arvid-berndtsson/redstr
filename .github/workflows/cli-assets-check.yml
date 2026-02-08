@@ -1,0 +1,29 @@
+name: CLI Assets Check
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main, develop]
+
+jobs:
+  generated-assets-up-to-date:
+    name: Verify Generated CLI Assets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Regenerate CLI assets
+        run: scripts/generate-cli-assets.sh
+
+      - name: Ensure no generated file drift
+        run: |
+          if ! git diff --exit-code -- completions/redstr.bash completions/redstr.zsh completions/redstr.fish man/redstr.1; then
+            echo "Generated CLI assets are out of date."
+            echo "Run: scripts/generate-cli-assets.sh"
+            exit 1
+          fi

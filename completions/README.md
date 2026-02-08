@@ -110,5 +110,11 @@ complete -c redstr
 
 ## Customization
 
-You can modify these completion scripts to add custom modes or change
-descriptions. After editing, reinstall using the commands above.
+Completions are generated from a shared mode list:
+
+```bash
+scripts/generate-cli-assets.sh
+```
+
+If you change CLI modes/options, regenerate first, then reinstall using the
+commands above.

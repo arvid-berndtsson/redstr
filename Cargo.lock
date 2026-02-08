@@ -818,7 +818,7 @@ dependencies = [
 
 [[package]]
 name = "redstr"
-version = "0.2.6"
+version = "0.2.7"
 dependencies = [
  "cc-check",
  "criterion",

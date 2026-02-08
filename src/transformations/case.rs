@@ -26,12 +26,19 @@ use crate::rng::SimpleRng;
 /// assert!(result2.contains("123"));
 /// ```
 pub fn randomize_capitalization(input: &str) -> String {
-    let mut rng = SimpleRng::new();
+    randomize_capitalization_with_seed(input, SimpleRng::new().next_u64())
+}
+
+/// Applies random capitalization to each letter in the input string using a deterministic seed.
+///
+/// This is useful for reproducible tests and fuzzing scenarios.
+pub fn randomize_capitalization_with_seed(input: &str, seed: u64) -> String {
+    let mut rng = SimpleRng::from_seed(seed);
     let mut result = String::with_capacity(input.len() * 2); // Allocate extra for potential multi-byte chars
 
     for c in input.chars() {
         if c.is_alphabetic() {
-            if rng.next() % 2 == 0 {
+            if rng.next_u64() % 2 == 0 {
                 for uc in c.to_uppercase() {
                     result.push(uc);
                 }
@@ -163,11 +170,18 @@ pub fn inverse_case(input: &str) -> String {
 /// // Example output: "<ScRiPt>alert(1)</ScRiPt>"
 /// ```
 pub fn case_swap(input: &str) -> String {
-    let mut rng = SimpleRng::new();
+    case_swap_with_seed(input, SimpleRng::new().next_u64())
+}
+
+/// Swaps case randomly using a deterministic seed.
+///
+/// This is useful when reproducibility matters in tests.
+pub fn case_swap_with_seed(input: &str, seed: u64) -> String {
+    let mut rng = SimpleRng::from_seed(seed);
     let mut result = String::with_capacity(input.len() * 2);
 
     for c in input.chars() {
-        if c.is_alphabetic() && rng.next() % 2 == 0 {
+        if c.is_alphabetic() && rng.next_u64() % 2 == 0 {
             if c.is_uppercase() {
                 for lc in c.to_lowercase() {
                     result.push(lc);
@@ -736,5 +750,21 @@ mod tests {
     fn test_to_kebab_case_already_kebab() {
         let result = to_kebab_case("hello-world");
         assert_eq!(result, "hello-world");
+    }
+
+    #[test]
+    fn test_seeded_randomize_capitalization_is_deterministic() {
+        let input = "Hello World";
+        let one = randomize_capitalization_with_seed(input, 1337);
+        let two = randomize_capitalization_with_seed(input, 1337);
+        assert_eq!(one, two);
+    }
+
+    #[test]
+    fn test_seeded_case_swap_is_deterministic() {
+        let input = "SELECT * FROM users";
+        let one = case_swap_with_seed(input, 42);
+        let two = case_swap_with_seed(input, 42);
+        assert_eq!(one, two);
     }
 }

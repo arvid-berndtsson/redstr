@@ -20,7 +20,7 @@ pub fn powershell_obfuscate(cmd: &str) -> String {
         match c {
             '-' => {
                 // PowerShell allows various dash alternatives
-                match rng.next() % 3 {
+                match rng.next_u64() % 3 {
                     0 => result.push('-'),
                     1 => result.push_str("'-'"), // Quoted dash
                     _ => result.push(' '),       // Space (sometimes works)
@@ -28,7 +28,7 @@ pub fn powershell_obfuscate(cmd: &str) -> String {
             }
             ' ' => {
                 // Vary whitespace
-                if rng.next() % 2 == 0 {
+                if rng.next_u64() % 2 == 0 {
                     result.push(' ');
                 } else {
                     result.push_str("  ");
@@ -36,7 +36,7 @@ pub fn powershell_obfuscate(cmd: &str) -> String {
             }
             _ => {
                 // Case variation
-                if c.is_alphabetic() && rng.next() % 3 == 0 {
+                if c.is_alphabetic() && rng.next_u64() % 3 == 0 {
                     if c.is_uppercase() {
                         result.push_str(&c.to_lowercase().to_string());
                     } else {
@@ -72,7 +72,7 @@ pub fn bash_obfuscate(cmd: &str) -> String {
         match c {
             ' ' => {
                 // Bash allows various space alternatives
-                match rng.next() % 4 {
+                match rng.next_u64() % 4 {
                     0 => result.push(' '),
                     1 => result.push_str("${IFS}"), // Internal Field Separator
                     2 => result.push('\t'),         // Tab
@@ -115,13 +115,13 @@ pub fn env_var_obfuscate(input: &str) -> String {
         .chars()
         .map(|c| {
             if c == '$' {
-                match rng.next() % 3 {
+                match rng.next_u64() % 3 {
                     0 => "$".to_string(),
                     1 => "${".to_string(), // Start brace expansion
                     2 => "$(".to_string(), // Command substitution start
                     _ => "$".to_string(),
                 }
-            } else if c.is_alphabetic() && rng.next() % 4 == 0 {
+            } else if c.is_alphabetic() && rng.next_u64() % 4 == 0 {
                 // Case variation
                 if c.is_uppercase() {
                     c.to_lowercase().to_string()
@@ -155,11 +155,11 @@ pub fn file_path_obfuscate(path: &str) -> String {
         match c {
             '/' => {
                 // Path separator variations
-                match rng.next() % 4 {
+                match rng.next_u64() % 4 {
                     0 => result.push('/'),
                     1 => {
                         // Add path traversal
-                        if rng.next() % 2 == 0 {
+                        if rng.next_u64() % 2 == 0 {
                             result.push_str("../");
                         } else {
                             result.push('/');
@@ -171,7 +171,7 @@ pub fn file_path_obfuscate(path: &str) -> String {
             }
             '.' => {
                 // Dot variations
-                match rng.next() % 3 {
+                match rng.next_u64() % 3 {
                     0 => result.push('.'),
                     1 => result.push_str("%2e"), // URL encoded
                     _ => result.push('.'),
@@ -179,7 +179,7 @@ pub fn file_path_obfuscate(path: &str) -> String {
             }
             _ => {
                 // Case variation for filenames
-                if c.is_alphabetic() && rng.next() % 5 == 0 {
+                if c.is_alphabetic() && rng.next_u64() % 5 == 0 {
                     if c.is_uppercase() {
                         result.push_str(&c.to_lowercase().to_string());
                     } else {

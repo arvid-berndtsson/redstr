@@ -1,242 +1,40 @@
-.TH REDSTR 1 "November 2025" "redstr 0.2.2" "User Commands"
+.TH REDSTR 1 "February 2026" "redstr 0.2.6" "User Commands"
 .SH NAME
-redstr \- Red team string transformation tool for offensive security operations
+redstr \- string obfuscation and transformation CLI for security testing
 .SH SYNOPSIS
 .B redstr
-[\fIMODE\fR] \fITEXT\fR
+[\fIOPTIONS\fR] [\fIMODE\fR] [\fITEXT ...\fR]
 .br
 .B redstr
-\fB\-h\fR|\fB\-\-help\fR
+[\fIOPTIONS\fR] \fBrandom-user-agent\fR
 .SH DESCRIPTION
-\fBredstr\fR is a comprehensive string obfuscation and transformation tool for
-red team operations, penetration testing, and security research. It provides
-30+ transformation functions for WAF bypass, XSS evasion, SQL injection testing,
-phishing domain generation, and bot detection evasion.
-.PP
-The tool is designed for security professionals building tools like Caido,
-Burp Suite extensions, phishing frameworks (EvilJinx), and bot detection evasion
-systems.
+\fBredstr\fR applies security-focused string transformations for red team, blue team,
+and purple team testing workflows.
 .SH OPTIONS
 .TP
 .B \-h, \-\-help
-Display help information and exit
-.SH MODES
-.SS "Basic Transformations"
+Show usage information.
 .TP
-.B random, r
-Random capitalization (default mode)
+.B \-\-list-modes, \-\-list
+Print supported transformation modes and exit.
 .TP
-.B alternate, a
-Alternate upper/lower case
+.B \-\-json
+Print a JSON object with \fBmode\fR, \fBinput\fR, and \fBoutput\fR fields.
 .TP
-.B inverse, i
-Invert the case of each letter
-.TP
-.B reverse, rv
-Reverse the string
-.SS "Case Conversion"
-.TP
-.B camel, c
-Convert to camelCase
-.TP
-.B snake, s
-Convert to snake_case
-.TP
-.B kebab, k
-Convert to kebab-case
-.SS "Security Testing - Obfuscation"
-.TP
-.B leetspeak, l
-Convert to leetspeak for filter evasion
-.TP
-.B homoglyph, h
-Substitute with lookalike characters for phishing
-.TP
-.B unicode, u
-Random unicode variations for normalization testing
-.TP
-.B zalgo, z
-Add zalgo combining characters for display testing
-.TP
-.B rot13
-Apply ROT13 cipher transformation
-.TP
-.B vowel-swap, vs
-Swap vowels randomly for pattern matching tests
-.TP
-.B double, d
-Double random characters for validation testing
-.TP
-.B space-variants, sv
-Use various Unicode space characters
-.TP
-.B mixed-encoding, me
-Mix character encodings (HTML entities + Unicode)
-.SS "Encoding and Obfuscation"
-.TP
-.B base64, b64
-Encode to Base64 for payload obfuscation
-.TP
-.B url-encode, url
-URL/percent encoding for web security testing
-.TP
-.B hex-encode, hex
-Encode to hexadecimal
-.TP
-.B hex-mixed, hm
-Mixed hex formats (\\x, %, 0x, &#x) for detection evasion
-.SS "Injection Testing"
-.TP
-.B sql-comment, sql
-Insert SQL comment patterns for injection testing
-.TP
-.B xss-tags, xss
-Generate XSS tag variations for filter evasion
-.TP
-.B case-swap, cs
-Random case swapping for WAF bypass
-.TP
-.B null-byte, nb
-Insert null byte representations for null byte attacks
-.TP
-.B path-traversal, pt
-Generate path traversal patterns (../ variations)
-.TP
-.B command-injection, ci
-Insert command injection separators (; | && ||)
+.B \-\-seed \fIu64\fR
+Provide a deterministic seed for supported random modes (\fBrandom\fR and \fBcase-swap\fR).
 .SH EXAMPLES
-.PP
-Basic random capitalization:
-.RS
-redstr "Hello World"
-.br
-Output: HeLlO wOrLd
-.RE
-.PP
-Leetspeak for filter bypass:
-.RS
-redstr leetspeak "password123"
-.br
-Output: p@55w0rd123
-.RE
-.PP
-Homoglyph substitution for phishing:
-.RS
-redstr homoglyph "admin@example.com"
-.br
-Output: аdmіn@еxаmple.com
-.RE
-.PP
-SQL injection testing:
-.RS
-redstr sql-comment "SELECT * FROM users"
-.br
-Output: SELECT --* FROM users
-.RE
-.PP
-XSS payload obfuscation:
-.RS
-redstr xss-tags "<script>alert(1)</script>"
-.br
-Output: Encoded variations
-.RE
-.PP
-Base64 encoding:
-.RS
-redstr base64 "secret payload"
-.br
-Output: c2VjcmV0IHBheWxvYWQ=
-.RE
-.PP
-Path traversal testing:
-.RS
-redstr path-traversal "/etc/passwd"
-.br
-Output: ../etc/../passwd
-.RE
-.SH USE CASES
-.SS "Red Team Operations"
-.IP \(bu 3
-WAF (Web Application Firewall) bypass techniques
-.IP \(bu 3
-XSS (Cross-Site Scripting) payload obfuscation
-.IP \(bu 3
-SQL injection evasion patterns
-.IP \(bu 3
-Phishing domain generation (typosquatting, homoglyphs)
-.IP \(bu 3
-Command injection testing
-.IP \(bu 3
-Path traversal attacks
-.IP \(bu 3
-Bot detection evasion
-.IP \(bu 3
-Payload encoding and obfuscation
-.SS "Blue Team Defense"
-.IP \(bu 3
-Security control testing
-.IP \(bu 3
-Filter and detection validation
-.IP \(bu 3
-Input sanitization testing
-.IP \(bu 3
-Threat intelligence enrichment
-.IP \(bu 3
-Malicious content detection
-.SS "Purple Team Collaboration"
-.IP \(bu 3
-Collaborative red/blue exercises
-.IP \(bu 3
-Baseline security testing
-.IP \(bu 3
-Security awareness training
-.IP \(bu 3
-Vulnerability assessment
-.IP \(bu 3
-Penetration testing automation
-.SH INTEGRATION
-\fBredstr\fR is designed to integrate with:
-.IP \(bu 3
-Caido \- Web security testing platform
-.IP \(bu 3
-Burp Suite \- Security proxy and scanner
-.IP \(bu 3
-EvilJinx \- Phishing framework
-.IP \(bu 3
-ParrotOS / Kali Linux \- Security distributions
-.IP \(bu 3
-Custom security tools and scripts
-.SH RESPONSIBLE USE
-This tool is intended for authorized security testing, research, and defensive
-security purposes only. Users are responsible for ensuring they have proper
-authorization before using these techniques on systems they do not own or have
-explicit permission to test.
-.PP
-\fBWARNING:\fR Unauthorized use of this tool may be illegal. Always obtain
-proper authorization before conducting security testing.
-.SH LIBRARY API
-\fBredstr\fR is also available as a Rust library. See the documentation at
-https://docs.rs/redstr for API details and integration examples.
-.SH FILES
 .TP
-.I /usr/share/bash-completion/completions/redstr
-Bash completion script
+\fBredstr\fR "Hello World"
+Random capitalization.
 .TP
-.I /usr/share/zsh/site-functions/_redstr
-Zsh completion script
+\fBredstr leetspeak password123\fR
+Leetspeak transformation.
 .TP
-.I /usr/share/fish/vendor_completions.d/redstr.fish
-Fish completion script
-.SH BUGS
-Report bugs at: https://github.com/arvid-berndtsson/redstr/issues
-.SH AUTHOR
-Arvid Berndtsson <arvid-berndtsson@users.noreply.github.com>
-.SH COPYRIGHT
-Copyright (C) 2025 Arvid Berndtsson. Licensed under the MIT License.
-.PP
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
+\fBredstr --json xss-tags "<script>alert(1)</script>"\fR
+Output transformation result in JSON.
+.TP
+\fBredstr ssti-framework jinja2 "{{7*7}}"\fR
+SSTI framework-specific variation.
 .SH SEE ALSO
-Full documentation at: https://github.com/arvid-berndtsson/redstr
-.PP
-Related tools: burpsuite(1), sqlmap(1), nikto(1)
+Project documentation: https://github.com/arvid-berndtsson/redstr
