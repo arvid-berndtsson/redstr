@@ -25,6 +25,8 @@ A comprehensive Rust library providing 60+ string obfuscation and transformation
 - **CLI tool** - Optional command-line interface
 - **Production-ready** - Performance optimized, well-documented, thoroughly tested
 
+Core source of truth: `crates/redstr/src`. The historical repository-root `src/` layout is legacy and no longer used.
+
 📊 **[Performance Benchmarks](docs/performance.md)** | 🔧 **[API Reference](docs/api-reference.md)**
 
 ## 🤔 Why redstr?
@@ -46,14 +48,14 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-redstr = "0.2.6"
+redstr = "*"
 ```
 
 ### With Serde Support (for web tools)
 
 ```toml
 [dependencies]
-redstr = { version = "0.2.6", features = ["serde"] }
+redstr = { version = "*", features = ["serde"] }
 ```
 
 ### Other Languages & Platforms
@@ -68,10 +70,12 @@ docker pull arvid-berndtsson/redstr-server
 ```
 See [API Server Documentation](docs/api_server.md) for usage examples in JavaScript, Python, Go, Ruby, and more.
 
+**Available Packages**:
+- **npm**: `npm install redstr` (JavaScript/TypeScript)
+- **PyPI**: `pip install redstr` (Python)
+
 **Coming Soon**:
 - 🔜 **Homebrew**: `brew install redstr` (macOS/Linux)
-- 🔜 **npm**: `npm install @redstr/core` (JavaScript/TypeScript)
-- 🔜 **PyPI**: `pip install redstr` (Python)
 - 🔜 **Go Module**: `go get github.com/arvid-berndtsson/redstr-go`
 - 🔜 **Raycast Extension**: Quick launcher integration
 

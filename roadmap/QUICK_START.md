@@ -90,7 +90,7 @@ Body: Use PR template from .github/PULL_REQUEST_TEMPLATE.md
 
 1. **Create function** in appropriate module:
    ```rust
-   // src/transformations/cloudflare.rs
+   // crates/redstr/src/transformations/cloudflare.rs
    /// Brief description.
    ///
    /// # Examples
@@ -116,12 +116,12 @@ Body: Use PR template from .github/PULL_REQUEST_TEMPLATE.md
    }
    ```
 
-3. **Export** in `src/lib.rs`:
+3. **Export** in `crates/redstr/src/lib.rs`:
    ```rust
    pub use transformations::cloudflare::new_function;
    ```
 
-4. **Add to builder** (if applicable) in `src/builder.rs`
+4. **Add to builder** (if applicable) in `crates/redstr/src/builder.rs`
 
 5. **Create example** in `examples/`
 

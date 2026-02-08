@@ -13,7 +13,7 @@
 #### ✅ Task 1.1.1: Cloudflare Challenge Response Variations (CF-001)
 - **Status:** Complete
 - **Deliverables:**
-  - `src/transformations/cloudflare.rs` - Cloudflare-specific functions
+  - `crates/redstr/src/transformations/cloudflare.rs` - Cloudflare-specific functions
   - Functions: `cloudflare_turnstile_variation()`, `cloudflare_challenge_response()`
   - `examples/cloudflare_evasion.rs` - Comprehensive examples
   - All tests passing
@@ -21,14 +21,14 @@
 #### ✅ Task 1.1.2: TLS Fingerprint Randomization (CF-002)
 - **Status:** Complete
 - **Deliverables:**
-  - Function: `tls_fingerprint_variation()` in `src/transformations/bot_detection.rs`
-  - Function: `tls_handshake_pattern()` in `src/transformations/cloudflare.rs`
+  - Function: `tls_fingerprint_variation()` in `crates/redstr/src/transformations/bot_detection.rs`
+  - Function: `tls_handshake_pattern()` in `crates/redstr/src/transformations/cloudflare.rs`
   - Tests and documentation included
 
 #### ✅ Task 1.1.3: Browser Fingerprint Consistency (CF-003)
 - **Status:** Complete
 - **Deliverables:**
-  - Functions in `src/transformations/cloudflare.rs`:
+  - Functions in `crates/redstr/src/transformations/cloudflare.rs`:
     - `canvas_fingerprint_variation()`
     - `webgl_fingerprint_obfuscate()`
     - `font_fingerprint_consistency()`
@@ -112,7 +112,7 @@
 #### ✅ Task 1.4.1: GraphQL Injection Patterns (EVASION-001)
 - **Status:** Complete
 - **Deliverables:**
-  - Functions in `src/transformations/web_security.rs`:
+  - Functions in `crates/redstr/src/transformations/web_security.rs`:
     - `graphql_obfuscate()` - Query obfuscation
     - `graphql_variable_injection()` - Variable injection
     - `graphql_introspection_bypass()` - Introspection bypass
@@ -123,7 +123,7 @@
 #### ✅ Task 1.4.2: NoSQL Injection Variations (EVASION-002)
 - **Status:** Complete
 - **Deliverables:**
-  - Functions in `src/transformations/injection.rs`:
+  - Functions in `crates/redstr/src/transformations/injection.rs`:
     - `mongodb_injection()` - MongoDB injection patterns
     - `couchdb_injection()` - CouchDB injection
     - `nosql_operator_injection()` - Operator-based injection
@@ -134,7 +134,7 @@
 #### ✅ Task 1.4.3: JWT Token Manipulation (EVASION-003)
 - **Status:** Complete
 - **Deliverables:**
-  - Functions in `src/transformations/web_security.rs`:
+  - Functions in `crates/redstr/src/transformations/web_security.rs`:
     - `jwt_header_manipulation()` - Header modification
     - `jwt_payload_obfuscate()` - Payload obfuscation
     - `jwt_algorithm_confusion()` - Algorithm confusion attacks
@@ -146,7 +146,7 @@
 #### ✅ Task 1.4.4: Server-Side Template Injection (SSTI) (EVASION-004)
 - **Status:** Complete
 - **Deliverables:**
-  - Functions in `src/transformations/injection.rs`:
+  - Functions in `crates/redstr/src/transformations/injection.rs`:
     - `ssti_injection()` - Basic SSTI patterns
     - `ssti_framework_variation()` - Framework-specific variations
     - `ssti_syntax_obfuscate()` - Syntax obfuscation

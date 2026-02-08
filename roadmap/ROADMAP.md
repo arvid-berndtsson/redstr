@@ -22,12 +22,13 @@
 
 ### Distribution & Accessibility
 - ✅ **Cargo/crates.io** - Rust native
-- 🎯 **Homebrew** - macOS/Linux package manager
-- 🎯 **npm** - JavaScript/TypeScript ecosystem
-- 🎯 **PyPI** - Python ecosystem
-- 🎯 **Go Module** - Go ecosystem
-- 🎯 **Raycast** - Quick launcher integration
 - ✅ **API Server** - Language-agnostic HTTP API (redstr-server)
+- 🔴 **npm (napi-rs)** - Node.js/TypeScript native bindings (PRIORITY)
+- 🔴 **npm (WASM)** - Browser-based JavaScript (PRIORITY)
+- 🎯 **PyPI** - Python ecosystem (PyO3 bindings)
+- 🎯 **NuGet** - .NET/C# ecosystem (C FFI bindings)
+- ✅ **Go Module** - Go ecosystem (redstr-go exists)
+- 🎯 **Homebrew** - macOS/Linux package manager
 
 ---
 
@@ -36,7 +37,7 @@
 ### Strengths
 - ✅ 60+ transformation functions
 - ✅ No required dependencies (optional serde, dev-only cc-check)
-- ✅ Published to crates.io (v0.2.6)
+- ✅ Published to crates.io
 - ✅ Comprehensive documentation
 - ✅ Builder pattern API
 - ✅ CLI tool available

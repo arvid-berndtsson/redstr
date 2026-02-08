@@ -1,0 +1,46 @@
+[build-system]
+requires = ["maturin>=1.4,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "redstr"
+version = "0.2.7"
+description = "Native string transformations for security testing - WAF bypass, XSS, SQL injection, phishing, and evasion testing"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Arvid Berndtsson", email = "dev@arvid.tech" }
+]
+keywords = ["security", "red-team", "obfuscation", "waf-bypass", "penetration-testing"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Rust",
+    "Topic :: Security",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+requires-python = ">=3.8"
+
+[project.urls]
+Homepage = "https://github.com/arvid-berndtsson/redstr"
+Repository = "https://github.com/arvid-berndtsson/redstr"
+Documentation = "https://github.com/arvid-berndtsson/redstr#readme"
+"Bug Tracker" = "https://github.com/arvid-berndtsson/redstr/issues"
+
+[tool.maturin]
+features = ["pyo3/extension-module", "pyo3/abi3-py38"]
+python-source = "python"
+module-name = "redstr._redstr"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -27,3 +27,9 @@ target
 
 # CodeQL artifacts
 _codeql_detected_source_root
+
+# Node.js binding artifacts
+bindings/node/node_modules/
+bindings/node/npm/
+bindings/node/package-lock.json
+bindings/node/*.tgz

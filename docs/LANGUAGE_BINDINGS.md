@@ -1,351 +1,395 @@
 # Language Bindings for redstr
 
-This document explains how redstr provides support for multiple programming languages through language-specific bindings maintained in separate repositories.
+This document explains how redstr provides support for multiple programming languages through native bindings maintained in a monorepo structure.
 
 ## Overview
 
-The `redstr` core repository contains only the Rust library implementation. Support for other programming languages is provided through language-specific binding repositories that depend on the core library. This architecture provides clean separation of concerns and independent versioning for each language.
+The `redstr` repository uses a **monorepo architecture** where the core Rust library and all language bindings live together. This follows the pattern used by successful projects like Polars, libsignal, swc, and deltachat.
 
 ## Architecture
 
-### Core Repository (`redstr`)
+```
+redstr/
+├── crates/
+│   └── redstr/              # Core Rust library
+├── ffi/                     # C FFI layer (shared by bindings)
+├── bindings/
+│   ├── node/                # Node.js/TypeScript (napi-rs)
+│   ├── python/              # Python (PyO3)
+│   ├── wasm/                # WebAssembly (wasm-bindgen)
+│   └── dotnet/              # .NET/C# (P/Invoke)
+└── .github/workflows/       # CI/CD for all languages
+```
 
-- **Purpose**: Pure Rust library implementation
-- **Contains**: Core string transformation functions
-- **Dependencies**: Zero external dependencies (Rust standard library only)
-- **Exports**: Public Rust API surface
-- **Version**: Follows semantic versioning
+### Why Monorepo?
 
-### Binding Repositories (`redstr-LANGUAGE`)
+| Benefit | Description |
+|---------|-------------|
+| **Atomic updates** | Change core + bindings in one PR |
+| **Version sync** | All bindings always match core version |
+| **Shared CI** | One pipeline tests everything |
+| **Easier maintenance** | No cross-repo version coordination |
+| **Single source of truth** | All code in one place |
 
-Each language has its own dedicated repository that:
-- Depends on the core `redstr` Rust crate
-- Provides language-specific bindings and idiomatic API
-- Includes language-specific tests, examples, and documentation
-- Has independent versioning and release cycles
-- Manages language-specific CI/CD pipelines
+### Used By
+
+This pattern is used by:
+- **libsignal** (Signal) - `rust/`, `node/`, `java/`, `swift/` in one repo
+- **Polars** - `crates/polars/`, `py-polars/`, `nodejs-polars/`
+- **swc** - Rust core + Node.js bindings in monorepo
+- **deltachat** - Core + FFI + all bindings together
 
 ## Supported Languages
 
-### Officially Maintained Bindings
-
-| Language | Repository | Package Manager | Status |
-|----------|------------|-----------------|--------|
-| Go | `redstr-go` | Go modules | Planned |
-| JavaScript/TypeScript | `redstr-npm` | npm | Planned |
-| Python | `redstr-python` | PyPI | Future |
-| Java | `redstr-java` | Maven Central | Future |
-| C#/.NET | `redstr-csharp` | NuGet | Future |
+| Language | Directory | Framework | Package Manager | Status |
+|----------|-----------|-----------|-----------------|--------|
+| **Rust** | `crates/redstr/` | Native | crates.io | ✅ Active |
+| **Node.js/TypeScript** | `bindings/node/` | napi-rs | npm | 🚧 In Progress |
+| **Python** | `bindings/python/` | PyO3 + maturin | PyPI | 🚧 In Progress |
+| **WebAssembly** | `bindings/wasm/` | wasm-bindgen | npm | 🚧 In Progress |
+| **C#/.NET** | `bindings/dotnet/` | C FFI + P/Invoke | NuGet | 🚧 In Progress |
+| **C/C++** | `ffi/` | cbindgen | Header file | 🚧 In Progress |
+| **Go** | External | CGO | Go modules | ✅ `redstr-go` |
 
 ## Repository Structure
 
-### Binding Repository Layout
+### Core Library (`crates/redstr/`)
 
-Each language binding repository follows this general structure:
-
-```
-redstr-LANGUAGE/
-├── README.md              # Language-specific documentation
-├── CHANGELOG.md           # Version history
-├── LICENSE               # License file (same as core)
-├── examples/             # Usage examples
-├── tests/                # Language-specific tests
-├── src/                  # Binding implementation
-├── .github/workflows/    # CI/CD for building and testing
-└── [language-specific files]
-```
-
-### Example: Go Bindings (`redstr-go`)
+The core Rust library containing all transformation functions.
 
 ```
-redstr-go/
-├── README.md
-├── CHANGELOG.md
-├── go.mod
-├── go.sum
-├── redstr.go            # Go wrapper functions
-├── redstr_test.go       # Go tests
-├── examples/
-│   ├── basic/
-│   └── security/
-└── .github/workflows/
-    └── ci.yml
+crates/redstr/
+├── Cargo.toml
+└── src/
+    ├── lib.rs
+    ├── builder.rs
+    ├── rng.rs
+    └── transformations/
+        ├── mod.rs
+        ├── encoding.rs
+        ├── case.rs
+        ├── obfuscation.rs
+        └── ...
 ```
 
-### Example: npm Bindings (`redstr-npm`)
+### C FFI Layer (`ffi/`)
+
+A C-compatible FFI layer that enables bindings for languages that can call C functions (Python, .NET, Ruby, etc.).
 
 ```
-redstr-npm/
-├── README.md
-├── CHANGELOG.md
-├── package.json
-├── Cargo.toml           # napi-rs bindings crate
+ffi/
+├── Cargo.toml
+├── cbindgen.toml
 ├── src/
-│   └── lib.rs          # Rust wrapper functions with #[napi]
-├── index.js            # Platform detection
-├── index.d.ts          # TypeScript definitions
-├── examples/
-└── __test__/
+│   └── lib.rs           # C-compatible exports
+└── include/
+    └── redstr.h         # Generated C header
 ```
 
-## Binding Implementation Strategies
+### Node.js Bindings (`bindings/node/`)
 
-### Strategy 1: C FFI (Go, Python, etc.)
+Native Node.js bindings using napi-rs for zero-overhead calls.
 
-For languages that can interface with C:
+```
+bindings/node/
+├── Cargo.toml
+├── package.json
+├── src/
+│   └── lib.rs           # napi-rs exports
+├── index.js             # Platform loader
+├── index.d.ts           # TypeScript definitions
+└── npm/                 # Platform-specific packages
+    ├── darwin-arm64/
+    ├── darwin-x64/
+    ├── linux-x64-gnu/
+    └── win32-x64-msvc/
+```
 
-1. **Core exports C FFI**: Core library can optionally provide C-compatible FFI functions
-2. **Language wrapper**: Binding repository implements language-specific wrappers
-3. **Memory management**: Binding handles string marshaling and memory safety
+### Python Bindings (`bindings/python/`)
 
-**Pros**: Wide language compatibility, mature tooling
-**Cons**: Requires C FFI layer, manual string marshaling
+Native Python bindings using PyO3 and maturin.
 
-### Strategy 2: Native Bindings (npm via napi-rs)
+```
+bindings/python/
+├── Cargo.toml
+├── pyproject.toml
+├── src/
+│   └── lib.rs           # PyO3 exports
+└── python/
+    └── redstr/
+        ├── __init__.py
+        └── py.typed     # PEP 561 marker
+```
 
-For languages with Rust binding frameworks:
+### WebAssembly (`bindings/wasm/`)
 
-1. **Direct Rust bindings**: Use language-specific Rust binding framework
-2. **No C layer**: Direct Rust ↔ Language communication
-3. **Type safety**: Framework handles type conversion
+Browser-compatible WebAssembly bindings.
 
-**Pros**: Better performance, type safety, simpler implementation
-**Cons**: Framework-specific, limited to supported languages
+```
+bindings/wasm/
+├── Cargo.toml
+├── src/
+│   └── lib.rs           # wasm-bindgen exports
+└── pkg/                 # Generated package
+    ├── redstr_wasm.js
+    ├── redstr_wasm.d.ts
+    └── redstr_wasm_bg.wasm
+```
 
-### Strategy 3: WASM (Web Browsers)
+### .NET Bindings (`bindings/dotnet/`)
 
-For web browser targets:
+.NET bindings using P/Invoke to call the C FFI layer.
 
-1. **Compile to WebAssembly**: Use `wasm-bindgen` or similar
-2. **JavaScript glue code**: Auto-generated by framework
-3. **Browser-compatible**: Runs in all modern browsers
-
-**Pros**: Universal browser support, near-native performance
-**Cons**: Bundle size considerations, async-only API
+```
+bindings/dotnet/
+├── src/
+│   └── Redstr/
+│       ├── Redstr.csproj
+│       ├── Native.cs    # P/Invoke declarations
+│       ├── Transforms.cs
+│       └── TransformBuilder.cs
+└── tests/
+    └── Redstr.Tests/
+```
 
 ## Development Workflow
 
-### Creating a New Language Binding
+### Building All Bindings
 
-1. **Create Repository**: Create `redstr-LANGUAGE` repository
-2. **Add Core Dependency**: Reference core `redstr` crate
-3. **Implement Bindings**: Create language-specific wrappers
-4. **Add Tests**: Comprehensive test suite for all functions
-5. **Add Examples**: Usage examples and best practices
-6. **Configure CI/CD**: Automated building, testing, and publishing
-7. **Document**: Language-specific README with installation and usage
+```bash
+# Build core library
+cargo build -p redstr
 
-### Maintaining Version Compatibility
+# Build FFI layer
+cargo build -p redstr-ffi --features ffi
 
-**Core Library Updates**:
-- Core `redstr` follows semantic versioning
-- Breaking changes increment major version
-- New functions increment minor version
-- Bug fixes increment patch version
+# Build Node.js bindings
+cd bindings/node && npm run build
 
-**Binding Updates**:
-- Bindings specify core version compatibility (e.g., `redstr = "0.1"`)
-- Bindings can have independent versioning
-- Update bindings when core adds new functions
-- Test bindings against core updates
+# Build Python bindings
+cd bindings/python && maturin develop
+
+# Build WASM bindings
+cd bindings/wasm && wasm-pack build
+
+# Build .NET bindings
+cd bindings/dotnet && dotnet build
+```
+
+### Testing All Bindings
+
+```bash
+# Test core library
+cargo test -p redstr
+
+# Test Node.js bindings
+cd bindings/node && npm test
+
+# Test Python bindings
+cd bindings/python && pytest
+
+# Test WASM bindings
+cd bindings/wasm && wasm-pack test --headless --firefox
+
+# Test .NET bindings
+cd bindings/dotnet && dotnet test
+```
+
+### Adding a New Function
+
+When adding a new transformation function:
+
+1. **Add to core** (`crates/redstr/src/`)
+2. **Export via FFI** (`ffi/src/lib.rs`)
+3. **Add to Node.js** (`bindings/node/src/lib.rs`)
+4. **Add to Python** (`bindings/python/src/lib.rs`)
+5. **Add to WASM** (`bindings/wasm/src/lib.rs`)
+6. **Add to .NET** (`bindings/dotnet/src/Redstr/Transforms.cs`)
+7. **Regenerate C header** (`cargo build -p redstr-ffi`)
+
+### Code Generation (Future)
+
+As the library grows, we'll add automated code generation:
+
+```bash
+# Generate all bindings from core library
+cargo run -p redstr-bindgen
+
+# This will:
+# 1. Parse core library function signatures
+# 2. Generate FFI exports
+# 3. Generate Node.js bindings
+# 4. Generate Python bindings
+# 5. Generate WASM bindings
+# 6. Generate .NET bindings
+```
+
+## Publishing
 
 ### Release Process
 
-**Core Library**:
-1. Update version in `Cargo.toml`
-2. Update `CHANGELOG.md`
-3. Run full test suite
-4. Publish to crates.io
-5. Create GitHub release tag
+All packages are published from the same commit:
 
-**Language Bindings**:
-1. Update core dependency version
-2. Update wrapper code for new functions
-3. Update binding version
-4. Update `CHANGELOG.md`
-5. Run full test suite
-6. Publish to language-specific package manager
-7. Create GitHub release tag
+```bash
+# 1. Update version in workspace Cargo.toml
+# 2. Create release tag
+git tag v<version>
 
-## Testing Strategy
+# 3. CI publishes to all registries:
+#    - crates.io (Rust)
+#    - npm (Node.js, WASM)
+#    - PyPI (Python)
+#    - NuGet (.NET)
+```
 
-### Core Library Testing
+### Version Synchronization
 
-- **Unit tests**: Test each transformation function
-- **Edge cases**: Empty strings, special characters, Unicode
-- **Property tests**: Validate transformation properties
-- **Benchmarks**: Performance regression testing
+All packages share the same version number:
+- `redstr` on crates.io: `<version>`
+- `redstr` on npm: `<version>`
+- `redstr` on PyPI: `<version>`
+- `Redstr` on NuGet: `<version>`
 
-### Binding Testing
+## Usage Examples
 
-Each binding repository should include:
+### Rust
 
-1. **Functionality tests**: Verify all functions work correctly
-2. **Interop tests**: Test string marshaling and memory safety
-3. **Integration tests**: End-to-end usage scenarios
-4. **Platform tests**: Test on target platforms (Linux, macOS, Windows)
-5. **Performance tests**: Verify binding overhead is acceptable
+```rust
+use redstr::{leetspeak, TransformBuilder};
 
-## Documentation Requirements
+let encoded = leetspeak("password");
 
-### Core Repository
+let payload = TransformBuilder::new("<script>")
+    .case_swap()
+    .url_encode()
+    .build();
+```
 
-- **API documentation**: Rust doc comments for all public functions
-- **README**: Overview, installation, basic usage
-- **Examples**: Common transformation patterns
-- **Security**: Responsible use disclaimer
+### Node.js / TypeScript
 
-### Binding Repositories
+```typescript
+import { leetspeak, TransformBuilder } from 'redstr';
 
-- **Installation**: Language-specific installation instructions
-- **API Reference**: All available functions with signatures
-- **Examples**: Language-idiomatic usage examples
-- **Migration Guide**: For users updating between versions
-- **Contributing**: How to contribute to bindings
-- **License**: Same as core library
+const encoded = leetspeak('password');
 
-## Security Considerations
+const payload = new TransformBuilder('<script>')
+    .caseSwap()
+    .urlEncode()
+    .build();
+```
 
-### Core Library
+### Python
 
-- Zero external dependencies
-- Standard library only
-- Regular security audits
-- Prompt CVE response
+```python
+from redstr import leetspeak, TransformBuilder
 
-### Bindings
+encoded = leetspeak('password')
 
-- Minimal external dependencies
-- Secure string marshaling
-- Memory safety guarantees
-- Regular dependency updates
-- Security advisories for binding-specific issues
+payload = (TransformBuilder('<script>')
+    .case_swap()
+    .url_encode()
+    .build())
+```
 
-## Performance Considerations
+### Browser (WASM)
 
-### Binding Overhead
+```typescript
+import init, { leetspeak } from 'redstr-wasm';
 
-- **Acceptable overhead**: <10% compared to pure Rust
-- **String copying**: Minimize unnecessary allocations
-- **Batch operations**: Provide APIs for bulk transformations
-- **Lazy evaluation**: Where appropriate for language
+await init();
+const encoded = leetspeak('password');
+```
 
-### Benchmarking
+### C# / .NET
 
-Each binding should include benchmarks comparing:
-- Native language implementations (if available)
-- Core Rust performance
-- Binding overhead measurement
+```csharp
+using Redstr;
 
-## Community Contributions
+var encoded = Transforms.Leetspeak("password");
 
-### Contributing New Bindings
+var payload = new TransformBuilder("<script>")
+    .CaseSwap()
+    .UrlEncode()
+    .Build();
+```
 
-To contribute a new language binding:
+### C / C++
 
-1. **Propose**: Open issue in core repository
-2. **Discuss**: Design and implementation approach
-3. **Create Repository**: Following naming convention
-4. **Implement**: Complete binding with tests
-5. **Document**: Comprehensive documentation
-6. **Submit**: Request official status
+```c
+#include "redstr.h"
 
-### Maintenance Model
+char* encoded = redstr_leetspeak("password");
+// Use encoded...
+redstr_free_string(encoded);
+```
 
-- **Core Team**: Maintains core library
-- **Language Maintainers**: Own specific binding repositories
-- **Community**: Contributions via pull requests
-- **Governance**: Decision-making in core repository
+## Performance
 
-## Code Generation (Future)
+All bindings have minimal overhead:
 
-### Automated Binding Generation
+| Binding | Overhead | Notes |
+|---------|----------|-------|
+| Rust | 0 | Native |
+| Node.js (napi-rs) | ~0.01ms | Direct FFI, no serialization |
+| Python (PyO3) | ~0.01ms | Direct FFI, no serialization |
+| WASM | ~0.05ms | WASM call overhead |
+| .NET (P/Invoke) | ~0.01ms | Direct FFI |
+| C/C++ | 0 | Direct FFI |
 
-As the library scales (500+ functions planned), automated code generation will be introduced:
+## Contributing
 
-**Tool**: Standalone binding generator (e.g., `polyglot-bindgen`)
+### Adding a New Language Binding
 
-**Capabilities**:
-- Parse Rust source function signatures
-- Generate FFI wrapper code
-- Generate language-specific bindings
-- Type mapping for all target languages
-- Template-based code generation
+1. Create directory: `bindings/<language>/`
+2. Add to workspace in root `Cargo.toml` (if Rust-based)
+3. Implement bindings following existing patterns
+4. Add CI workflow in `.github/workflows/`
+5. Add documentation to this file
+6. Add usage example to README
 
-**Benefits**:
-- Consistency across all bindings
-- Reduced maintenance burden
-- Faster updates when core changes
-- Fewer manual errors
+### Guidelines
 
-**Implementation Timeline**: To be determined based on function count and maintenance burden
-
-## Migration from Monorepo
-
-Previously, language bindings were maintained in the core repository under `bindings/` directory. This structure was refactored to separate repositories for:
-
-- **Cleaner core**: Focus on Rust implementation
-- **Independent versioning**: Each language can evolve separately
-- **Better ownership**: Clear maintainer boundaries
-- **Simpler CI/CD**: Language-specific workflows
-- **Reduced complexity**: Smaller repositories
-
-Existing users should migrate to the new binding repositories when they become available.
-
-## FAQ
-
-### Why separate repositories?
-
-Separate repositories provide:
-- Clean separation of concerns
-- Independent versioning and releases
-- Language-specific CI/CD pipelines
-- Clearer ownership and maintenance
-- Smaller, focused codebases
-
-### How do I add support for my language?
-
-1. Check if an official binding exists
-2. If not, propose a new binding in core repository issues
-3. Follow the contribution guidelines above
-4. Engage with the community for design feedback
-
-### What if the binding doesn't support all functions?
-
-Bindings should aim for 100% function coverage. If a binding is incomplete:
-- Check the binding repository's roadmap
-- Open an issue for missing functions
-- Consider contributing the implementation
-
-### How are breaking changes handled?
-
-- **Core**: Semantic versioning, breaking changes = major version bump
-- **Bindings**: Can introduce language-specific breaking changes independently
-- **Communication**: Changelogs and migration guides for all breaking changes
-
-### Can I use multiple language bindings together?
-
-Yes, but ensure they use compatible core library versions. Mixing incompatible versions may cause unexpected behavior.
-
-### What about performance?
-
-- Core library is highly optimized Rust
-- Bindings add minimal overhead (<10% typically)
-- Native bindings (napi-rs) perform better than FFI
-- Each binding includes benchmarks
+- All bindings must support all public functions
+- TypeScript/Python type definitions required
+- Tests required for all functions
+- Documentation required with examples
+- Follow language-specific conventions
 
 ## Resources
 
-- **Core Repository**: https://github.com/arvid-berndtsson/redstr
-- **Core Documentation**: https://docs.rs/redstr
-- **Issue Tracker**: https://github.com/arvid-berndtsson/redstr/issues
-- **Discussions**: https://github.com/arvid-berndtsson/redstr/discussions
+- **Repository**: https://github.com/arvid-berndtsson/redstr
+- **Rust Docs**: https://docs.rs/redstr
+- **npm Package**: https://www.npmjs.com/package/redstr
+- **PyPI Package**: https://pypi.org/project/redstr/
+- **NuGet Package**: https://www.nuget.org/packages/Redstr
 
-## License
+## FAQ
 
-All language bindings must use the same license as the core library to ensure consistency and legal clarity.
+### Why not separate repositories?
+
+Separate repos cause version sync issues and maintenance overhead. With a monorepo:
+- One PR updates everything
+- CI catches binding breakages immediately
+- No "binding lags behind core" problems
+
+### Can I use just the Rust library?
+
+Yes! The core library at `crates/redstr/` works standalone:
+```toml
+[dependencies]
+redstr = "0.3"
+```
+
+### What about the API server?
+
+The `redstr-server` HTTP API is in a separate repository for deployment flexibility. Use it for:
+- Quick prototyping
+- Microservices architecture
+- Languages without bindings
+
+But native bindings are preferred for performance.
 
 ---
 
-**Last Updated**: 2025-11-29  
-**Version**: 1.0
+**Last Updated**: December 2025  
+**Version**: 2.0 (Monorepo Architecture)

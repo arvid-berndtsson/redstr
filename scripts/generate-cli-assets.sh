@@ -110,7 +110,7 @@ EOF
 } > completions/redstr.fish
 
 cat > man/redstr.1 <<'EOF'
-.TH REDSTR 1 "February 2026" "redstr 0.2.6" "User Commands"
+.TH REDSTR 1 "" "redstr" "User Commands"
 .SH NAME
 redstr \- string obfuscation and transformation CLI for security testing
 .SH SYNOPSIS

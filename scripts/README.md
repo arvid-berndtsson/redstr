@@ -15,7 +15,7 @@ Usage:
 scripts/generate-cli-assets.sh
 ```
 
-Run this after changing CLI modes/options in `src/main.rs`.
+Run this after changing CLI modes/options in `crates/redstr/src/main.rs`.
 
 ## redstr-wrapper.sh
 

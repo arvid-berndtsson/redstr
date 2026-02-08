@@ -8,7 +8,7 @@
 ## 📊 Current Status
 - ✅ 60+ transformation functions
 - ✅ Zero dependencies
-- ✅ Published to crates.io (v0.2.3)
+- ✅ Published to crates.io
 - ✅ Comprehensive documentation
 - ✅ Builder pattern API
 - ✅ CLI tool available
