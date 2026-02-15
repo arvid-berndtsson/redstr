@@ -90,6 +90,10 @@ jobs:
         working-directory: bindings/node
         run: npm run build
 
+      - name: Test
+        working-directory: bindings/node
+        run: npm test
+
   # Python bindings
   python:
     name: Python Bindings
