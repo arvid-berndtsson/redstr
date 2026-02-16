@@ -14,7 +14,7 @@ crate-type = ["cdylib"]
 [dependencies]
 redstr.workspace = true
 napi = { version = "2.16", default-features = false, features = ["napi4"] }
-napi-derive = "2.16"
+napi-derive = "3.5"
 
 [build-dependencies]
 napi-build = "2.3"
