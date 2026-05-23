@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   publish:
@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
-      contents: write
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.repository.default_branch }}
+          ref: ${{ github.ref }}
           fetch-depth: 0
 
       - name: Install Rust
@@ -57,19 +57,10 @@ jobs:
 
             python -c "import json,pathlib,re; version=pathlib.Path('Cargo.toml').read_text().split('version = \\\"', 1)[1].split('\\\"', 1)[0]; package_json=pathlib.Path('bindings/node/package.json'); data=json.loads(package_json.read_text()); data['version']=version; optional=data.get('optionalDependencies', {}); optional.update({key: version for key in optional}); package_json.write_text(json.dumps(data, indent=2) + '\\n'); pyproject=pathlib.Path('bindings/python/pyproject.toml'); text=pyproject.read_text(); text=re.sub(r'^version = \\\".*\\\"$', f'version = \\\"{version}\\\"', text, count=1, flags=re.M); pyproject.write_text(text)"
             
-            # Update Cargo.lock to reflect the version change
+            # Update Cargo.lock locally so publishes use a consistent manifest set.
             cargo check -p redstr
-            
-            # Configure git
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            
-            # Commit and push the version update
-            git add Cargo.toml Cargo.lock bindings/node/package.json bindings/python/pyproject.toml
-            git commit -m "chore: bump version to $TAG_VERSION for release"
-            git push origin ${{ github.event.repository.default_branch }}
-            
-            echo "✅ Version updated and committed"
+
+            echo "✅ Version updated locally for this release run"
           else
             echo "✅ Version already matches tag"
           fi
@@ -82,3 +73,77 @@ jobs:
         run: cargo publish -p redstr --all-features
         env:
           CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+
+  publish-bindings:
+    name: Publish bindings
+    needs: publish
+    uses: ./.github/workflows/publish-bindings.yml
+    with:
+      release_ref: ${{ github.ref }}
+      release_ref_name: ${{ github.ref_name }}
+    secrets: inherit
+
+  sync-version-pr:
+    name: Open version sync PR
+    needs: publish-bindings
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Update package versions to match tag
+        run: |
+          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          WORKSPACE_VERSION=$(grep '^version = ' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
+          NODE_VERSION=$(python - <<'PY'
+          import json
+          import pathlib
+          print(json.loads(pathlib.Path("bindings/node/package.json").read_text())["version"])
+          PY
+          )
+          PYTHON_VERSION=$(python - <<'PY'
+          import pathlib
+          import re
+          text = pathlib.Path("bindings/python/pyproject.toml").read_text()
+          match = re.search(r'^version = "(.*)"$', text, flags=re.M)
+          print(match.group(1))
+          PY
+          )
+
+          echo "📦 Tag version: $TAG_VERSION"
+          echo "📦 Workspace version: $WORKSPACE_VERSION"
+          echo "📦 Node version: $NODE_VERSION"
+          echo "📦 Python version: $PYTHON_VERSION"
+
+          if [ "$TAG_VERSION" != "$WORKSPACE_VERSION" ] || [ "$TAG_VERSION" != "$NODE_VERSION" ] || [ "$TAG_VERSION" != "$PYTHON_VERSION" ]; then
+            echo "🔄 Updating package versions to $TAG_VERSION"
+            sed -i "0,/^version = \".*\"/s//version = \"$TAG_VERSION\"/" Cargo.toml
+            python -c "import json,pathlib,re; version=pathlib.Path('Cargo.toml').read_text().split('version = \\\"', 1)[1].split('\\\"', 1)[0]; package_json=pathlib.Path('bindings/node/package.json'); data=json.loads(package_json.read_text()); data['version']=version; optional=data.get('optionalDependencies', {}); optional.update({key: version for key in optional}); package_json.write_text(json.dumps(data, indent=2) + '\\n'); pyproject=pathlib.Path('bindings/python/pyproject.toml'); text=pyproject.read_text(); text=re.sub(r'^version = \\\".*\\\"$', f'version = \\\"{version}\\\"', text, count=1, flags=re.M); pyproject.write_text(text)"
+            cargo check -p redstr
+          else
+            echo "✅ Version already matches tag"
+          fi
+
+      - name: Create version sync PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.RELEASE_BOT_TOKEN != '' && secrets.RELEASE_BOT_TOKEN || github.token }}
+          commit-message: "chore: bump version to ${{ github.ref_name }} for release"
+          branch: "release/version-sync-${{ github.ref_name }}"
+          delete-branch: true
+          title: "chore: bump version to ${{ github.ref_name }} for release"
+          body: |
+            Sync package versions back to `main` after the `${{ github.ref_name }}` release.
+
+            This PR is created automatically by the release workflow so code scanning and branch rules apply to the version update on `main`, while the tagged release can still proceed.
