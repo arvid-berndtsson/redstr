@@ -30,6 +30,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ github.token }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
       
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -73,6 +77,10 @@ jobs:
         node: [18, 20]
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ github.token }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
       
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -105,6 +113,10 @@ jobs:
         python: ['3.9', '3.10', '3.11', '3.12']
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ github.token }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
       
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -128,6 +140,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ github.token }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
       
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
