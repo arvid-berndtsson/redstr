@@ -16,4 +16,4 @@ redstr.workspace = true
 wasm-bindgen = "0.2"
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3"
+wasm-bindgen-test = "0.3.58"

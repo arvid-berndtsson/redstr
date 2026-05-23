@@ -422,7 +422,7 @@ impl TransformBuilder {
 
 /// Native string transformations for security testing.
 #[pymodule]
-fn _redstr(_py: Python, m: &PyModule) -> PyResult<()> {
+fn _redstr(_py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
     // Case transformations
     m.add_function(wrap_pyfunction!(randomize_capitalization, m)?)?;
     m.add_function(wrap_pyfunction!(case_swap, m)?)?;
