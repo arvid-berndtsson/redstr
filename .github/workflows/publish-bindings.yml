@@ -22,6 +22,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.release_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -92,6 +93,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.release_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -163,6 +165,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.release_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
