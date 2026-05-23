@@ -74,9 +74,18 @@ jobs:
         env:
           CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
 
+  publish-bindings:
+    name: Publish bindings
+    needs: publish
+    uses: ./.github/workflows/publish-bindings.yml
+    with:
+      release_ref: ${{ github.ref }}
+      release_ref_name: ${{ github.ref_name }}
+    secrets: inherit
+
   sync-version-pr:
     name: Open version sync PR
-    needs: publish
+    needs: publish-bindings
     runs-on: ubuntu-latest
     permissions:
       contents: write

@@ -1,9 +1,14 @@
 name: Publish Bindings
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_call:
+    inputs:
+      release_ref:
+        required: true
+        type: string
+      release_ref_name:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -16,7 +21,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ inputs.release_ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -30,7 +35,7 @@ jobs:
 
       - name: Update package versions to match tag
         run: |
-          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          TAG_VERSION="${{ inputs.release_ref_name }}"
           WORKSPACE_VERSION=$(grep '^version = ' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
           NODE_VERSION=$(node -p "require('./bindings/node/package.json').version")
           PYTHON_VERSION=$(python - <<'PY'
@@ -86,7 +91,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ inputs.release_ref }}
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -98,7 +103,7 @@ jobs:
 
       - name: Update package versions to match tag
         run: |
-          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          TAG_VERSION="${{ inputs.release_ref_name }}"
           WORKSPACE_VERSION=$(grep '^version = ' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
           NODE_VERSION=$(node -p "require('./bindings/node/package.json').version")
           PYTHON_VERSION=$(python - <<'PY'
@@ -157,7 +162,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ inputs.release_ref }}
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -169,7 +174,7 @@ jobs:
 
       - name: Update package versions to match tag
         run: |
-          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          TAG_VERSION="${{ inputs.release_ref_name }}"
           WORKSPACE_VERSION=$(grep '^version = ' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
           NODE_VERSION=$(node -p "require('./bindings/node/package.json').version")
           PYTHON_VERSION=$(python - <<'PY'
