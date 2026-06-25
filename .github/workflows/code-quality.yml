@@ -39,3 +39,6 @@ jobs:
 
       - name: Run tests
         run: cargo test
+
+      - name: Run CLI contract tests
+        run: cargo test -p redstr --features cli --test cli_contract

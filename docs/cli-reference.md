@@ -21,10 +21,18 @@ The binary will be available at `target/release/redstr`.
 ## Usage
 
 ```bash
-redstr [mode] <text>
+redstr [options] [mode] <text...>
+redstr [options] random-user-agent
 ```
 
 If no mode is specified, random capitalization is used by default.
+
+## Options
+
+- `--help`, `-h` - Show usage and examples
+- `--list-modes` - List all available transformation modes
+- `--json` - Emit `{ mode, input, output }` as JSON
+- `--seed <u64>` - Use deterministic output for random and case-swap modes
 
 ## Transformation Modes
 
