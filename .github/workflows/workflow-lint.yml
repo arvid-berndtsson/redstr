@@ -23,8 +23,13 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 1
 
+      - name: Install actionlint
+        run: |
+          curl -sSL https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz \
+            | tar -xz actionlint
+
       - name: Run actionlint
-        uses: rhysd/actionlint@v1
+        run: ./actionlint
 
   publish-permissions:
     name: Validate publish OIDC permissions
