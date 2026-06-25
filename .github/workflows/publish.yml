@@ -77,6 +77,8 @@ jobs:
   publish-bindings:
     name: Publish bindings
     needs: publish
+    # The reusable bindings workflow publishes npm and PyPI packages with
+    # trusted publishing, so the caller must grant OIDC to nested jobs.
     permissions:
       contents: read
       id-token: write

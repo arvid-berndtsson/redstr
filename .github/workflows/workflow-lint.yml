@@ -1,0 +1,72 @@
+name: Workflow Lint
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/**'
+
+jobs:
+  actionlint:
+    name: Validate GitHub Actions workflows
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - name: Run actionlint
+        uses: rhysd/actionlint@v1
+
+  publish-permissions:
+    name: Validate publish OIDC permissions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - name: Validate reusable publishing workflow permissions
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          publish = Path('.github/workflows/publish.yml').read_text()
+          bindings = Path('.github/workflows/publish-bindings.yml').read_text()
+
+          def extract_job(text: str, job_name: str) -> str:
+              pattern = re.compile(rf'^  {re.escape(job_name)}:\n(?P<body>(?:    .+\n|\n)+)', re.M)
+              match = pattern.search(text)
+              if not match:
+                  print(f'Missing job: {job_name}', file=sys.stderr)
+                  sys.exit(1)
+              return match.group('body')
+
+          caller = extract_job(publish, 'publish-bindings')
+          if 'uses: ./.github/workflows/publish-bindings.yml' not in caller:
+              print('publish-bindings job must call the reusable bindings workflow', file=sys.stderr)
+              sys.exit(1)
+          if not re.search(r'permissions:\n(?:      .+\n)*      id-token: write\n', caller):
+              print('publish-bindings caller must grant id-token: write to reusable workflow jobs', file=sys.stderr)
+              sys.exit(1)
+
+          for job_name in ('publish-npm', 'publish-pypi'):
+              job = extract_job(bindings, job_name)
+              if not re.search(r'permissions:\n(?:      .+\n)*      id-token: write\n', job):
+                  print(f'{job_name} must request id-token: write for trusted publishing', file=sys.stderr)
+                  sys.exit(1)
+
+          print('Publish workflow OIDC permissions are valid')
+          PY
