@@ -70,7 +70,11 @@ jobs:
         uses: rust-lang/crates-io-auth-action@v1
 
       - name: Publish redstr to crates.io
-        run: cargo publish -p redstr --all-features
+        # The release job updates package versions locally to match the pushed
+        # tag before publishing. `--allow-dirty` is required so Cargo publishes
+        # that intentional release-only manifest version instead of rejecting
+        # the uncommitted Cargo.toml change.
+        run: cargo publish -p redstr --all-features --allow-dirty
         env:
           CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
 
