@@ -41,3 +41,6 @@ bindings/node/*.node
 
 # Local build artifacts
 liblib.rlib
+
+# macOS Finder metadata
+.DS_Store
